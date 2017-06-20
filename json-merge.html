@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="json-merge">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `json-merge`
+     * Polymer component designed to merge JSON objects into other objects
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class JsonMerge extends Polymer.Element {
+      static get is() { return 'json-merge'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'json-merge'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(JsonMerge.is, JsonMerge);
+  </script>
+</dom-module>
