@@ -1,10 +1,9 @@
 {
-  "name": "json-merge",
-  "description": "Polymer component designed to merge JSON objects into other objects",
-  "main": "json-merge.html",
+  "name": "poly-prep",
+  "description": "Helper elements to load polymer elements asynchronously.",
+  "main": "poly-prep.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0",
-    "poly-prep": "bahrus/poly-prep#^0.0.5"
+    "polymer": "Polymer/polymer#^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",

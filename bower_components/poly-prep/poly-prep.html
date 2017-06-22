@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<link async rel="import" href="../polymer/polymer-element.html" onload="xtal.elements.bootstrap()">
+<!--<dom-module id="poly-prep">
+    <template>
+        i am here
+         <slot></slot>
+    </template>
+   
+</dom-module>-->
+<script>
+    var xtal;
+    (function (xtal) {
+        var elements;
+        (function (elements) {
+            function bootstrap() {
+                let pp = customElements.get('poly-prep');
+                if(pp) return pp;
+                class PolyPrep extends Polymer.Element {
+                    // _attachDom(dom) {
+                    //     if (dom) {
+                    //         return this.appendChild(dom);
+                    //     }
+                    // }
+                    ready(){
+                        super.ready();
+                        const template = this.querySelector('template');
+                        if(!template) return;
+                        var clone = document.importNode(template.content, true);
+                        const nd = this.appendChild(clone);
+                    }
+                }
+                customElements.define('poly-prep', PolyPrep);
+                return PolyPrep;
+            }
+            function debounce(callback, wait, context = this) {
+                //from https://gist.github.com/beaucharman/1f93fdd7c72860736643d1ab274fee1a
+                let timeout = null 
+                let callbackArgs = null
+                
+                const later = () => callback.apply(context, callbackArgs)
+                
+                return function() {
+                    callbackArgs = arguments
+                    clearTimeout(timeout)
+                    timeout = setTimeout(later, wait)
+                }
+            }
+
+            function downloadJSFilesInParallelButLoadInSequence(refs, callBack) {
+                //see https://www.html5rocks.com/en/tutorials/speed/script-loading/
+                const notLoadedYet = {};
+                const nonNullRefs = refs.filter(ref => ref !== null);
+                nonNullRefs.forEach(ref => {
+                    notLoadedYet[ref.src] = true;
+                });
+                nonNullRefs.forEach(ref => {
+                    const script = document.createElement('script');
+                    script.src = ref.src;
+                    script.async = false;
+                    script.onload = () => {
+                        //console.log(script.src + ' loaded');
+                        delete notLoadedYet[script.src];
+                        if (Object.keys(notLoadedYet).length === 0) {
+                            if (callBack)
+                                callBack();
+                        }
+                    };
+                    document.head.appendChild(script);
+                });
+            }
+
+            function InitMerge(superClass) {
+                return class extends superClass {
+                    init() {
+                        return new Promise((resolve, reject) =>{
+                            const jsonMergeInit = this.querySelector('json-merge[role="init"]');
+                            if(jsonMergeInit){
+                                customElements.whenDefined('json-merge').then(() =>{
+                                    const initObjs = jsonMergeInit.loadJSON();
+                                    if(initObjs){
+                                        initObjs.forEach(initObj => jsonMergeInit.mergeDeep(this, initObj))
+                                        
+                                    }
+                                    resolve();
+                                });
+                            }else{
+                                resolve();
+                            }
+                        });
+
+                    }
+                }
+            }
+            elements.bootstrap = bootstrap;
+            elements.downloadJSFilesInParallelButLoadInSequence = downloadJSFilesInParallelButLoadInSequence;
+            elements.debounce = debounce;
+            elements.InitMerge = InitMerge;
+            
+        })(elements = xtal.elements || (xtal.elements = {}));
+    })(xtal || (xtal = {}));
+</script>

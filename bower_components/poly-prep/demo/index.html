@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>poly-prep demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    
+    
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic poly-prep demo</h3>
+      <link  async rel="import" href="../poly-prep.html">
+      <poly-prep>
+        <template>
+          <link async rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+          <link async rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+        </template>
+      </poly-prep>
+      <demo-snippet>
+        <template>
+          <!--
+           <link  async rel="import" href="../poly-prep.html">
+           <link async rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+           <link async rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+          -->
+          <my-custom-component></my-custom-component>
+          <script>
+            function initMyCustomComponent(){
+              class MyCustomComponent extends Polymer.Element{
+                static get is(){return 'my-custom-component';}
+                ready(){
+                  super.ready();
+                  this.innerHTML = 'Look Ma, no async errors';
+                }
+              }
+              customElements.define(MyCustomComponent.is, MyCustomComponent);
+            }
+            customElements.whenDefined('poly-prep').then(() => initMyCustomComponent());
+          </script>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>
