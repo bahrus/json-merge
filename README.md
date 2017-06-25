@@ -19,8 +19,6 @@ It enforces the declarative, side-effect free, XSS safe principles by insisting 
 <custom-element-demo>
   <template>
                   <link rel="import" href="../json-merge-sync.html">
-              <!-- use <link async rel="import" href="../json-merge.html">
-               if you want to prevent blocking -->
           
           <dom-module id="my-component">
             <template>
