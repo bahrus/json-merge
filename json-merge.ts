@@ -155,7 +155,6 @@ module xtal.elements{
             }
             
             onPropsChange(newVal){
-                debugger;
                 let transformedObj;
                 if(this.wrapObjectWithPath) {
                     transformedObj  = {};

@@ -137,7 +137,6 @@ var xtal;
                     return this._objectsToMerge;
                 }
                 onPropsChange(newVal) {
-                    debugger;
                     let transformedObj;
                     if (this.wrapObjectWithPath) {
                         transformedObj = {};

@@ -27,29 +27,31 @@
           
           
           <dom-module id="my-component">
-            <textarea id="textA" value="taInput::input">
-              [
-                {"name": "HarryPotter", "age":"13"}
-              ]
-            </textarea>
-            <json-merge hidden watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
-              [{
-                "columns":[
-                    {"id": "index",       "name": "Index",      "field": "index"},
-                    {"id": "isActive",    "name": "Active",     "field": "isActive"},
-                    {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
-                    {"id": "age",         "name": "Age",        "field": "age"},
-                    {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-                    {"id": "name",        "name": "Name",       "field": "name"},
-                    {"id": "gender",      "name": "Gender",     "field": "gender"},
-                    {"id": "company",     "name":"Company",     "field": "company"}
-                ],
-                "gridOptions":{
-                    "enableCellNavigation": true,
-                    "enableColumnReorder": false
-                }
-              }]
-            </json-merge>
+            <template>
+              <textarea id="textA" value="{{taInput::input}}" rows="10" cols="40">
+                [
+                  {"name": "HarryPotter", "age":"13"}
+                ]
+              </textarea>
+              <json-merge hidden watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
+                [{
+                  "columns":[
+                      {"id": "index",       "name": "Index",      "field": "index"},
+                      {"id": "isActive",    "name": "Active",     "field": "isActive"},
+                      {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
+                      {"id": "age",         "name": "Age",        "field": "age"},
+                      {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+                      {"id": "name",        "name": "Name",       "field": "name"},
+                      {"id": "gender",      "name": "Gender",     "field": "gender"},
+                      {"id": "company",     "name":"Company",     "field": "company"}
+                  ],
+                  "gridOptions":{
+                      "enableCellNavigation": true,
+                      "enableColumnReorder": false
+                  }
+                }]
+              </json-merge>
+            </template>
           </dom-module>
           <script>
             class MyComponent extends Polymer.Element{
@@ -71,10 +73,10 @@
               }
               onInputChanges(){
                 try{
-                  var json = JSON.parse(this.$.textA);
+                  var json = JSON.parse(this.$.textA.value);
                   this.jsonInput = json;
                 }catch(e){
-                  console.log('invaid json');
+                  console.warn({invalidJson:e});
                 }
                 
               }
