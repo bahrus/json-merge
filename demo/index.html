@@ -10,7 +10,9 @@
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../json-merge.html">
+    <link rel="import" href="../json-merge-sync.html">
+    <!-- use <link async rel="import" href="../json-merge.html"> if you want to prevent blocking -->
+    <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
@@ -22,7 +24,67 @@
       <h3>Basic json-merge demo</h3>
       <demo-snippet>
         <template>
-          <json-merge></json-merge>
+          
+          
+          <dom-module id="my-component">
+            <textarea id="textA" value="taInput::input">
+              [
+                {"name": "HarryPotter", "age":"13"}
+              ]
+            </textarea>
+            <json-merge hidden watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
+              [{
+                "columns":[
+                    {"id": "index",       "name": "Index",      "field": "index"},
+                    {"id": "isActive",    "name": "Active",     "field": "isActive"},
+                    {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
+                    {"id": "age",         "name": "Age",        "field": "age"},
+                    {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+                    {"id": "name",        "name": "Name",       "field": "name"},
+                    {"id": "gender",      "name": "Gender",     "field": "gender"},
+                    {"id": "company",     "name":"Company",     "field": "company"}
+                ],
+                "gridOptions":{
+                    "enableCellNavigation": true,
+                    "enableColumnReorder": false
+                }
+              }]
+            </json-merge>
+          </dom-module>
+          <script>
+            class MyComponent extends Polymer.Element{
+              static get is(){return 'my-component';}
+              static get properties(){
+                return {
+                  taInput: {
+                    type: String,
+                    observer: 'onInputChanges'
+                  },
+                  jsonInput:{
+                    type: Object
+                  },
+                  mergedObject:{
+                    type: Object,
+                    observer: 'onMergedObjectChanges'
+                  }
+                }
+              }
+              onInputChanges(){
+                try{
+                  var json = JSON.parse(this.$.textA);
+                  this.jsonInput = json;
+                }catch(e){
+                  console.log('invaid json');
+                }
+                
+              }
+              onMergedObjectChanges(){
+                console.log('iah');
+              }
+            }
+            customElements.define(MyComponent.is, MyComponent);
+          </script>
+          <my-component></my-component>
         </template>
       </demo-snippet>
     </div>
