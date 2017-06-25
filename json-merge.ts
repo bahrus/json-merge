@@ -136,20 +136,27 @@ module xtal.elements{
             }
 
             loadJSON(){
+                const scriptTag = this.querySelector('script[type="application/json"') as HTMLScriptElement;
+                if(!scriptTag){
+                    console.error('Unable to find script tag child with type application/json');
+                    return;
+                }
+                const stringToParse = scriptTag.innerText;
                 try{
+                    
                     if(this.refs){
-                        this._objectsToMerge = JSON.parse(this.innerText, (key, val) => {
+                        this._objectsToMerge = JSON.parse(stringToParse, (key, val) => {
                             if(typeof val !== 'string') return val;
                             if(!val.startsWith('${refs.') || !val.endsWith('}')) return val;
                             const realKey = val.substring(7, val.length - 1);
                             return this.refs[realKey];
                         } );
                     }else{
-                        this._objectsToMerge = JSON.parse( this.innerText);
+                        this._objectsToMerge = JSON.parse( stringToParse);
                     }
                     
                 }catch(e){
-                    console.error("Unable to parse " + this.innerText);
+                    console.error("Unable to parse " + stringToParse);
                 }
                 return this._objectsToMerge;    
             }

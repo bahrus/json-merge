@@ -28,12 +28,18 @@
           
           <dom-module id="my-component">
             <template>
+              <div>Input:</div>
               <textarea id="textA" value="{{taInput::input}}" rows="10" cols="40">
-                [
-                  {"name": "HarryPotter", "age":"13"}
-                ]
+[
+  {"name": "Harry Potter", "age":"13"},
+  {"name": "Albus Dumbledore", "age":"279"}
+]
               </textarea>
-              <json-merge hidden watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
+              <br>
+              <div>See markup to see json text that is getting merged...</div>
+              <br>
+              <json-merge  watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
+                <script type="application/json">
                 [{
                   "columns":[
                       {"id": "index",       "name": "Index",      "field": "index"},
@@ -50,7 +56,10 @@
                       "enableColumnReorder": false
                   }
                 }]
+                </script>
               </json-merge>
+              <div>Output:</div>
+              <textarea rows="15" cols="80">[[mergedObjectStringified]]</textarea>
             </template>
           </dom-module>
           <script>
@@ -60,7 +69,7 @@
                 return {
                   taInput: {
                     type: String,
-                    observer: 'onInputChanges'
+                    observer: 'convertTextAreaToJSON'
                   },
                   jsonInput:{
                     type: Object
@@ -68,10 +77,13 @@
                   mergedObject:{
                     type: Object,
                     observer: 'onMergedObjectChanges'
+                  },
+                  mergedObjectStringified:{
+                    type: String,
                   }
                 }
               }
-              onInputChanges(){
+              convertTextAreaToJSON(){
                 try{
                   var json = JSON.parse(this.$.textA.value);
                   this.jsonInput = json;
@@ -81,7 +93,11 @@
                 
               }
               onMergedObjectChanges(){
-                console.log('iah');
+                this.mergedObjectStringified = JSON.stringify(this.mergedObject);
+              }
+              ready(){
+                super.ready();
+                this.convertTextAreaToJSON();
               }
             }
             customElements.define(MyComponent.is, MyComponent);
