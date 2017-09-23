@@ -14,6 +14,39 @@ Other components tend to view themselves primarily as a JavaScript api, and then
 
 It enforces the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [https://www.ampproject.org/docs/reference/components/amp-bind] (other examples of allowing JSON to be embedded within a page).
 
+By default, the JSON needs to be wrapped inside a script tag with type application/json, as shown below.
+
+```html
+<script type="application/json">
+//JSON goes here
+</script>
+```
+
+However, if global variable json_merge_allow_json_without_script_tag is set to true, then the JSON can go right inside the \<json-merge\> tag.
+
+## Referencing \<json=merge\>.
+
+You can reference the component the Polymer < 3 way:
+
+```html
+<link rel="import" href="../json-merge.html">
+```
+
+But if you don't want to be tied to using HTML Imports, you can instead provide your own reference to Polymer.Element independently, from wherever you choose, and just reference the javascript file directly:
+
+
+
+
+```html
+<script async src="../json-merge.js"></script>
+```
+
+Or you can use ES6 modules:
+
+```html
+<script type="module" src="../json-merge.js"></script>
+```
+
 <!--
 ```
 <custom-element-demo>

@@ -1,4 +1,3 @@
-
 declare module Polymer{
     export abstract class Element extends HTMLElement{
         connectedCallback();
@@ -10,6 +9,12 @@ declare module Polymer{
         debounce(name: string, fn: Function, timeInMilliSeconds: number);
         importPath(path: string, fnSuccess: Function, fnError: Function);
         notifyPath(path: string);
+    }
+    export abstract class ElementMixin{
+        
+    }
+    export module CaseMap{
+        function camelToDashCase(s: string) : string;
     }
 }
 

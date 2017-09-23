@@ -1,111 +1,116 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>json-merge demo</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <title>json-merge demo</title>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <script src="../json-merge.js"></script>
+ <script>var json_merge_allow_json_without_script_tag = true;</script>
 
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic json-merge demo</h3>
-      <demo-snippet>
-        <template>
-              <link rel="import" href="../json-merge-sync.html">
-              <!-- use <link async rel="import" href="../json-merge.html">
-               if you want to prevent blocking -->
-          
-          <dom-module id="my-component">
-            <template>
-              <div>Input:</div>
-              <textarea id="textA" value="{{taInput::input}}" rows="10" cols="40">
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+
+    </style>
+  </custom-style>
+
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+    <h3>Basic json-merge demo</h3>
+    <demo-snippet>
+      <template>
+
+        <my-component></my-component>
+        <dom-module id="my-component">
+          <template>
+            <div>Input:</div>
+            <textarea id="textA" value="{{taInput::input}}" rows="10" cols="40">
 [
   {"name": "Harry Potter", "age":"13"},
   {"name": "Albus Dumbledore", "age":"279"}
 ]
-              </textarea>
-              <br>
-              <div>See markup to see json text that is getting merged...</div>
-              <br>
-              <json-merge  watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
-                <script type="application/json">
-                [{
-                  "columns":[
-                      {"id": "index",       "name": "Index",      "field": "index"},
-                      {"id": "isActive",    "name": "Active",     "field": "isActive"},
-                      {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
-                      {"id": "age",         "name": "Age",        "field": "age"},
-                      {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-                      {"id": "name",        "name": "Name",       "field": "name"},
-                      {"id": "gender",      "name": "Gender",     "field": "gender"},
-                      {"id": "company",     "name":"Company",     "field": "company"}
-                  ],
-                  "gridOptions":{
-                      "enableCellNavigation": true,
-                      "enableColumnReorder": false
-                  }
-                }]
-                </script>
-              </json-merge>
-              <div>Output:</div>
-              <textarea rows="15" cols="80">[[mergedObjectStringified]]</textarea>
-            </template>
-          </dom-module>
-          <script>
-            class MyComponent extends Polymer.Element{
-              static get is(){return 'my-component';}
-              static get properties(){
-                return {
-                  taInput: {
-                    type: String,
-                    observer: 'convertTextAreaToJSON'
-                  },
-                  jsonInput:{
-                    type: Object
-                  },
-                  mergedObject:{
-                    type: Object,
-                    observer: 'onMergedObjectChanges'
-                  },
-                  mergedObjectStringified:{
-                    type: String,
-                  }
+            </textarea>
+            <br>
+            <div>See markup to see json text that is getting merged...</div>
+            <br>
+            <!--the json inside can be wrapped inside <script type="application/json"> -->
+            <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}" hidden>
+              [{
+                "columns":[
+                    {"id": "index",       "name": "Index",      "field": "index"},
+                    {"id": "isActive",    "name": "Active",     "field": "isActive"},
+                    {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
+                    {"id": "age",         "name": "Age",        "field": "age"},
+                    {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+                    {"id": "name",        "name": "Name",       "field": "name"},
+                    {"id": "gender",      "name": "Gender",     "field": "gender"},
+                    {"id": "company",     "name":"Company",     "field": "company"}
+                ],
+                "gridOptions":{
+                    "enableCellNavigation": true,
+                    "enableColumnReorder": false
                 }
-              }
-              convertTextAreaToJSON(){
-                try{
-                  var json = JSON.parse(this.$.textA.value);
-                  this.jsonInput = json;
-                }catch(e){
-                  console.warn({invalidJson:e});
+              }]
+            </json-merge>
+            <div>Output:</div>
+            <textarea rows="15" cols="80">[[mergedObjectStringified]]</textarea>
+          </template>
+        </dom-module>
+
+        <script>
+          
+          class MyComponent extends Polymer.Element {
+            static get is() { return 'my-component'; }
+            static get properties() {
+              return {
+                taInput: {
+                  type: String,
+                  observer: 'convertTextAreaToJSON'
+                },
+                jsonInput: {
+                  type: Object
+                },
+                mergedObject: {
+                  type: Object,
+                  observer: 'onMergedObjectChanges'
+                },
+                mergedObjectStringified: {
+                  type: String,
                 }
-                
-              }
-              onMergedObjectChanges(){
-                this.mergedObjectStringified = JSON.stringify(this.mergedObject);
-              }
-              ready(){
-                super.ready();
-                this.convertTextAreaToJSON();
               }
             }
-            customElements.define(MyComponent.is, MyComponent);
-          </script>
-          <my-component></my-component>
-        </template>
-      </demo-snippet>
-    </div>
-  </body>
+            convertTextAreaToJSON() {
+              try {
+                var json = JSON.parse(this.$.textA.value);
+                this.jsonInput = json;
+              } catch (e) {
+                console.warn({ invalidJson: e });
+              }
+      
+            }
+            onMergedObjectChanges() {
+              this.mergedObjectStringified = JSON.stringify(this.mergedObject);
+            }
+            ready() {
+              super.ready();
+              this.convertTextAreaToJSON();
+            }
+          }
+          console.log('iah1');
+          customElements.define(MyComponent.is, MyComponent);
+          console.log('iah2');
+        </script>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+
 </html>
