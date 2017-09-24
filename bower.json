@@ -3,8 +3,7 @@
   "description": "Polymer component designed to merge JSON objects into other objects",
   "main": "json-merge.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0",
-    "poly-prep": "bahrus/poly-prep#^0.0.5"
+    "polymer": "Polymer/polymer#^2.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
