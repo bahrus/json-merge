@@ -22,6 +22,8 @@ By default, the JSON needs to be wrapped inside a script tag with type applicati
 </script>
 ```
 
+To see the component in action, take a look at the demo for [billboard charts](https://www.webcomponents.org/element/bahrus/billboard-charts).
+
 However, if global variable json_merge_allow_json_without_script_tag is set to true, then the JSON can go right inside the \<json-merge\> tag.
 
 ## Referencing \<json=merge\>.
