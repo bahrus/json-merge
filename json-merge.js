@@ -33,7 +33,7 @@
                      */
                     watch: {
                         type: Object,
-                        observer: 'onPropsChange'
+                        observer: 'onPrePropsChange'
                     },
                     /**
                      * The expression for where to place the result.
@@ -54,6 +54,12 @@
                      */
                     passThruOnInit: {
                         type: Boolean
+                    },
+                    /**
+                     * Wait this long before passing the value
+                     */
+                    delay: {
+                        type: Number
                     }
                 };
             }
@@ -148,6 +154,16 @@
                     console.error("Unable to parse " + stringToParse);
                 }
                 return this._objectsToMerge;
+            }
+            onPrePropsChange(newVal) {
+                if (this.delay) {
+                    setTimeout(() => {
+                        this.onPropsChange(newVal);
+                    });
+                }
+                else {
+                    this.onPropsChange(newVal);
+                }
             }
             onPropsChange(newVal) {
                 let transformedObj;

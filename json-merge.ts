@@ -4,7 +4,8 @@ export interface JSONMergeProperties {
     watch: object | polymer.PropObjectType,
     result: object | polymer.PropObjectType,
     refs: { [key: string]: any } | polymer.PropObjectType,
-    passThruOnInit: boolean | polymer.PropObjectType
+    passThruOnInit: boolean | polymer.PropObjectType,
+    delay: number | polymer.PropObjectType,
 }
 export interface JSONMergeMethods {
     loadJSON(): object[];
@@ -49,7 +50,7 @@ export interface JSONMergeMethods {
                      */
                     watch: {
                         type: Object,
-                        observer: 'onPropsChange'
+                        observer: 'onPrePropsChange'
                     },
                     /**
                      * The expression for where to place the result.
@@ -70,6 +71,12 @@ export interface JSONMergeMethods {
                      */
                     passThruOnInit: {
                         type: Boolean
+                    },
+                    /**
+                     * Wait this long before passing the value
+                     */
+                    delay:{
+                        type: Number
                     }
                 }
             }
@@ -86,6 +93,7 @@ export interface JSONMergeMethods {
             result: object;
             refs: { [key: string]: any };
             passThruOnInit = false;
+            delay: number;
 
             /**
              * Deep merge two objects.
@@ -172,7 +180,15 @@ export interface JSONMergeMethods {
                 }
                 return this._objectsToMerge;
             }
-
+            onPrePropsChange(newVal){
+                if(this.delay){
+                    setTimeout(() =>{
+                        this.onPropsChange(newVal);
+                    })
+                }else{
+                    this.onPropsChange(newVal);
+                }
+            }
             onPropsChange(newVal) {
                 let transformedObj;
                 if (this.wrapObjectWithPath) {
