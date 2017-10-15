@@ -184,7 +184,7 @@ export interface JSONMergeMethods {
                 if(this.delay){
                     setTimeout(() =>{
                         this.onPropsChange(newVal);
-                    })
+                    }, this.delay);
                 }else{
                     this.onPropsChange(newVal);
                 }
