@@ -11,12 +11,13 @@
 
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <script src="../json-merge.js"></script>
- <script>var json_merge_allow_json_without_script_tag = true;</script>
+  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
+  <link rel="import" href="../../xtal-json-editor/xtal-json-editor.html">
+  <link rel="import" href="../json-merge.html"></script>
+
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
-
     </style>
   </custom-style>
 
@@ -27,27 +28,33 @@
     <h3>Basic json-merge demo</h3>
     <demo-snippet>
       <template>
-
-        <my-component></my-component>
-        <dom-module id="my-component">
+        <dom-bind>
           <template>
+            <json-merge watch="[]" result="{{jsonInput}}">
+              <script type="application/json">
+                  [
+                    [
+                      {"name": "Harry Potter", "age":"13"},
+                      {"name": "Albus Dumbledore", "age":"279"}
+                    ]
+                  ]
+                </script>
+            </json-merge>
             <div>Input:</div>
-            <textarea id="textA" value="{{taInput::input}}" rows="10" cols="40">
-[
-  {"name": "Harry Potter", "age":"13"},
-  {"name": "Albus Dumbledore", "age":"279"}
-]
-            </textarea>
+            <xtal-json-editor watch="[[jsonInput]]"></xtal-json-editor>
+
+
             <br>
             <div>See markup to see json text that is getting merged...</div>
             <br>
             <!--the json inside can be wrapped inside <script type="application/json"> -->
-            <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}" hidden>
+            <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
+              <script type="application/json">
               [{
                 "columns":[
                     {"id": "index",       "name": "Index",      "field": "index"},
                     {"id": "isActive",    "name": "Active",     "field": "isActive"},
-                    {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
+                    {"id": "balance",     "name": "Balance",    "field": "balance"},
                     {"id": "age",         "name": "Age",        "field": "age"},
                     {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
                     {"id": "name",        "name": "Name",       "field": "name"},
@@ -59,55 +66,14 @@
                     "enableColumnReorder": false
                 }
               }]
+            </script>
             </json-merge>
             <div>Output:</div>
-            <textarea rows="15" cols="80">[[mergedObjectStringified]]</textarea>
+            <xtal-json-editor watch="[[mergedObject]]"></xtal-json-editor>
           </template>
-        </dom-module>
+        </dom-bind>
 
-        <script>
-          
-          class MyComponent extends Polymer.Element {
-            static get is() { return 'my-component'; }
-            static get properties() {
-              return {
-                taInput: {
-                  type: String,
-                  observer: 'convertTextAreaToJSON'
-                },
-                jsonInput: {
-                  type: Object
-                },
-                mergedObject: {
-                  type: Object,
-                  observer: 'onMergedObjectChanges'
-                },
-                mergedObjectStringified: {
-                  type: String,
-                }
-              }
-            }
-            convertTextAreaToJSON() {
-              try {
-                var json = JSON.parse(this.$.textA.value);
-                this.jsonInput = json;
-              } catch (e) {
-                console.warn({ invalidJson: e });
-              }
-      
-            }
-            onMergedObjectChanges() {
-              this.mergedObjectStringified = JSON.stringify(this.mergedObject);
-            }
-            ready() {
-              super.ready();
-              this.convertTextAreaToJSON();
-            }
-          }
-          console.log('iah1');
-          customElements.define(MyComponent.is, MyComponent);
-          console.log('iah2');
-        </script>
+
       </template>
     </demo-snippet>
   </div>
