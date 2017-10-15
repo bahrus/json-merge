@@ -150,7 +150,7 @@ export interface JSONMergeMethods {
             }
 
             loadJSON() {
-                const scriptTag = this.querySelector('script[type="application/json"') as HTMLScriptElement;
+                const scriptTag = this.querySelector('script[type="application\/json"') as HTMLScriptElement;
                 let stringToParse;
                 if (scriptTag) {
                     stringToParse = scriptTag.innerText;
