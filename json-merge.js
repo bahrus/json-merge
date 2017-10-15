@@ -123,7 +123,7 @@
                 return target;
             }
             loadJSON() {
-                const scriptTag = this.querySelector('script[type="application\/json"');
+                const scriptTag = this.querySelector('script[type="application\/json"]');
                 let stringToParse;
                 if (scriptTag) {
                     stringToParse = scriptTag.innerText;
