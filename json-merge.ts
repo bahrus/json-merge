@@ -110,7 +110,6 @@ export interface JSONMergeMethods {
                     const targetVal = target[key];
                     if (!sourceVal) continue; //TODO:  null out property?
                     if (!targetVal) {
-                        console.log(key);
                         target[key] = sourceVal;
                         continue;
                     }
@@ -142,7 +141,6 @@ export interface JSONMergeMethods {
                             }
                             break;
                         default:
-                            console.log(key);
                             target[key] = sourceVal;
                     }
                 }

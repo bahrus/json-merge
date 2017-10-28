@@ -81,7 +81,6 @@
                     if (!sourceVal)
                         continue; //TODO:  null out property?
                     if (!targetVal) {
-                        console.log(key);
                         target[key] = sourceVal;
                         continue;
                     }
@@ -116,7 +115,6 @@
                             }
                             break;
                         default:
-                            console.log(key);
                             target[key] = sourceVal;
                     }
                 }
