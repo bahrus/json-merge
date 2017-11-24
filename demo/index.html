@@ -12,8 +12,8 @@
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-  <!-- <link rel="import" href="../../xtal-json-editor/xtal-json-editor.html"> -->
-  <!-- <link rel="import" href="../json-merge.html"></script> -->
+  <link rel="import" href="../../xtal-json-editor/xtal-json-editor.html">
+  <link rel="import" href="../json-merge.html">
 
 
   <custom-style>
@@ -30,7 +30,7 @@
       <template>
         <dom-bind>
           <template>
-            <!-- <json-merge watch="[]" result="{{jsonInput}}">
+            <json-merge watch="[]" result="{{jsonInput}}">
               <script type="application/json">
                   [
                     [
@@ -39,7 +39,7 @@
                     ]
                   ]
                 </script>
-            </json-merge> -->
+            </json-merge>
             <div>Input:</div>
             <xtal-json-editor watch="[[jsonInput]]"></xtal-json-editor>
 
@@ -48,7 +48,7 @@
             <div>See markup to see json text that is getting merged...</div>
             <br>
             <!--the json inside can be wrapped inside <script type="application/json"> -->
-            <!-- <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
+            <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
               <script type="application/json">
               [{
                 "columns":[
@@ -67,7 +67,7 @@
                 }
               }]
             </script>
-            </json-merge> -->
+            </json-merge>
             <div>Output:</div>
             <xtal-json-editor watch="[[mergedObject]]"></xtal-json-editor>
           </template>
