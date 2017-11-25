@@ -53,7 +53,7 @@ Or you can use ES6 modules:
 ```
 <custom-element-demo>
   <template>
-                  <link rel="import" href="../json-merge-sync.html">
+                  <link rel="import" href="../json-merge.html">
           
           <dom-module id="my-component">
             <template>
