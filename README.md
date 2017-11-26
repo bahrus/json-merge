@@ -12,7 +12,7 @@ Some of them, like the Vaadin grid, choose to configure this via light children.
 
 Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper it.  The configuration needs to be passed in as a property, together with the actual dynamic data.  This component helps with that, so that boilerplate code can be avoided.
 
-It enforces the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [https://www.ampproject.org/docs/reference/components/amp-bind] (other examples of allowing JSON to be embedded within a page).
+It enforces the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [https://www.ampproject.org/docs/reference/components/amp-bind](other examples of allowing JSON to be embedded within a page).
 
 By default, the JSON needs to be wrapped inside a script tag with type application/json, as shown below.
 
