@@ -22,9 +22,10 @@ By default, the JSON needs to be wrapped inside a script tag with type applicati
 </script>
 ```
 
-To see the component in action, take a look at the demo for [billboard charts](https://www.webcomponents.org/element/bahrus/billboard-charts).
 
 However, if global variable json_merge_allow_json_without_script_tag is set to true, then the JSON can go right inside the \<json-merge\> tag.
+
+To see the component in action, take a look at the demo for [billboard charts](https://www.webcomponents.org/element/bahrus/billboard-charts).
 
 ## Referencing \<json=merge\>.
 
@@ -48,6 +49,16 @@ Or you can use ES6 modules:
 ```html
 <script type="module" src="../json-merge.js"></script>
 ```
+
+You can point to a cdn, such as unpkg or jsdelivr:
+
+```html
+<script async src="https://cdn.jsdelivr.net/npm/xtal-json-merge@0.1.1/build/ES6/json-merge.js"></script>
+```
+
+For IE11, you need to point to a reference compiled for ES5:
+
+<script async src="https://cdn.jsdelivr.net/npm/xtal-json-merge@0.1.1/build/ES5/json-merge.js"></script>
 
 <!--
 ```

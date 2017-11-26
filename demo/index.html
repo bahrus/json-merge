@@ -8,19 +8,22 @@
   <title>json-merge demo</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-
+  <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-  <link rel="import" href="../../xtal-json-editor/xtal-json-editor.html">
-  <link rel="import" href="../json-merge.html">
+  <script async src="https://cdn.jsdelivr.net/npm/xtal-json-editor@0.0.12/build/ES6/xtal-json-editor.js"></script>
+  <script async src="../json-merge.js"></script>
 
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
   </custom-style>
-
+  <script>
+    var json_merge_allow_json_without_script_tag = true;
+    try { eval('"use strict"; class foo {}'); } catch (e) { location.href='ES5.html'; }
+  </script>
 </head>
 
 <body>
@@ -31,25 +34,40 @@
         <dom-bind>
           <template>
             <json-merge watch="[]" result="{{jsonInput}}">
-              <script type="application/json">
                   [
                     [
                       {"name": "Harry Potter", "age":"13"},
                       {"name": "Albus Dumbledore", "age":"279"}
                     ]
                   ]
-                </script>
             </json-merge>
             <div>Input:</div>
             <xtal-json-editor watch="[[jsonInput]]"></xtal-json-editor>
 
 
             <br>
-            <div>See markup to see json text that is getting merged...</div>
+            <div>Merge with</div>
+            <code>
+              [{
+                "columns":[
+                    {"id": "index",       "name": "Index",      "field": "index"},
+                    {"id": "isActive",    "name": "Active",     "field": "isActive"},
+                    {"id": "balance",     "name": "Balance",    "field": "balance"},
+                    {"id": "age",         "name": "Age",        "field": "age"},
+                    {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+                    {"id": "name",        "name": "Name",       "field": "name"},
+                    {"id": "gender",      "name": "Gender",     "field": "gender"},
+                    {"id": "company",     "name":"Company",     "field": "company"}
+                ],
+                "gridOptions":{
+                    "enableCellNavigation": true,
+                    "enableColumnReorder": false
+                }
+              }]              
+            </code>
             <br>
-            <!--the json inside can be wrapped inside <script type="application/json"> -->
+            
             <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
-              <script type="application/json">
               [{
                 "columns":[
                     {"id": "index",       "name": "Index",      "field": "index"},
@@ -66,8 +84,8 @@
                     "enableColumnReorder": false
                 }
               }]
-            </script>
             </json-merge>
+            <br>
             <div>Output:</div>
             <xtal-json-editor watch="[[mergedObject]]"></xtal-json-editor>
           </template>

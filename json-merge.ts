@@ -20,8 +20,9 @@ export interface JSONMergeMethods {
 }
 
 (function () {
-    let cs;
+    //let cs_merge;
     function initJSONMerge(polymerMixin : any) {
+        
         /**
          * <js-merge></js-merge> is a Polymer-based helper element, that watches for changes to a property defined in 
          * its containing host polymer element.  When it changes, this element will merge the data with an array of JSON 
@@ -221,9 +222,9 @@ export interface JSONMergeMethods {
         }
         customElements.define(JSONMerge.is, JSONMerge);
     }
+    //cs_merge = document.currentScript;
     function WaitForPolymer()
     {
-        cs = document.currentScript;
         if ((typeof Polymer !== 'function') || (typeof Polymer.ElementMixin !== 'function')) {
            setTimeout( WaitForPolymer, 100);
            return;
