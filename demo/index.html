@@ -33,7 +33,7 @@
       <template>
         <dom-bind>
           <template>
-            <json-merge watch="[]" result="{{jsonInput}}">
+            <json-merge watch="[]" result="{{jsonInput}}" hidden>
                   [
                     [
                       {"name": "Harry Potter", "age":"13"},
@@ -47,7 +47,7 @@
 
             <br>
             <div>Merge with</div>
-            <code>
+            <pre>
               [{
                 "columns":[
                     {"id": "index",       "name": "Index",      "field": "index"},
@@ -64,10 +64,10 @@
                     "enableColumnReorder": false
                 }
               }]              
-            </code>
+            </pre>
             <br>
             
-            <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
+            <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}" hidden>
               [{
                 "columns":[
                     {"id": "index",       "name": "Index",      "field": "index"},
