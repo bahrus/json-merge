@@ -10,7 +10,9 @@ The primary motivation for this component is as follows:
 
 Many complex components, like grids, require a large amount of declarative configuration, beyond what is optimally configured via attributes.
 
-Some of them, like the Vaadin grid, choose to configure this via light children.  This component is of no help in those circumstances.
+[In the context of one of the code-centric frameworks mentioned above, it is anyone's guess what is meant by "declarative" these days, rendering the entire point of this component seem quaint or weird.  Sorry about that.]
+
+Some components, like the Vaadin grid, choose to configure this via light children.  This component is of no help in those circumstances.
 
 Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it.  The configuration needs to be passed in as a property, together with the actual dynamic data.  This component helps with that, so that boilerplate / risky code can be avoided.
 
