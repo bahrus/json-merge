@@ -2,7 +2,9 @@
 
 # \<json-merge\>
 
-Polymer component designed to merge JSON objects into other objects.
+json-merge is a dependency free web component.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps, as opposed to the code-centric approach of (P)React / LitHTML / HyperHTML / etc.  
+
+It's also useful for demo pages that use html markup as the primary way of demonstrating the functionality of a component.
 
 The primary motivation for this component is as follows:
 
@@ -10,7 +12,7 @@ Many complex components, like grids, require a large amount of declarative confi
 
 Some of them, like the Vaadin grid, choose to configure this via light children.  This component is of no help in those circumstances.
 
-Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper it.  The configuration needs to be passed in as a property, together with the actual dynamic data.  This component helps with that, so that boilerplate code can be avoided.
+Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it.  The configuration needs to be passed in as a property, together with the actual dynamic data.  This component helps with that, so that boilerplate / risky code can be avoided.
 
 It enforces the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [https://www.ampproject.org/docs/reference/components/amp-bind](other examples of allowing JSON to be embedded within a page).
 
@@ -22,149 +24,3 @@ By default, the JSON needs to be wrapped inside a script tag with type applicati
 </script>
 ```
 
-
-However, if global variable json_merge_allow_json_without_script_tag is set to true, then the JSON can go right inside the \<json-merge\> tag.
-
-To see the component in action, take a look at the demo for [billboard charts](https://www.webcomponents.org/element/bahrus/billboard-charts).
-
-## Referencing \<json=merge\>.
-
-You can reference the component the Polymer < 3 way:
-
-```html
-<link rel="import" href="../json-merge.html">
-```
-
-But if you don't want to be tied to using HTML Imports, you can instead provide your own reference to Polymer.Element independently, from wherever you choose, and just reference the javascript file directly:
-
-
-
-
-```html
-<script async src="../json-merge.js"></script>
-```
-
-Or you can use ES6 modules:
-
-```html
-<script type="module" src="../json-merge.js"></script>
-```
-
-You can point to a cdn, such as unpkg or jsdelivr:
-
-```html
-<script async src="https://cdn.jsdelivr.net/npm/xtal-json-merge@0.1.1/build/ES6/json-merge.js"></script>
-```
-
-For IE11, you need to point to a reference compiled for ES5:
-
-<script async src="https://cdn.jsdelivr.net/npm/xtal-json-merge@0.1.1/build/ES5/json-merge.js"></script>
-
-<!--
-```
-<custom-element-demo>
-  <template>
-                  <link rel="import" href="../json-merge.html">
-          
-          <dom-module id="my-component">
-            <template>
-              <div>Input:</div>
-              <textarea id="textA" value="{{taInput::input}}" rows="10" cols="40">
-[
-  {"name": "Harry Potter", "age":"13"},
-  {"name": "Albus Dumbledore", "age":"279"}
-]
-              </textarea>
-              <br>
-              <div>See markup to see json text that is getting merged...</div>
-              <br>
-              <json-merge  watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}">
-                <script type="application/json">
-                [{
-                  "columns":[
-                      {"id": "index",       "name": "Index",      "field": "index"},
-                      {"id": "isActive",    "name": "Active",     "field": "isActive"},
-                      {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
-                      {"id": "age",         "name": "Age",        "field": "age"},
-                      {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-                      {"id": "name",        "name": "Name",       "field": "name"},
-                      {"id": "gender",      "name": "Gender",     "field": "gender"},
-                      {"id": "company",     "name":"Company",     "field": "company"}
-                  ],
-                  "gridOptions":{
-                      "enableCellNavigation": true,
-                      "enableColumnReorder": false
-                  }
-                }]
-                </script>
-              </json-merge>
-              <div>Output:</div>
-              <textarea rows="15" cols="80">[[mergedObjectStringified]]</textarea>
-            </template>
-          </dom-module>
-          <script>
-            class MyComponent extends Polymer.Element{
-              static get is(){return 'my-component';}
-              static get properties(){
-                return {
-                  taInput: {
-                    type: String,
-                    observer: 'convertTextAreaToJSON'
-                  },
-                  jsonInput:{
-                    type: Object
-                  },
-                  mergedObject:{
-                    type: Object,
-                    observer: 'onMergedObjectChanges'
-                  },
-                  mergedObjectStringified:{
-                    type: String,
-                  }
-                }
-              }
-              convertTextAreaToJSON(){
-                try{
-                  var json = JSON.parse(this.$.textA.value);
-                  this.jsonInput = json;
-                }catch(e){
-                  console.warn({invalidJson:e});
-                }
-                
-              }
-              onMergedObjectChanges(){
-                this.mergedObjectStringified = JSON.stringify(this.mergedObject);
-              }
-              ready(){
-                super.ready();
-                this.convertTextAreaToJSON();
-              }
-            }
-            customElements.define(MyComponent.is, MyComponent);
-          </script>
-          <my-component></my-component>
-  </template>
-</custom-element-demo>
-```
--->
-```html
-<my-component></my-component>
-```
-
-## Install the Polymer-CLI
-
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your element locally.
-
-## Viewing Your Element
-
-```
-$ polymer serve
-```
-
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
