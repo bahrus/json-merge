@@ -2,9 +2,9 @@
 
 # \<json-merge\>
 
-json-merge is a dependency free web component.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps, as opposed to the JavaScript, code-centric / functional approach of (P)React / LitHTML / HyperHTML / SkateJS, etc.  
+json-merge is a dependency free web component.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps, as opposed to the JavaScript, code-centric / functional approach of (P)React / LitHTML / HyperHTML / SkateJS, etc.  Especially if the renderer wildly renders everything at the slightest provocation (I think).
 
-It's also useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
+json-merge can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
 Many complex components, like grids, require a large amount of declarative configuration, beyond what is optimally configured via attributes.
 
@@ -29,7 +29,7 @@ During the parsing of the JSON, you can insert dynamic fields, if they are passe
 
 ```html
 <!--- Polymer Syntax -->
-<json-merge  input="[[jsonInput]]" refs="{{formatters}}" wrap-object-with-path="data" mergedObject="{{mergedObject}}">
+<json-merge  input="[[gridData]]" refs="{{formatters}}" wrap-object-with-path="data" mergedObject="{{mergedObject}}">
 <script type="application/json">
 [{
     "columns":[
@@ -51,3 +51,30 @@ During the parsing of the JSON, you can insert dynamic fields, if they are passe
 </json-merge>
 ```
 
+The mergedObject property / event raises an event containing the merged object.
+
+One can raise the objection that using an event handler to pass data between components violates some philophical tenet or other, or that it is less efficient.  If this is a concern, you can instead provide a callback function, which will skip the event-based approach:
+
+```html
+<!--- Polymer Syntax -->
+<json-merge  input="[[gridData]]" refs="[[formatters]]" wrap-object-with-path="data" post-merge-callback-fn="[[renderGrid]]">
+<script type="application/json">
+[{
+    "columns":[
+        {"id": "index",       "name": "Index",      "field": "index"},
+        {"id": "isActive",    "name": "Active",     "field": "isActive"},
+        {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
+        {"id": "age",         "name": "Age",        "field": "age"},
+        {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+        {"id": "name",        "name": "Name",       "field": "name"},
+        {"id": "gender",      "name": "Gender",     "field": "gender"},
+        {"id": "company",     "name":"Company",     "field": "company"}
+    ],
+    "gridOptions":{
+        "enableCellNavigation": true,
+        "enableColumnReorder": false
+    }
+}]
+</script>
+</json-merge>
+```
