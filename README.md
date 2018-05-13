@@ -28,7 +28,7 @@ For productivity purposes, I like the places that define the first two steps to 
 ```html
 <!--- Polymer Syntax -->
 <fetch-data url="https://HRDatabase.com" output="{{rowData}}"></fetch-data>
-<json-merge  input="[[rowData]]" refs="{{formatters}}" with-path="data" merged-object="{{employeeGridData}}">
+<json-merge  input="[[rowData]]" refs="{{formatters}}" with-path="data" merged-obj="{{employeeGridData}}">
     <script type="application/json">
     [{
         "columns":[
@@ -100,7 +100,7 @@ During the parsing of the JSON, you can insert dynamic fields, if they are passe
 
 ```html
 <!--- Polymer Syntax -->
-<json-merge  input="[[gridData]]" refs="{{formatters}}" with-path="data" mergedObject="{{gridOptions}}">
+<json-merge  input="[[gridData]]" refs="{{formatters}}" with-path="data" merged-obj="{{gridOptions}}">
 <script type="application/json">
 [{
     "columns":[

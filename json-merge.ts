@@ -1,3 +1,4 @@
+(function () {
 const with_path = 'with-path';
 const delay = 'delay';
 const pass_thru_on_init = 'pass-thru-on-init';
@@ -7,7 +8,7 @@ interface ICssKeyMapper{
     cssSelector: string;
     propMapper: {[key: string]: string[]}
 }
-export class JSONMerge extends HTMLElement {
+class JSONMerge extends HTMLElement {
 
     static get is() { return 'json-merge'; }
     static get observedAttributes() {
@@ -319,3 +320,5 @@ export class JSONMerge extends HTMLElement {
 }
 
 customElements.define(JSONMerge.is, JSONMerge);
+
+})();
