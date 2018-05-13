@@ -31,7 +31,8 @@
         <dom-bind>
           <template>
             
-            <json-merge input="[]" merged-object="{{jsonInput}}">
+            <!-- <json-merge input="[]" merged-prop="{{jsonInput}}"> -->
+            <json-merge input="[]" pass-to="#firstEditor{watch:detail.value}">
                 <script type="application/json">
               [
                 [
@@ -42,7 +43,7 @@
                 </script>
             </json-merge>
             <div>Input:</div>
-            <xtal-json-editor watch="[[jsonInput]]"></xtal-json-editor>
+            <xtal-json-editor id="firstEditor" watch="[[jsonInput]]"></xtal-json-editor>
 
 
             <br>
@@ -67,7 +68,7 @@
             </pre>
             <br>
             
-            <json-merge input="[[jsonInput]]" with-path="data" merged-object="{{mergedObject}}" hidden>
+            <json-merge input="[[jsonInput]]" with-path="data" merged-prop="{{fullObject}}" hidden>
                 <script type="application/json">
               [{
                 "columns":[
@@ -89,7 +90,7 @@
             </json-merge>
             <br>
             <div>Output:</div>
-            <xtal-json-editor watch="[[mergedObject]]"></xtal-json-editor>
+            <xtal-json-editor watch="[[fullObject]]"></xtal-json-editor>
           </template>
         </dom-bind>
 

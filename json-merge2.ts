@@ -2,6 +2,11 @@ const with_path = 'with-path';
 const delay = 'delay';
 const pass_thru_on_init = 'pass-thru-on-init';
 const input = 'input';
+const pass_to = 'pass-to';
+interface ICssKeyMapper{
+    cssSelector: string;
+    propMapper: {[key: string]: string[]}
+}
 export class JSONMerge extends HTMLElement {
 
     static get is() { return 'json-merge'; }
@@ -24,6 +29,7 @@ export class JSONMerge extends HTMLElement {
              */
             'pass-thru-on-init',
             input,
+            pass_to,
         ]
     }
 
@@ -37,8 +43,11 @@ export class JSONMerge extends HTMLElement {
         })
 
     }
+    _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs'])
+        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs', pass_to]);
+        this._connected = true;
+        this.onInputChange(this._input);
     }
     /**
     * Fired when a transform is in progress.
@@ -55,19 +64,35 @@ export class JSONMerge extends HTMLElement {
         this.onInputChange(val);
     }
 
-    _mergedObject: object;
-    get mergedObject() {
-        return this._mergedObject;
+    _mergedProp: object;
+    get mergedProp() {
+        return this._mergedProp;
     }
-    set mergedObject(val) {
-        this._mergedObject = val;
-        const mergedObjectChangedEvent = new CustomEvent('merged-object-changed', {
+    set mergedProp(val) {
+        this._mergedProp = val;
+        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
             detail:{
                 value: val
             },
             bubbles: true,
             composed: true,
-        } as any);
+        } as CustomEventInit);
+        if(this.cssKeyMappers){
+            this.cssKeyMappers.forEach(cssKeyMapper =>{
+                const targetEls = this.getParent().querySelectorAll(cssKeyMapper.cssSelector);
+                for(let i = 0, ii = targetEls.length; i < ii; i++){
+                    const targetEl = targetEls[i];
+                    for(var key in cssKeyMapper.propMapper){
+                        const pathSelector = cssKeyMapper.propMapper[key];
+                        let context = mergedObjectChangedEvent;
+                        pathSelector.forEach(path =>{
+                            if(context) context = context[path];
+                        });
+                        targetEl[key] = context;
+                    }
+                }
+            })
+        }
         this.dispatchEvent(mergedObjectChangedEvent);
     }
 
@@ -79,6 +104,8 @@ export class JSONMerge extends HTMLElement {
         this._refs = val;
         //this.onPropsChange();
     }
+
+
 /**********************End properties **************************************/
 /******************** Attributes *********************** */
     _withPath: string;
@@ -109,6 +136,14 @@ export class JSONMerge extends HTMLElement {
             this.removeAttribute(pass_thru_on_init);
         } 
     }
+
+    _passTo: string;
+    get passTo(){
+        return this._passTo;
+    }
+    set passTo(val){
+        this.setAttribute(pass_to, val);
+    }
 /********************End Attributes ******************************/
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         switch (name) {
@@ -124,11 +159,21 @@ export class JSONMerge extends HTMLElement {
             case input:
                 this.input = JSON.parse(newVal);
                 break;
+            case pass_to:
+                this._passTo = newVal;
+                if(newVal){
+                    this.parsePassTo();
+                }else{
+                    this.cssKeyMappers = null;
+                }
+                
+                break;
         }
         
     }
 
     onInputChange(newVal){
+        if(!this._connected) return;
         let mergedObj;
         if (this._withPath) {
             mergedObj = {};
@@ -164,7 +209,12 @@ export class JSONMerge extends HTMLElement {
                 }
             }
         }
-        this.mergedObject = mergedObj;
+
+        this.mergedProp = mergedObj;
+    }
+
+    getParent(){
+        return this.parentElement;
     }
 
     /**
@@ -240,6 +290,31 @@ export class JSONMerge extends HTMLElement {
         }
         callBack();
         //return this._objectsToMerge;
+    }
+    cssKeyMappers : ICssKeyMapper[];
+    parsePassTo(){
+        // const iPosOfOpenBrace = this._passTo.lastIndexOf('{');
+        // if(iPosOfOpenBrace < 0) return;
+        this.cssKeyMappers = [];
+        const endsWithBrace = this._passTo.endsWith('}');
+        const adjustedPassTo = this._passTo + (endsWithBrace ? ';' : '');
+        const splitPassTo = adjustedPassTo.split('};');
+        splitPassTo.forEach(passTo =>{
+            const splitPassTo2 = passTo.split('{');
+            const tokens = splitPassTo2[1].split(';');
+            const propMapper = {};
+            tokens.forEach(token =>{
+                const nameValuePair = token.split(':');
+                propMapper[nameValuePair[0]] = nameValuePair[1].split('.');
+            })
+            this.cssKeyMappers.push({
+                cssSelector: splitPassTo2[0],
+                propMapper: propMapper
+            });
+        })
+        // this._cssSelector = this._passTo.substr(0, iPosOfOpenBrace);
+        // const propMapperString = this._passTo.substring(iPosOfOpenBrace + 1, this._passTo.length - 1);
+        
     }
 }
 
