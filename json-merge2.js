@@ -3,7 +3,6 @@ const delay = 'delay';
 const pass_thru_on_init = 'pass-thru-on-init';
 const input = 'input';
 export class JSONMerge extends HTMLElement {
-
     static get is() { return 'json-merge'; }
     static get observedAttributes() {
         return [
@@ -24,29 +23,21 @@ export class JSONMerge extends HTMLElement {
              */
             'pass-thru-on-init',
             input,
-        ]
+        ];
     }
-
-    _upgradeProperties(props: string[]) {
+    _upgradeProperties(props) {
         props.forEach(prop => {
             if (this.hasOwnProperty(prop)) {
                 let value = this[prop];
                 delete this[prop];
                 this[prop] = value;
             }
-        })
-
+        });
     }
     connectedCallback() {
-        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs'])
+        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs']);
     }
-    /**
-    * Fired when a transform is in progress.
-    *
-    * @event transform
-    */
-    _input: object;
-/******************************  Properties ********************************8 */
+    /******************************  Properties ********************************8 */
     get input() {
         return this._input;
     }
@@ -54,24 +45,20 @@ export class JSONMerge extends HTMLElement {
         this._input = val;
         this.onInputChange(val);
     }
-
-    _mergedObject: object;
     get mergedObject() {
         return this._mergedObject;
     }
     set mergedObject(val) {
         this._mergedObject = val;
         const mergedObjectChangedEvent = new CustomEvent('merged-object-changed', {
-            detail:{
+            detail: {
                 value: val
             },
             bubbles: true,
             composed: true,
-        } as any);
+        });
         this.dispatchEvent(mergedObjectChangedEvent);
     }
-
-    _refs: object;
     get refs() {
         return this._refs;
     }
@@ -79,38 +66,31 @@ export class JSONMerge extends HTMLElement {
         this._refs = val;
         //this.onPropsChange();
     }
-/**********************End properties **************************************/
-/******************** Attributes *********************** */
-    _withPath: string;
     get withPath() {
         return this._withPath;
     }
     set withPath(val) {
         this.setAttribute(with_path, val);
     }
-
-    _delay: number;
-    get delay(){
+    get delay() {
         return this._delay;
     }
-    set delay(newVal: number){
+    set delay(newVal) {
         this.setAttribute(delay, newVal.toString());
     }
-
-    _passThruOnInit: boolean;
-    get passThruOnInit(){
+    get passThruOnInit() {
         return this._passThruOnInit;
     }
-
-    set passThruOnInit(val){
-        if(val){
+    set passThruOnInit(val) {
+        if (val) {
             this.setAttribute(pass_thru_on_init, '');
-        }else{
+        }
+        else {
             this.removeAttribute(pass_thru_on_init);
-        } 
+        }
     }
-/********************End Attributes ******************************/
-    attributeChangedCallback(name: string, oldVal: string, newVal: string) {
+    /********************End Attributes ******************************/
+    attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case with_path:
                 this._withPath = newVal;
@@ -125,32 +105,30 @@ export class JSONMerge extends HTMLElement {
                 this.input = JSON.parse(newVal);
                 break;
         }
-        
     }
-
-    onInputChange(newVal){
+    onInputChange(newVal) {
         let mergedObj;
         if (this._withPath) {
             mergedObj = {};
             const splitPath = this._withPath.split('.');
             const lenMinus1 = splitPath.length - 1;
             splitPath.forEach((pathToken, idx) => {
-                if(idx === lenMinus1){
+                if (idx === lenMinus1) {
                     mergedObj[pathToken] = newVal;
-                }else{
+                }
+                else {
                     mergedObj = mergedObj[pathToken] = {};
                 }
-            })
-        } else {
+            });
+        }
+        else {
             mergedObj = newVal;
         }
-        this.loadJSON(() =>{
+        this.loadJSON(() => {
             this.postLoadJson(mergedObj);
         });
-
     }
-
-    postLoadJson(mergedObj){
+    postLoadJson(mergedObj) {
         if (this._objectsToMerge && mergedObj) {
             for (let i = 0, ii = this._objectsToMerge.length; i < ii; i++) {
                 const objToMerge = this._objectsToMerge[i];
@@ -159,35 +137,37 @@ export class JSONMerge extends HTMLElement {
                         this.mergeDeep(mergedObj, objToMerge);
                         break;
                     default:
-                        throw 'TODO:  error message'
-
+                        throw 'TODO:  error message';
                 }
             }
         }
         this.mergedObject = mergedObj;
     }
-
     /**
      * Deep merge two objects.
      * Inspired by Stackoverflow.com/questions/27936772/deep-object-merging-in-es6-es7
      * @param target
      * @param source
-     * 
+     *
      */
     mergeDeep(target, source) {
-        if (typeof target !== 'object') return;
-        if (typeof source !== 'object') return;
+        if (typeof target !== 'object')
+            return;
+        if (typeof source !== 'object')
+            return;
         for (const key in source) {
             const sourceVal = source[key];
             const targetVal = target[key];
-            if (!sourceVal) continue; //TODO:  null out property?
+            if (!sourceVal)
+                continue; //TODO:  null out property?
             if (!targetVal) {
                 target[key] = sourceVal;
                 continue;
             }
             if (Array.isArray(sourceVal) && Array.isArray(targetVal)) {
                 //warning!! code below not yet tested
-                if (targetVal.length > 0 && typeof targetVal[0].id === 'undefined') continue;
+                if (targetVal.length > 0 && typeof targetVal[0].id === 'undefined')
+                    continue;
                 for (var i = 0, ii = sourceVal.length; i < ii; i++) {
                     const srcEl = sourceVal[i];
                 }
@@ -211,9 +191,8 @@ export class JSONMerge extends HTMLElement {
         }
         return target;
     }
-    _objectsToMerge: Function[];
-    loadJSON(callBack: any) {
-        const scriptTag = this.querySelector('script[type="application\/json"]') as HTMLScriptElement;
+    loadJSON(callBack) {
+        const scriptTag = this.querySelector('script[type="application\/json"]');
         if (!scriptTag) {
             setTimeout(() => {
                 this.loadJSON(callBack);
@@ -221,26 +200,27 @@ export class JSONMerge extends HTMLElement {
             return;
         }
         const stringToParse = scriptTag.innerText;
-
         try {
-
             if (this.refs) {
                 this._objectsToMerge = JSON.parse(stringToParse, (key, val) => {
-                    if (typeof val !== 'string') return val;
-                    if (!val.startsWith('${refs.') || !val.endsWith('}')) return val;
+                    if (typeof val !== 'string')
+                        return val;
+                    if (!val.startsWith('${refs.') || !val.endsWith('}'))
+                        return val;
                     const realKey = val.substring(7, val.length - 1);
                     return this.refs[realKey];
                 });
-            } else {
+            }
+            else {
                 this._objectsToMerge = JSON.parse(stringToParse);
             }
-
-        } catch (e) {
+        }
+        catch (e) {
             console.error("Unable to parse " + stringToParse);
         }
         callBack();
         //return this._objectsToMerge;
     }
 }
-
 customElements.define(JSONMerge.is, JSONMerge);
+//# sourceMappingURL=json-merge2.js.map

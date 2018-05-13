@@ -2,7 +2,7 @@
 
 # \<json-merge\>
 
-json-merge is a dependency free web component.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps.  It may seem somewhat jarring to see it inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS, etc.  More on that later.
+json-merge is a dependency free web component.  It provides binding support compatible with Polymer, but it can be used in non Polymer settings as well.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps like VueJS, Polymer (as we mentioned already) or Aurelia (or Angular?). It may seem somewhat jarring to see it inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS, etc.  More on that later.
 
 json-merge can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
@@ -11,12 +11,24 @@ json-merge can also be useful for demo pages that use html markup as the primary
 
 Many complex components, like grids, require a large amount of declarative configuration, beyond what is optimally configured via attributes.
 
-For productivity purposes, I like  the configuration to be as physically close to the markup tag where the grid is placed.  In fact, I would venture that 50% of UI screens are doing something like the following:
+I would venture that 50% of UI Screens in the world consist of the following workflow:  
+
+1)  Get data 
+2)  Merge with configuration (and/or other manipulation of the data, not discussed here)
+3)  Render using some specialized renderer (like a grid or chart component).  
+
+We assume here that step 3 is:
+
+1) done with another third party web component.  For simplicity we'll assume it's called my-grid
+2) defined via some form of template markup i.e. \<my-grid\>
+
+For productivity purposes, I like the places that define the first two steps to be as "physically close" to the place where the third step is defined as possible.  What this looks like in Polymer is a beauty to behold (according to my eye):
+
 
 ```html
 <!--- Polymer Syntax -->
 <fetch-data url="https://HRDatabase.com" output="{{rowData}}"></fetch-data>
-<json-merge  input="[[rowData]]" refs="{{formatters}}" wrap-object-with-path="data" mergedObject="{{employeeGridData}}">
+<json-merge  input="[[rowData]]" refs="{{formatters}}" with-path="data" merged-object="{{employeeGridData}}">
     <script type="application/json">
     [{
         "columns":[
@@ -35,29 +47,30 @@ For productivity purposes, I like  the configuration to be as physically close t
     }]
     </script>
 </json-merge>
-<my-grid gridOptions="[[employeeGridData]]"></my-grid>
+<my-grid grid-options="[[employeeGridData]]"></my-grid>
 ```
 
-## You can't do that!!!
 
-Here's why I like to keep this family intact -- 
+Here's why I like to keep this trio of tags (data retrieval, data merge, grid) cozily next to eachother:
 
 1)  I can see at a glance the whole picture. This makes developing and debugging easy.
 2)  If the grid needs to move elsewhere, it's a single cut and paste operation.
 
-I have heard, but never understood, a great number of reasons why this family should be torn apart.
+## You can't do that!!!
 
-###  Is the data flowing uniderectionally?
+I have heard, but never understood, a great number of reasons why this trio should be torn apart.
 
-Yes, the data flows down the page.
+###  Data flow must be unidirectional!!!
 
-###  Does this belong inside a render function?
+It is, the data flows down the page.
+
+###  That has no place in a render function!!!
 
 If a framework can't handle it running inside a render function, the framework needs to see a therapist for controlling issues. 
 
-The UI is still a function of state.  It's just that part of that function is handled by json-merge.
+The UI is still a function of state.  All we've done is given some part of the rendering responsibility to json-merge (and of course the grid takes it from there).
 
-### Aren't you mixing concerns?
+### You're mixing concerns!!!
 
 True, we are using different technologies, but there's only one concern -- show a grid with as little fuss as possible.
 
@@ -71,7 +84,7 @@ Some components, like the Vaadin grid, choose to be configured via light DOM ele
 
 Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it.  
 
-json-merge enforces the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [https://www.ampproject.org/docs/reference/components/amp-bind](other examples of embedding JSON as part of the markup).
+json-merge enforces the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bin).
 
 The JSON needs to be wrapped inside a script tag with type application/json, as shown below.
 
@@ -80,13 +93,14 @@ The JSON needs to be wrapped inside a script tag with type application/json, as 
 <script type="application/json">
 //JSON goes here
 </script>
+</json-merge>
 ```
 
 During the parsing of the JSON, you can insert dynamic fields, if they are passed to the refs property of json-merge:
 
 ```html
 <!--- Polymer Syntax -->
-<json-merge  input="[[gridData]]" refs="{{formatters}}" wrap-object-with-path="data" mergedObject="{{gridOptions}}">
+<json-merge  input="[[gridData]]" refs="{{formatters}}" with-path="data" mergedObject="{{gridOptions}}">
 <script type="application/json">
 [{
     "columns":[
@@ -115,24 +129,9 @@ One can raise the objection that using an event handler to pass data between com
 
 ```html
 <!--- Polymer Syntax -->
-<json-merge  input="[[gridData]]" refs="[[formatters]]" wrap-object-with-path="data" post-merge-callback-fn="[[renderGrid]]">
+<json-merge  input="[[gridData]]" refs="[[formatters]]" with-path="data" post-merge-callback-fn="[[renderGrid]]">
 <script type="application/json">
-[{
-    "columns":[
-        {"id": "index",       "name": "Index",      "field": "index"},
-        {"id": "isActive",    "name": "Active",     "field": "isActive"},
-        {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
-        {"id": "age",         "name": "Age",        "field": "age"},
-        {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-        {"id": "name",        "name": "Name",       "field": "name"},
-        {"id": "gender",      "name": "Gender",     "field": "gender"},
-        {"id": "company",     "name":"Company",     "field": "company"}
-    ],
-    "gridSettings":{
-        "enableCellNavigation": true,
-        "enableColumnReorder": false
-    }
-}]
+...
 </script>
 </json-merge>
 <my-grid>
@@ -142,24 +141,9 @@ If you would rather not write such a function, nor an event handler, you can alt
 
 ```html
 <!--- Polymer Syntax -->
-<json-merge  input="[[gridData]]" refs="[[formatters]]" wrap-object-with-path="data" pass-to="myGrid{gridOptions:detail.mergedObject}">
+<json-merge  input="[[gridData]]" refs="[[formatters]]" with-path="data" pass-to="myGrid{gridOptions:detail.mergedObject}">
 <script type="application/json">
-[{
-    "columns":[
-        {"id": "index",       "name": "Index",      "field": "index"},
-        {"id": "isActive",    "name": "Active",     "field": "isActive"},
-        {"id": "balance",     "name": "Balance",    "field": "balance", "formatter":  "${refs.testFormatter}"},
-        {"id": "age",         "name": "Age",        "field": "age"},
-        {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-        {"id": "name",        "name": "Name",       "field": "name"},
-        {"id": "gender",      "name": "Gender",     "field": "gender"},
-        {"id": "company",     "name":"Company",     "field": "company"}
-    ],
-    "gridSettings":{
-        "enableCellNavigation": true,
-        "enableColumnReorder": false
-    }
-}]
+...
 </script>
 </json-merge>
 <my-grid></my-grid>

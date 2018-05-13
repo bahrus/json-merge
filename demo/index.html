@@ -9,7 +9,7 @@
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script async src="https://cdn.jsdelivr.net/npm/xtal-json-editor@0.0.12/build/ES6/xtal-json-editor.js"></script>
-  <script async src="../json-merge.js"></script>
+  <script type="module" async src="../json-merge2.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
   <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
@@ -21,10 +21,6 @@
     <style is="custom-style" include="demo-pages-shared-styles">
     </style>
   </custom-style>
-  <script>
-    var json_merge_allow_json_without_script_tag = true;
-    try { eval('"use strict"; class foo {}'); } catch (e) { location.href='ES5.html'; }
-  </script>
 </head>
 
 <body>
@@ -34,13 +30,16 @@
       <template>
         <dom-bind>
           <template>
-            <json-merge watch="[]" result="{{jsonInput}}" hidden>
-                  [
-                    [
-                      {"name": "Harry Potter", "age":"13"},
-                      {"name": "Albus Dumbledore", "age":"279"}
-                    ]
-                  ]
+            
+            <json-merge input="[]" merged-object="{{jsonInput}}">
+                <script type="application/json">
+              [
+                [
+                  {"name": "Harry Potter", "age":"13"},
+                  {"name": "Albus Dumbledore", "age":"279"}
+                ]
+              ]
+                </script>
             </json-merge>
             <div>Input:</div>
             <xtal-json-editor watch="[[jsonInput]]"></xtal-json-editor>
@@ -68,7 +67,8 @@
             </pre>
             <br>
             
-            <json-merge watch="[[jsonInput]]" wrap-object-with-path="data" result="{{mergedObject}}" hidden>
+            <json-merge input="[[jsonInput]]" with-path="data" merged-object="{{mergedObject}}" hidden>
+                <script type="application/json">
               [{
                 "columns":[
                     {"id": "index",       "name": "Index",      "field": "index"},
@@ -85,6 +85,7 @@
                     "enableColumnReorder": false
                 }
               }]
+            </script>
             </json-merge>
             <br>
             <div>Output:</div>
