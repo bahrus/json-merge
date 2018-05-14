@@ -46,7 +46,7 @@ class XtalJSONMerge extends HTMLElement {
     }
     _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs', pass_to]);
+        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs', pass_to, 'postMergeCallbackFn']);
         this._connected = true;
         this.onInputChange(this._input);
     }
@@ -78,6 +78,10 @@ class XtalJSONMerge extends HTMLElement {
             bubbles: true,
             composed: false,
         } as CustomEventInit);
+        if(this._postMergeCallbackFn){
+            this._postMergeCallbackFn(mergedObjectChangedEvent, this);
+            return;
+        }
         if(this.cssKeyMappers){
             this.cssKeyMappers.forEach(cssKeyMapper =>{
                 const targetEls = this.getParent().querySelectorAll(cssKeyMapper.cssSelector);
@@ -93,6 +97,7 @@ class XtalJSONMerge extends HTMLElement {
                     }
                 }
             })
+            return;
         }
         this.dispatchEvent(mergedObjectChangedEvent);
     }
@@ -106,6 +111,13 @@ class XtalJSONMerge extends HTMLElement {
         //this.onPropsChange();
     }
 
+    _postMergeCallbackFn: (c: CustomEvent, t: XtalJSONMerge) => void;
+    get postMergeCallbackFn(){
+        return this._postMergeCallbackFn;
+    }
+    set postMergeCallbackFn(val){
+        this._postMergeCallbackFn;
+    }
 
 /**********************End properties **************************************/
 /******************** Attributes *********************** */

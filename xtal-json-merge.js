@@ -38,7 +38,7 @@
             });
         }
         connectedCallback() {
-            this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs', pass_to]);
+            this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs', pass_to, 'postMergeCallbackFn']);
             this._connected = true;
             this.onInputChange(this._input);
         }
@@ -60,8 +60,12 @@
                     value: val
                 },
                 bubbles: true,
-                composed: true,
+                composed: false,
             });
+            if (this._postMergeCallbackFn) {
+                this._postMergeCallbackFn(mergedObjectChangedEvent, this);
+                return;
+            }
             if (this.cssKeyMappers) {
                 this.cssKeyMappers.forEach(cssKeyMapper => {
                     const targetEls = this.getParent().querySelectorAll(cssKeyMapper.cssSelector);
@@ -78,6 +82,7 @@
                         }
                     }
                 });
+                return;
             }
             this.dispatchEvent(mergedObjectChangedEvent);
         }
@@ -87,6 +92,12 @@
         set refs(val) {
             this._refs = val;
             //this.onPropsChange();
+        }
+        get postMergeCallbackFn() {
+            return this._postMergeCallbackFn;
+        }
+        set postMergeCallbackFn(val) {
+            this._postMergeCallbackFn;
         }
         get withPath() {
             return this._withPath;

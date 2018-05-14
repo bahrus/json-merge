@@ -5,6 +5,7 @@ json-merge is a dependency free web component.  It provides binding support comp
 
 json-merge can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
+json-merge is ~1.8 kb minified/gzipped.
 
 ## Mission
 
