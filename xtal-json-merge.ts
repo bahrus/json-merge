@@ -263,7 +263,6 @@ class XtalJSONMerge extends HTMLElement {
                             this.mergeDeep(targetVal, sourceVal);
                             break;
                         default:
-                            console.log(key);
                             target[key] = sourceVal;
                             break;
                     }
@@ -326,8 +325,6 @@ class XtalJSONMerge extends HTMLElement {
                 propMapper: propMapper
             });
         })
-        // this._cssSelector = this._passTo.substr(0, iPosOfOpenBrace);
-        // const propMapperString = this._passTo.substring(iPosOfOpenBrace + 1, this._passTo.length - 1);
         
     }
 }
