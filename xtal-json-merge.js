@@ -4,8 +4,8 @@
     const pass_thru_on_init = 'pass-thru-on-init';
     const input = 'input';
     const pass_to = 'pass-to';
-    class JSONMerge extends HTMLElement {
-        static get is() { return 'json-merge'; }
+    class XtalJSONMerge extends HTMLElement {
+        static get is() { return 'xtal-json-merge'; }
         static get observedAttributes() {
             return [
                 /**
@@ -271,6 +271,8 @@
             const adjustedPassTo = this._passTo + (endsWithBrace ? ';' : '');
             const splitPassTo = adjustedPassTo.split('};');
             splitPassTo.forEach(passTo => {
+                if (!passTo)
+                    return;
                 const splitPassTo2 = passTo.split('{');
                 const tokens = splitPassTo2[1].split(';');
                 const propMapper = {};
@@ -287,6 +289,6 @@
             // const propMapperString = this._passTo.substring(iPosOfOpenBrace + 1, this._passTo.length - 1);
         }
     }
-    customElements.define(JSONMerge.is, JSONMerge);
+    customElements.define(XtalJSONMerge.is, XtalJSONMerge);
 })();
-//# sourceMappingURL=json-merge.js.map
+//# sourceMappingURL=xtal-json-merge.js.map

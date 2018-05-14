@@ -1,8 +1,1 @@
-/bower_components
-/.vscode
-/node_modules
-/build/ES6/bower_components
-/build/ES6/index.html
-/build/ES5/bower_components
-/build/ES5/index.html
-/build/polymer.json
+/node_modules/
