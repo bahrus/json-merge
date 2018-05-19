@@ -3,6 +3,9 @@
   "version": "0.2.0",
   "description": "Dependency free web component  designed to merge JSON objects into other objects",
   "main": "xtal-json-merge.js",
+  "repository": "https://github.com/bahrus/json-merge",
+  "author": "bahrus <anderson.bruce.b@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@polymer/polymer": "^3.0.0"
   },
