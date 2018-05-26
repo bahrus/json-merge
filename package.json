@@ -1,6 +1,6 @@
 {
   "name": "xtal-json-merge",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Dependency free web component  designed to merge JSON objects into other objects",
   "main": "xtal-json-merge.js",
   "repository": "https://github.com/bahrus/json-merge",
