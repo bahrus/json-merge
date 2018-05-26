@@ -8,6 +8,11 @@ export class XtalInsertJson extends HTMLElement {
             input
         ];
     }
+    /**
+    * @type {Object}
+    * @returns {Object}
+    * An object that should be merged with the JSON inside the element
+    **/
     get input() {
         return this._input;
     }
@@ -37,7 +42,8 @@ export class XtalInsertJson extends HTMLElement {
         this.dispatchEvent(mergedObjectChangedEvent);
     }
     /**
-     * @type {string}
+     * @type {String}
+     * @returns {String}
     * Wrap the incoming object inside a new empty object, with key equal to this value.
     * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
     * and with-path = 'myPath'
@@ -50,7 +56,7 @@ export class XtalInsertJson extends HTMLElement {
     set withPath(val) {
         this.setAttribute(with_path, val);
     }
-    /********************End Attributes ******************************/
+    /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case input:
