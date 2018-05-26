@@ -3,6 +3,8 @@
 <a href="https://nodei.co/npm/xtal-json-merge/"><img src="https://nodei.co/npm/xtal-json-merge.png"></a>
 # \<xtal-json-merge\>
 
+[Demo](https://www.webcomponents.org/element/bahrus/xtal-json-merge/demo/index.html) 
+
 xtal-json-merge, and xtal-insert-json are dependency free web components, that merges predefined json with some dynamic json.  xtal-json-merge extends xtal-insert-json. They provide binding support compatible with Polymer, but they can be used in non Polymer settings as well.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps like VueJS, Polymer (as we mentioned already) or Aurelia (or Angular?). It may seem somewhat jarring to see it inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS, etc.  More on that later.
 
 These two components can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
