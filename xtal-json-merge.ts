@@ -1,26 +1,18 @@
+import {XtalInsertJson} from './xtal-insert-json.js';
 (function () {
-const with_path = 'with-path';
 const delay = 'delay';
 const pass_thru_on_init = 'pass-thru-on-init';
-const input = 'input';
+
 const pass_to = 'pass-to';
 interface ICssKeyMapper{
     cssSelector: string;
     propMapper: {[key: string]: string[]}
 }
-class XtalJSONMerge extends HTMLElement {
+class XtalJSONMerge extends XtalInsertJson {
 
     static get is() { return 'xtal-json-merge'; }
     static get observedAttributes() {
-        return [
-            /**
-             * Wrap the incoming object inside a new empty object, with key equal to this value.
-             * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
-             * and with-path = 'myPath'
-             * then the source object which be merged into is:
-             * {myPath: {foo: 'hello', bar: 'world'}}
-             */
-            'with-path',
+        return super.observedAttributes.concat( [
             /**
              * Wait this long before passing the value
              */
@@ -29,9 +21,8 @@ class XtalJSONMerge extends HTMLElement {
              * If set to true, the JSON object will directly go to result during initialization
              */
             'pass-thru-on-init',
-            input,
             pass_to,
-        ]
+        ]);
     }
 
     _upgradeProperties(props: string[]) {
@@ -44,26 +35,20 @@ class XtalJSONMerge extends HTMLElement {
         })
 
     }
-    _connected: boolean;
+   // _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs', pass_to, 'postMergeCallbackFn']);
-        this._connected = true;
-        this.onInputChange(this._input);
+        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'refs', pass_to, 'postMergeCallbackFn']);
+        super.connectedCallback();
+        //this.onInputChange(this._input);
     }
     /**
     * Fired when a transform is in progress.
     *
     * @event transform
     */
-    _input: object;
+    
 /******************************  Properties ********************************8 */
-    get input() {
-        return this._input;
-    }
-    set input(val) {
-        this._input = val;
-        this.onInputChange(val);
-    }
+    
 
     _mergedProp: object;
     get mergedProp() {
@@ -87,7 +72,7 @@ class XtalJSONMerge extends HTMLElement {
                 const targetEls = this.getParent().querySelectorAll(cssKeyMapper.cssSelector);
                 for(let i = 0, ii = targetEls.length; i < ii; i++){
                     const targetEl = targetEls[i];
-                    for(var key in cssKeyMapper.propMapper){
+                    for(const key in cssKeyMapper.propMapper){
                         const pathSelector = cssKeyMapper.propMapper[key];
                         let context = mergedObjectChangedEvent;
                         pathSelector.forEach(path =>{
@@ -102,14 +87,7 @@ class XtalJSONMerge extends HTMLElement {
         this.dispatchEvent(mergedObjectChangedEvent);
     }
 
-    _refs: object;
-    get refs() {
-        return this._refs;
-    }
-    set refs(val) {
-        this._refs = val;
-        //this.onPropsChange();
-    }
+
 
     _postMergeCallbackFn: (c: CustomEvent, t: XtalJSONMerge) => void;
     get postMergeCallbackFn(){
@@ -121,13 +99,7 @@ class XtalJSONMerge extends HTMLElement {
 
 /**********************End properties **************************************/
 /******************** Attributes *********************** */
-    _withPath: string;
-    get withPath() {
-        return this._withPath;
-    }
-    set withPath(val) {
-        this.setAttribute(with_path, val);
-    }
+
 
     _delay: number;
     get delay(){
@@ -159,19 +131,16 @@ class XtalJSONMerge extends HTMLElement {
     }
 /********************End Attributes ******************************/
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
+        super.attributeChangedCallback(name, oldVal, newVal)
         switch (name) {
-            case with_path:
-                this._withPath = newVal;
-                break;
+            
             case pass_thru_on_init:
                 this._passThruOnInit = newVal !== null;
                 break;
             case delay:
                 this._delay = parseFloat(newVal);
                 break;
-            case input:
-                this.input = JSON.parse(newVal);
-                break;
+            
             case pass_to:
                 this._passTo = newVal;
                 if(newVal){
@@ -273,36 +242,8 @@ class XtalJSONMerge extends HTMLElement {
         }
         return target;
     }
-    _objectsToMerge: Function[];
-    loadJSON(callBack: any) {
-        const scriptTag = this.querySelector('script[type="application\/json"]') as HTMLScriptElement;
-        if (!scriptTag) {
-            setTimeout(() => {
-                this.loadJSON(callBack);
-            }, 100);
-            return;
-        }
-        const stringToParse = scriptTag.innerText;
-
-        try {
-
-            if (this.refs) {
-                this._objectsToMerge = JSON.parse(stringToParse, (key, val) => {
-                    if (typeof val !== 'string') return val;
-                    if (!val.startsWith('${refs.') || !val.endsWith('}')) return val;
-                    const realKey = val.substring(7, val.length - 1);
-                    return this.refs[realKey];
-                });
-            } else {
-                this._objectsToMerge = JSON.parse(stringToParse);
-            }
-
-        } catch (e) {
-            console.error("Unable to parse " + stringToParse);
-        }
-        callBack();
-        //return this._objectsToMerge;
-    }
+   
+    
     cssKeyMappers : ICssKeyMapper[];
     parsePassTo(){
         // const iPosOfOpenBrace = this._passTo.lastIndexOf('{');

@@ -1,21 +1,12 @@
+import { XtalInsertJson } from './xtal-insert-json.js';
 (function () {
-    const with_path = 'with-path';
     const delay = 'delay';
     const pass_thru_on_init = 'pass-thru-on-init';
-    const input = 'input';
     const pass_to = 'pass-to';
-    class XtalJSONMerge extends HTMLElement {
+    class XtalJSONMerge extends XtalInsertJson {
         static get is() { return 'xtal-json-merge'; }
         static get observedAttributes() {
-            return [
-                /**
-                 * Wrap the incoming object inside a new empty object, with key equal to this value.
-                 * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
-                 * and with-path = 'myPath'
-                 * then the source object which be merged into is:
-                 * {myPath: {foo: 'hello', bar: 'world'}}
-                 */
-                'with-path',
+            return super.observedAttributes.concat([
                 /**
                  * Wait this long before passing the value
                  */
@@ -24,9 +15,8 @@
                  * If set to true, the JSON object will directly go to result during initialization
                  */
                 'pass-thru-on-init',
-                input,
                 pass_to,
-            ];
+            ]);
         }
         _upgradeProperties(props) {
             props.forEach(prop => {
@@ -37,18 +27,11 @@
                 }
             });
         }
+        // _connected: boolean;
         connectedCallback() {
-            this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'input', 'refs', pass_to, 'postMergeCallbackFn']);
-            this._connected = true;
-            this.onInputChange(this._input);
-        }
-        /******************************  Properties ********************************8 */
-        get input() {
-            return this._input;
-        }
-        set input(val) {
-            this._input = val;
-            this.onInputChange(val);
+            this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'refs', pass_to, 'postMergeCallbackFn']);
+            super.connectedCallback();
+            //this.onInputChange(this._input);
         }
         get mergedProp() {
             return this._mergedProp;
@@ -71,7 +54,7 @@
                     const targetEls = this.getParent().querySelectorAll(cssKeyMapper.cssSelector);
                     for (let i = 0, ii = targetEls.length; i < ii; i++) {
                         const targetEl = targetEls[i];
-                        for (var key in cssKeyMapper.propMapper) {
+                        for (const key in cssKeyMapper.propMapper) {
                             const pathSelector = cssKeyMapper.propMapper[key];
                             let context = mergedObjectChangedEvent;
                             pathSelector.forEach(path => {
@@ -86,24 +69,11 @@
             }
             this.dispatchEvent(mergedObjectChangedEvent);
         }
-        get refs() {
-            return this._refs;
-        }
-        set refs(val) {
-            this._refs = val;
-            //this.onPropsChange();
-        }
         get postMergeCallbackFn() {
             return this._postMergeCallbackFn;
         }
         set postMergeCallbackFn(val) {
             this._postMergeCallbackFn;
-        }
-        get withPath() {
-            return this._withPath;
-        }
-        set withPath(val) {
-            this.setAttribute(with_path, val);
         }
         get delay() {
             return this._delay;
@@ -130,18 +100,13 @@
         }
         /********************End Attributes ******************************/
         attributeChangedCallback(name, oldVal, newVal) {
+            super.attributeChangedCallback(name, oldVal, newVal);
             switch (name) {
-                case with_path:
-                    this._withPath = newVal;
-                    break;
                 case pass_thru_on_init:
                     this._passThruOnInit = newVal !== null;
                     break;
                 case delay:
                     this._delay = parseFloat(newVal);
-                    break;
-                case input:
-                    this.input = JSON.parse(newVal);
                     break;
                 case pass_to:
                     this._passTo = newVal;
@@ -242,36 +207,6 @@
                 }
             }
             return target;
-        }
-        loadJSON(callBack) {
-            const scriptTag = this.querySelector('script[type="application\/json"]');
-            if (!scriptTag) {
-                setTimeout(() => {
-                    this.loadJSON(callBack);
-                }, 100);
-                return;
-            }
-            const stringToParse = scriptTag.innerText;
-            try {
-                if (this.refs) {
-                    this._objectsToMerge = JSON.parse(stringToParse, (key, val) => {
-                        if (typeof val !== 'string')
-                            return val;
-                        if (!val.startsWith('${refs.') || !val.endsWith('}'))
-                            return val;
-                        const realKey = val.substring(7, val.length - 1);
-                        return this.refs[realKey];
-                    });
-                }
-                else {
-                    this._objectsToMerge = JSON.parse(stringToParse);
-                }
-            }
-            catch (e) {
-                console.error("Unable to parse " + stringToParse);
-            }
-            callBack();
-            //return this._objectsToMerge;
         }
         parsePassTo() {
             // const iPosOfOpenBrace = this._passTo.lastIndexOf('{');

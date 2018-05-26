@@ -3,6 +3,7 @@
   "fragments": [],
   "sources": [
     "xtal-json-merge.js",
+    "xtal-insert-json.js",
     "index.html"
   ],
   "extraDependencies": [
