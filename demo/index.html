@@ -30,7 +30,7 @@
       <template>
         <dom-bind>
           <template>
-              <xtal-json-merge input="[]" pass-to="#firstEditor{input:detail.value}">
+              <xtal-json-merge input="[]" pass-to="#firstEditor{input:detail.value};#insertData{input:detail.value}">
                   <script type="application/json">
                 [
                   [
@@ -63,7 +63,7 @@
                 }]              
               </pre>
               <br>
-              <xtal-insert-json input="[[jsonInput]]" with-path="data" merged-prop="{{fullObject}}" hidden>
+              <xtal-insert-json id="insertData" with-path="data" merged-prop="{{fullObject}}" hidden>
                   <script type="application/json">
                 [{
                   "columns":[
