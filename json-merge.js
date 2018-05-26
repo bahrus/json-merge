@@ -7,13 +7,6 @@ class XtalInsertJson extends HTMLElement {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
         return [
-            /**
-            * Wrap the incoming object inside a new empty object, with key equal to this value.
-            * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
-            * and with-path = 'myPath'
-            * then the source object which be merged into is:
-            * {myPath: {foo: 'hello', bar: 'world'}}
-            */
             'with-path',
             input
         ];
@@ -46,6 +39,14 @@ class XtalInsertJson extends HTMLElement {
         });
         this.dispatchEvent(mergedObjectChangedEvent);
     }
+    /**
+     * @type {string}
+    * Wrap the incoming object inside a new empty object, with key equal to this value.
+    * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
+    * and with-path = 'myPath'
+    * then the source object which be merged into is:
+    * {myPath: {foo: 'hello', bar: 'world'}}
+    */
     get withPath() {
         return this._withPath;
     }
