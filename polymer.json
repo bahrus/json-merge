@@ -1,7 +1,8 @@
 {
   "sources":[
    "xtal-json-merge.js",
-   "xtal-insert-json.js"
+   "xtal-insert-json.js",
+   "json-merge.js"
   ],
   "lint": {
     "rules": [

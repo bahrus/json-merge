@@ -1,11 +1,23 @@
 
 const input = 'input';
 const with_path = 'with-path';
+const delay = 'delay';
+/**
+ * `xtal-insert-json`
+ *  Combine passed-in JSON with JSON defined within script tag
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
 export class XtalInsertJson extends HTMLElement{
     static get is() { return 'xtal-insert-json';}
     static get observedAttributes() {
         return [
-            
+                       /**
+             * Wait this long before passing the value
+             */
+           delay, 
            'with-path',
            input
         ];
@@ -13,8 +25,7 @@ export class XtalInsertJson extends HTMLElement{
     /*----------------------------------------- Properties ------------------------------------ */
     _input: object;
      /**
-     * @type {Object}
-     * @returns {Object}
+     * @type {object}
      * An object that should be merged with the JSON inside the element
      **/
     get input() {
@@ -22,10 +33,22 @@ export class XtalInsertJson extends HTMLElement{
     }
     set input(val) {
         this._input = val;
-        this.onInputChange(val);
+        if(this._delay){
+            setTimeout(() =>{
+                this.onInputChange(val);
+            }, this._delay);
+        }else{
+            this.onInputChange(val);
+        }
+        
     }
 
     _refs: object;
+    /**
+     * @type {object}
+     * An key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
+     * 
+     */
     get refs() {
         return this._refs;
     }
@@ -35,6 +58,10 @@ export class XtalInsertJson extends HTMLElement{
     }
 
     _mergedProp: object;
+    /**
+     * @type {object}
+     * The result of merging the input property with the JSON inside the script tag.
+     */
     get mergedProp() {
         return this._mergedProp;
     }
@@ -67,6 +94,16 @@ export class XtalInsertJson extends HTMLElement{
     set withPath(val) {
         this.setAttribute(with_path, val);
     }
+    _delay: number;
+    /**
+     * How long to wait before 
+     */
+    get delay(){
+        return this._delay;
+    }
+    set delay(newVal: number){
+        this.setAttribute(delay, newVal.toString());
+    }
     /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         switch (name) {
@@ -75,6 +112,9 @@ export class XtalInsertJson extends HTMLElement{
                 break;
             case with_path:
                 this._withPath = newVal;
+                break;
+            case delay:
+                this._delay = parseFloat(newVal);
                 break;
         }
     }
@@ -152,7 +192,7 @@ export class XtalInsertJson extends HTMLElement{
     }
     _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties([input]);
+        this._upgradeProperties([delay, input, 'refs', 'withPath']);
         this._connected = true;
         this.onInputChange(this._input);
     }

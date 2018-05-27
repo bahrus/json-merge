@@ -3,21 +3,50 @@
     (function () {
     const input = 'input';
 const with_path = 'with-path';
+const delay = 'delay';
+/**
+ * `xtal-insert-json`
+ *  Combine passed-in JSON with JSON defined within script tag
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
 class XtalInsertJson extends HTMLElement {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
         return [
+            /**
+  * Wait this long before passing the value
+  */
+            delay,
             'with-path',
             input
         ];
     }
+    /**
+    * @type {object}
+    * An object that should be merged with the JSON inside the element
+    **/
     get input() {
         return this._input;
     }
     set input(val) {
         this._input = val;
-        this.onInputChange(val);
+        if (this._delay) {
+            setTimeout(() => {
+                this.onInputChange(val);
+            }, this._delay);
+        }
+        else {
+            this.onInputChange(val);
+        }
     }
+    /**
+     * @type {object}
+     * An key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
+     *
+     */
     get refs() {
         return this._refs;
     }
@@ -25,6 +54,10 @@ class XtalInsertJson extends HTMLElement {
         this._refs = val;
         //this.onPropsChange();
     }
+    /**
+     * @type {object}
+     * The result of merging the input property with the JSON inside the script tag.
+     */
     get mergedProp() {
         return this._mergedProp;
     }
@@ -40,7 +73,8 @@ class XtalInsertJson extends HTMLElement {
         this.dispatchEvent(mergedObjectChangedEvent);
     }
     /**
-     * @type {string}
+     * @type {String}
+     * @returns {String}
     * Wrap the incoming object inside a new empty object, with key equal to this value.
     * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
     * and with-path = 'myPath'
@@ -53,7 +87,16 @@ class XtalInsertJson extends HTMLElement {
     set withPath(val) {
         this.setAttribute(with_path, val);
     }
-    /********************End Attributes ******************************/
+    /**
+     * How long to wait before
+     */
+    get delay() {
+        return this._delay;
+    }
+    set delay(newVal) {
+        this.setAttribute(delay, newVal.toString());
+    }
+    /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case input:
@@ -61,6 +104,9 @@ class XtalInsertJson extends HTMLElement {
                 break;
             case with_path:
                 this._withPath = newVal;
+                break;
+            case delay:
+                this._delay = parseFloat(newVal);
                 break;
         }
     }
@@ -137,7 +183,7 @@ class XtalInsertJson extends HTMLElement {
         });
     }
     connectedCallback() {
-        this._upgradeProperties([input]);
+        this._upgradeProperties([delay, input, 'refs', 'withPath']);
         this._connected = true;
         this.onInputChange(this._input);
     }
@@ -147,7 +193,6 @@ if (!customElements.get(XtalInsertJson.is)) {
 }
 //# sourceMappingURL=xtal-insert-json.js.map
 (function () {
-    const delay = 'delay';
     const pass_thru_on_init = 'pass-thru-on-init';
     const pass_to = 'pass-to';
     class XtalJSONMerge extends XtalInsertJson {
@@ -155,28 +200,15 @@ if (!customElements.get(XtalInsertJson.is)) {
         static get observedAttributes() {
             return super.observedAttributes.concat([
                 /**
-                 * Wait this long before passing the value
-                 */
-                'delay',
-                /**
                  * If set to true, the JSON object will directly go to result during initialization
                  */
                 'pass-thru-on-init',
                 pass_to,
             ]);
         }
-        _upgradeProperties(props) {
-            props.forEach(prop => {
-                if (this.hasOwnProperty(prop)) {
-                    let value = this[prop];
-                    delete this[prop];
-                    this[prop] = value;
-                }
-            });
-        }
         // _connected: boolean;
         connectedCallback() {
-            this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'refs', pass_to, 'postMergeCallbackFn']);
+            this._upgradeProperties(['passThruOnInit', pass_to, 'postMergeCallbackFn']);
             super.connectedCallback();
             //this.onInputChange(this._input);
         }
@@ -216,17 +248,15 @@ if (!customElements.get(XtalInsertJson.is)) {
             }
             this.dispatchEvent(mergedObjectChangedEvent);
         }
+        /**
+         * @type {function}
+         * Pass in a function to handle the resulting merged object, rather than using events.
+         */
         get postMergeCallbackFn() {
             return this._postMergeCallbackFn;
         }
         set postMergeCallbackFn(val) {
             this._postMergeCallbackFn;
-        }
-        get delay() {
-            return this._delay;
-        }
-        set delay(newVal) {
-            this.setAttribute(delay, newVal.toString());
         }
         get passThruOnInit() {
             return this._passThruOnInit;
@@ -251,9 +281,6 @@ if (!customElements.get(XtalInsertJson.is)) {
             switch (name) {
                 case pass_thru_on_init:
                     this._passThruOnInit = newVal !== null;
-                    break;
-                case delay:
-                    this._delay = parseFloat(newVal);
                     break;
                 case pass_to:
                     this._passTo = newVal;

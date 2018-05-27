@@ -4,6 +4,7 @@
   "sources": [
     "xtal-json-merge.js",
     "xtal-insert-json.js",
+    "json-merge.js",
     "index.html"
   ],
   "extraDependencies": [

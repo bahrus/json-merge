@@ -5,11 +5,13 @@
 
 [Demo](https://xtal-json-editor-demo.glitch.me/) 
 
-xtal-json-merge, and xtal-insert-json are dependency free web components, that merges predefined json with some dynamic json.  xtal-json-merge extends xtal-insert-json. They provide binding support compatible with Polymer, but they can be used in non Polymer settings as well.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps like VueJS, Polymer (as we mentioned already) or Aurelia (or Angular?). It may seem somewhat jarring to see it inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS, etc.  More on that later.
+xtal-json-merge and xtal-insert-json are dependency free web components, that merge predefined json with some dynamic json.  xtal-json-merge extends xtal-insert-json. They provide binding support compatible with Polymer, but they can be used in non Polymer settings as well.  It may make more sense to use in [disciplined, declarative markup-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps like VueJS, Polymer (as we mentioned already), Aurelia, Svelte, Angular. It may seem somewhat jarring to see it inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS, etc.  More on that later.
 
 These two components can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
-xtal-insert-json.js is ~1KB minified and gzipped.  xtal-json-merge.js is ~1.5kb minified and gzipped.  Both require importing via ES6 Modules.  
+xtal-insert-json.js is ~1.1KB minified and gzipped.  xtal-json-merge.js is ~1.4kb minified and gzipped.  Both require importing via ES6 Modules. 
+
+The two files are combined into one IIFE file, json-merge.js, which can be imported via a classic script tag.  This combined file is ~1.9kb minified and gzipped
 
 ## Mission
 
@@ -32,7 +34,7 @@ For productivity purposes, I like the places that define the first two steps to 
 ```html
 <!--- Polymer Syntax -->
 <fetch-data url="https://HRDatabase.com" output="{{rowData}}"></fetch-data>
-<xtal-insert-json  input="[[rowData]]" refs="[[formatters]]" with-path="data" merged-obj="{{employeeGridData}}">
+<xtal-insert-json  input="[[rowData]]" refs="[[formatters]]" with-path="data" merged-prop="{{employeeGridData}}">
     <script type="application/json">
     [{
         "columns":[
@@ -53,6 +55,8 @@ For productivity purposes, I like the places that define the first two steps to 
 </xtal-insert-json>
 <my-grid grid-options="[[employeeGridData]]"></my-grid>
 ```
+
+If you are not using Polymer, you can attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  However, xtal-merge-json provides some simpler ways of passing gthe data on. 
 
 
 Here's why I like to keep this trio of tags (data retrieval, data merge, grid) cozily next to eachother:
@@ -88,7 +92,7 @@ Some components, like the Vaadin grid, choose to be configured via light DOM ele
 
 Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it.  
 
-json-merge enforces the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bin).
+These components, xtal-insert-json and xtal-json-merge, enforce the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bin).
 
 The JSON needs to be wrapped inside a script tag with type application/json, as shown below.
 

@@ -1,6 +1,6 @@
 import {XtalInsertJson} from './xtal-insert-json.js';
 (function () {
-const delay = 'delay';
+
 const pass_thru_on_init = 'pass-thru-on-init';
 
 const pass_to = 'pass-to';
@@ -8,15 +8,19 @@ interface ICssKeyMapper{
     cssSelector: string;
     propMapper: {[key: string]: string[]}
 }
+/**
+ * `xtal-json-merge`
+ *  Merge passed-in JSON into JSON defined within script tag
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
 class XtalJSONMerge extends XtalInsertJson {
 
     static get is() { return 'xtal-json-merge'; }
     static get observedAttributes() {
         return super.observedAttributes.concat( [
-            /**
-             * Wait this long before passing the value
-             */
-            'delay',
             /**
              * If set to true, the JSON object will directly go to result during initialization
              */
@@ -25,19 +29,10 @@ class XtalJSONMerge extends XtalInsertJson {
         ]);
     }
 
-    _upgradeProperties(props: string[]) {
-        props.forEach(prop => {
-            if (this.hasOwnProperty(prop)) {
-                let value = this[prop];
-                delete this[prop];
-                this[prop] = value;
-            }
-        })
 
-    }
    // _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties([delay, 'withPath', 'passThruOnInit', 'refs', pass_to, 'postMergeCallbackFn']);
+        this._upgradeProperties(['passThruOnInit', pass_to, 'postMergeCallbackFn']);
         super.connectedCallback();
         //this.onInputChange(this._input);
     }
@@ -47,7 +42,7 @@ class XtalJSONMerge extends XtalInsertJson {
     * @event transform
     */
     
-/******************************  Properties ********************************8 */
+/*---------------------------------  Properties ---------------------------------------- */
     
 
     _mergedProp: object;
@@ -90,6 +85,10 @@ class XtalJSONMerge extends XtalInsertJson {
 
 
     _postMergeCallbackFn: (c: CustomEvent, t: XtalJSONMerge) => void;
+    /**
+     * @type {function}
+     * Pass in a function to handle the resulting merged object, rather than using events.
+     */
     get postMergeCallbackFn(){
         return this._postMergeCallbackFn;
     }
@@ -97,17 +96,11 @@ class XtalJSONMerge extends XtalInsertJson {
         this._postMergeCallbackFn;
     }
 
-/**********************End properties **************************************/
-/******************** Attributes *********************** */
+/* ----------------------------- End properties ------------------------------------------- */
+/* ----------------------------- Attributes ----------------------------------------------- */
 
 
-    _delay: number;
-    get delay(){
-        return this._delay;
-    }
-    set delay(newVal: number){
-        this.setAttribute(delay, newVal.toString());
-    }
+   
 
     _passThruOnInit: boolean;
     get passThruOnInit(){
@@ -137,9 +130,7 @@ class XtalJSONMerge extends XtalInsertJson {
             case pass_thru_on_init:
                 this._passThruOnInit = newVal !== null;
                 break;
-            case delay:
-                this._delay = parseFloat(newVal);
-                break;
+
             
             case pass_to:
                 this._passTo = newVal;
