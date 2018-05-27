@@ -14,11 +14,8 @@ export class XtalInsertJson extends HTMLElement{
     static get is() { return 'xtal-insert-json';}
     static get observedAttributes() {
         return [
-                       /**
-             * Wait this long before passing the value
-             */
            delay, 
-           'with-path',
+           with_path,
            input
         ];
     }
@@ -46,7 +43,7 @@ export class XtalInsertJson extends HTMLElement{
     _refs: object;
     /**
      * @type {object}
-     * An key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
+     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
      * 
      */
     get refs() {
@@ -80,9 +77,8 @@ export class XtalInsertJson extends HTMLElement{
     /*----------------------------------------- Attributes --------------------------------------*/
     _withPath: string;
     /**
-     * @type {String}
-     * @returns {String}
-    * Wrap the incoming object inside a new empty object, with key equal to this value.
+    * @type {string}
+    * object inside a new empty object, with key equal to this value.
     * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
     * and with-path = 'myPath'
     * then the source object which be merged into is:
@@ -96,7 +92,8 @@ export class XtalInsertJson extends HTMLElement{
     }
     _delay: number;
     /**
-     * How long to wait before 
+     * @type {number}
+     * Number of milliseconds to wait before passing the input on for processing.
      */
     get delay(){
         return this._delay;
@@ -104,7 +101,9 @@ export class XtalInsertJson extends HTMLElement{
     set delay(newVal: number){
         this.setAttribute(delay, newVal.toString());
     }
+
     /*-------------------------------------------End Attributes -------------------------------*/
+    
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         switch (name) {
             case input:

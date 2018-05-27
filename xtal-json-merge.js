@@ -2,6 +2,14 @@ import { XtalInsertJson } from './xtal-insert-json.js';
 (function () {
     const pass_thru_on_init = 'pass-thru-on-init';
     const pass_to = 'pass-to';
+    /**
+     * `xtal-json-merge`
+     *  Merge passed-in JSON into JSON defined within script tag
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
     class XtalJSONMerge extends XtalInsertJson {
         static get is() { return 'xtal-json-merge'; }
         static get observedAttributes() {

@@ -11,11 +11,13 @@
   <!-- <script async src="https://cdn.jsdelivr.net/npm/xtal-json-editor@0.0.19/build/ES6/xtal-json-editor.js"></script> -->
   <script async src="https://unpkg.com/xtal-json-editor@0.0.19/build/ES6/xtal-json-editor.js"></script>
   <script async type="module" src="../xtal-json-merge.js"></script>
-  <script async type="module" async src="../xtal-insert-json.js"></script>
-  <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
-  <script type="module" src="../node_modules/@polymer/iron-demo-helpers/demo-snippet.js"></script>
-  <script type="module" src="../node_modules/@polymer/polymer/lib/elements/dom-bind.js"></script>
+  <script async type="module" src="../xtal-insert-json.js"></script>
 
+<script type="module">
+    import "https://unpkg.com/@polymer/iron-demo-helpers@3.0.0-pre.19/demo-pages-shared-styles.js?module";
+    import "https://unpkg.com/@polymer/iron-demo-helpers@3.0.0-pre.19/demo-snippet.js?module";
+    import "https://unpkg.com/@polymer/polymer@3.0.2/lib/elements/dom-bind.js?module";
+</script>
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
