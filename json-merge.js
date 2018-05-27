@@ -16,11 +16,8 @@ class XtalInsertJson extends HTMLElement {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
         return [
-            /**
-  * Wait this long before passing the value
-  */
             delay,
-            'with-path',
+            with_path,
             input
         ];
     }
@@ -44,7 +41,7 @@ class XtalInsertJson extends HTMLElement {
     }
     /**
      * @type {object}
-     * An key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
+     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
      *
      */
     get refs() {
@@ -73,9 +70,8 @@ class XtalInsertJson extends HTMLElement {
         this.dispatchEvent(mergedObjectChangedEvent);
     }
     /**
-     * @type {String}
-     * @returns {String}
-    * Wrap the incoming object inside a new empty object, with key equal to this value.
+    * @type {string}
+    * object inside a new empty object, with key equal to this value.
     * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
     * and with-path = 'myPath'
     * then the source object which be merged into is:
@@ -88,7 +84,8 @@ class XtalInsertJson extends HTMLElement {
         this.setAttribute(with_path, val);
     }
     /**
-     * How long to wait before
+     * @type {number}
+     * Number of milliseconds to wait before passing the input on for processing.
      */
     get delay() {
         return this._delay;
@@ -195,6 +192,14 @@ if (!customElements.get(XtalInsertJson.is)) {
 (function () {
     const pass_thru_on_init = 'pass-thru-on-init';
     const pass_to = 'pass-to';
+    /**
+     * `xtal-json-merge`
+     *  Merge passed-in JSON into JSON defined within script tag
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
     class XtalJSONMerge extends XtalInsertJson {
         static get is() { return 'xtal-json-merge'; }
         static get observedAttributes() {

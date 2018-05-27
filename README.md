@@ -92,7 +92,7 @@ Some components, like the Vaadin grid, choose to be configured via light DOM ele
 
 Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it.  
 
-These components, xtal-insert-json and xtal-json-merge, enforce the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bin).
+These components, xtal-insert-json and xtal-json-merge, enforce the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bind).
 
 The JSON needs to be wrapped inside a script tag with type application/json, as shown below.
 
@@ -149,7 +149,7 @@ If you would rather not write such a function, nor an event handler, you can alt
 
 ```html
 <!--- Polymer Syntax -->
-<xtal-json-merge  input="[[gridData]]" refs="[[formatters]]" with-path="data" pass-to="myGrid{gridOptions:detail.mergedObject}">
+<xtal-json-merge  input="[[gridData]]" refs="[[formatters]]" with-path="data" pass-to="my-grid{gridOptions:detail.mergedObject}">
 <script type="application/json">
 ...
 </script>
@@ -157,7 +157,7 @@ If you would rather not write such a function, nor an event handler, you can alt
 <my-grid></my-grid>
 ```
 
-The query for myGrid will begin from the parent DOM element (or shadowRoot fragment).  Yes, in this scenario, we have a component that is poking its parent.  Tsk, tsk!  
+The query for my-grid will begin from the parent DOM element (or shadowRoot fragment).  Yes, in this scenario, we have a component that is poking its parent.  Tsk, tsk!  
 
 ## Install the Polymer-CLI
 
