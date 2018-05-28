@@ -56,7 +56,7 @@ For productivity purposes, I like the places that define the first two steps to 
 <my-grid grid-options="[[employeeGridData]]"></my-grid>
 ```
 
-If you are not using Polymer, you can attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  However, xtal-insert-json, and xtal-merge-json provide some simpler ways of passing gthe data on. 
+If you are not using Polymer, you can attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  However, xtal-insert-json, and xtal-merge-json provide some simpler ways of passing the data on. 
 
 If you are using a top-down framework, but don't want to write repetitive code over and over again, you can simply do this:
 
@@ -188,9 +188,9 @@ During the parsing of the JSON, you can insert dynamic fields, if they are passe
 <my-grid gridOptions="[[gridOptions]]"></my-grid>
 ```
 
-By default, the mergedObject property / event raises an event containing the merged object.
+By default, the mergedObject property / event raises an event containing the merged object.  And we've already discussed an alternative way of passing the data, using attribute "pass-down."
 
-One can raise the objection that using an event handler to pass data between components violates some philophical tenet or other, or that it is less efficient.  May I see the day when this is actually the bottleneck of any application.  Still, if this is a concern, you can instead provide a callback function, which will skip the event-based approach.  This requires using xtal-json-merge, which extends xtal-insert-json:
+xtal-json-merge, which extends xtal-insert-json, supports additional ways of handling the merged object.  You can specify a callback function
 
 ```html
 <!--- Polymer Syntax -->
@@ -202,7 +202,7 @@ One can raise the objection that using an event handler to pass data between com
 <my-grid>
 ```
 
-If you would rather not write such a function, nor an event handler, you can alternatively specify where to pass it to.
+If you would rather not write such a function, nor an event handler, and the pass-down attribute isn't powerful enough for your needs, you can alternatively specify where to pass it to.
 
 ```html
 <!--- Polymer Syntax -->
@@ -214,7 +214,7 @@ If you would rather not write such a function, nor an event handler, you can alt
 <my-grid></my-grid>
 ```
 
-The query for my-grid will begin from the parent DOM element (or shadowRoot fragment).  Yes, in this scenario, we have a component that is poking its parent.  Tsk, tsk!  
+The query for my-grid will begin from the parent DOM element (or shadowRoot fragment). 
 
 ## Install the Polymer-CLI
 
