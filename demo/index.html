@@ -32,7 +32,9 @@
       <template>
         <dom-bind>
           <template>
-              <xtal-json-merge input="[]" pass-to="#firstEditor{input:detail.value};#insertData{input:detail.value}">
+              
+              <div>Input:</div>
+                <xtal-json-merge input="[]" pass-to="#firstEditor{input:detail.value};#insertData{input:detail.value}">
                   <script type="application/json">
                 [
                   [
@@ -42,7 +44,6 @@
                 ]
                   </script>
               </xtal-json-merge>
-              <div>Input:</div>
               <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
               <br>
               <div>Merge with</div>

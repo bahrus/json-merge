@@ -2,6 +2,7 @@
 const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
+const pass_down = 'pass-down';
 /**
  * `xtal-insert-json`
  *  Combine passed-in JSON with JSON defined within script tag
@@ -16,7 +17,8 @@ export class XtalInsertJson extends HTMLElement{
         return [
            delay, 
            with_path,
-           input
+           input,
+           pass_down
         ];
     }
     /*----------------------------------------- Properties ------------------------------------ */
@@ -53,7 +55,16 @@ export class XtalInsertJson extends HTMLElement{
         this._refs = val;
         //this.onPropsChange();
     }
-
+    de(val){
+        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
+            detail:{
+                value: val
+            },
+            bubbles: true,
+            composed: false,
+        } as CustomEventInit);
+        return mergedObjectChangedEvent;
+    }
     _mergedProp: object;
     /**
      * @type {object}
@@ -64,14 +75,11 @@ export class XtalInsertJson extends HTMLElement{
     }
     set mergedProp(val) {
         this._mergedProp = val;
-        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
-            detail:{
-                value: val
-            },
-            bubbles: true,
-            composed: false,
-        } as CustomEventInit);
-        this.dispatchEvent(mergedObjectChangedEvent);
+        if(this._passDown){
+            this.nextElementSibling[this._passDown] = val;
+            return;
+        }
+        this.dispatchEvent(this.de(val));
     }
     /*------------------------------------------End properties ----------------------------------*/
     /*----------------------------------------- Attributes --------------------------------------*/
@@ -102,6 +110,14 @@ export class XtalInsertJson extends HTMLElement{
         this.setAttribute(delay, newVal.toString());
     }
 
+    _passDown: string;
+    get passDown(){
+        return this._passDown;
+    }
+    set passDown(val){
+        this.setAttribute(pass_down, val);
+    }
+
     /*-------------------------------------------End Attributes -------------------------------*/
     
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
@@ -114,6 +130,9 @@ export class XtalInsertJson extends HTMLElement{
                 break;
             case delay:
                 this._delay = parseFloat(newVal);
+                break;
+            case pass_down:
+                this._passDown = newVal;
                 break;
         }
     }

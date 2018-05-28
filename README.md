@@ -56,29 +56,86 @@ For productivity purposes, I like the places that define the first two steps to 
 <my-grid grid-options="[[employeeGridData]]"></my-grid>
 ```
 
-If you are not using Polymer, you can attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  However, xtal-merge-json provides some simpler ways of passing gthe data on. 
+If you are not using Polymer, you can attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  However, xtal-insert-json, and xtal-merge-json provide some simpler ways of passing gthe data on. 
 
+If you are using a top-down framework, but don't want to write repetitive code over and over again, you can simply do this:
+
+```html
+<!--- Polymer Syntax -->
+<xtal-insert-json  input="[[rowData]]"  with-path="data" pass-down="gridOptions">
+    <script type="application/json">
+    [{
+        "columns":[
+            {"id": "index",       "name": "Index",      "field": "index"},
+            {"id": "isActive",    "name": "Active",     "field": "isActive"},
+            {"id": "salary",     "name": "Salary",      "field": "balance", "formatter":  "${refs.dollarFormatter}"},
+            {"id": "age",         "name": "Age",        "field": "age"},
+            {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+            {"id": "name",        "name": "Name",       "field": "name"},
+            {"id": "gender",      "name": "Gender",     "field": "gender"},
+        ],
+        "gridSettings":{
+            "enableCellNavigation": true,
+            "enableColumnReorder": false
+        }
+    }]
+    </script>
+</xtal-insert-json>
+<my-grid></my-grid>
+```
+
+If you use xtal-fetch-get, it also supports the pass-down attribute.  So the complete markup looks like:
+
+```html
+<!--- Polymer Syntax -->
+<xtal-fetch-get href="https://HRDatabase.com" pass-down="input"></fetch-data>
+<xtal-insert-json  refs="[[formatters]]" with-path="data" pass-down="gridOptions">
+    <script type="application/json">
+    [{
+        "columns":[
+            {"id": "index",       "name": "Index",      "field": "index"},
+            {"id": "isActive",    "name": "Active",     "field": "isActive"},
+            {"id": "salary",     "name": "Salary",      "field": "balance", "formatter":  "${refs.dollarFormatter}"},
+            {"id": "age",         "name": "Age",        "field": "age"},
+            {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+            {"id": "name",        "name": "Name",       "field": "name"},
+            {"id": "gender",      "name": "Gender",     "field": "gender"},
+        ],
+        "gridSettings":{
+            "enableCellNavigation": true,
+            "enableColumnReorder": false
+        }
+    }]
+    </script>
+</xtal-insert-json>
+<my-grid></my-grid>
+```
+
+
+The presence of attribute pass-down causes xtal-insert-json to search to set the property ("gridOptions" in this case) of the next element sibling specified to the value of the merged object.
+
+xtal-json-merge provides some extra ways of passing the data to other elements if you need more power.
 
 Here's why I like to keep this trio of tags (data retrieval, data merge, grid) cozily next to eachother:
 
 1)  I can see at a glance the whole picture. This makes developing and debugging easy.
 2)  If the grid needs to move elsewhere, it's a single cut and paste operation.
 
-## You can't do that!!!
+## You can't do that!
 
 I have heard, but never understood, a great number of reasons why this love triangle should be torn apart.
 
-###  Data flow must be unidirectional!!!
+###  Data flow must be unidirectional!
 
 It is, the data flows down the page.
 
-###  That has no place in a render function!!!
+###  That has no place in a render function!
 
 If a framework can't handle it running inside a render function, the framework needs to see a therapist for controlling issues. 
 
 The UI is still a function of state.  All we've done is given some part of the rendering responsibility to json-merge (and of course the grid takes it from there).
 
-### You're mixing concerns!!!
+### You're mixing concerns!
 
 True, we are using different technologies, but there's only one concern -- show a grid with as little fuss as possible.
 

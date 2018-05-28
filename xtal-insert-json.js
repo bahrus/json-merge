@@ -1,6 +1,7 @@
 const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
+const pass_down = 'pass-down';
 /**
  * `xtal-insert-json`
  *  Combine passed-in JSON with JSON defined within script tag
@@ -15,7 +16,8 @@ export class XtalInsertJson extends HTMLElement {
         return [
             delay,
             with_path,
-            input
+            input,
+            pass_down
         ];
     }
     /**
@@ -48,6 +50,16 @@ export class XtalInsertJson extends HTMLElement {
         this._refs = val;
         //this.onPropsChange();
     }
+    de(val) {
+        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
+            detail: {
+                value: val
+            },
+            bubbles: true,
+            composed: false,
+        });
+        return mergedObjectChangedEvent;
+    }
     /**
      * @type {object}
      * The result of merging the input property with the JSON inside the script tag.
@@ -57,14 +69,11 @@ export class XtalInsertJson extends HTMLElement {
     }
     set mergedProp(val) {
         this._mergedProp = val;
-        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
-            detail: {
-                value: val
-            },
-            bubbles: true,
-            composed: false,
-        });
-        this.dispatchEvent(mergedObjectChangedEvent);
+        if (this._passDown) {
+            this.nextElementSibling[this._passDown] = val;
+            return;
+        }
+        this.dispatchEvent(this.de(val));
     }
     /**
     * @type {string}
@@ -90,6 +99,12 @@ export class XtalInsertJson extends HTMLElement {
     set delay(newVal) {
         this.setAttribute(delay, newVal.toString());
     }
+    get passDown() {
+        return this._passDown;
+    }
+    set passDown(val) {
+        this.setAttribute(pass_down, val);
+    }
     /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
@@ -101,6 +116,9 @@ export class XtalInsertJson extends HTMLElement {
                 break;
             case delay:
                 this._delay = parseFloat(newVal);
+                break;
+            case pass_down:
+                this._passDown = newVal;
                 break;
         }
     }

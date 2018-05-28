@@ -50,14 +50,12 @@ class XtalJSONMerge extends XtalInsertJson {
         return this._mergedProp;
     }
     set mergedProp(val) {
+        if(!this.cssKeyMappers && !this.postMergeCallbackFn){
+            super.mergedProp = val;
+            return;
+        }
         this._mergedProp = val;
-        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
-            detail:{
-                value: val
-            },
-            bubbles: true,
-            composed: false,
-        } as CustomEventInit);
+        const mergedObjectChangedEvent = this.de(val);
         if(this._postMergeCallbackFn){
             this._postMergeCallbackFn(mergedObjectChangedEvent, this);
             return;
