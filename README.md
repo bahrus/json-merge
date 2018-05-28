@@ -133,7 +133,7 @@ It is, the data flows down the page.
 
 If a framework can't handle it running inside a render function, the framework needs to see a therapist for controlling issues. 
 
-The UI is still a function of state.  All we've done is given some part of the rendering responsibility to json-merge (and of course the grid takes it from there).
+The UI is still a function of state.  All we've done is give some part of the rendering responsibility to xtal-insert-json (and of course the grid takes it from there).
 
 ### You're mixing concerns!
 
@@ -147,7 +147,7 @@ I'm too thick to understand the question.
 
 Some components, like the Vaadin grid, choose to be configured via light DOM elements (a perfectly fine approach).  This component is of no help in those circumstances.
 
-Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it.  
+Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it. Often that api consists of a single function or two, with a single parameter, where declarative JSON is expected to be passed.  These components are designed to facilitate working with such components. 
 
 These components, xtal-insert-json and xtal-json-merge, enforce the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bind).
 
