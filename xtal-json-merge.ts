@@ -3,11 +3,8 @@ import {XtalInsertJson} from './xtal-insert-json.js';
 
 const pass_thru_on_init = 'pass-thru-on-init';
 
-const pass_to = 'pass-to';
-interface ICssKeyMapper{
-    cssSelector: string;
-    propMapper: {[key: string]: string[]}
-}
+
+
 /**
  * `xtal-json-merge`
  *  Merge passed-in JSON into JSON defined within script tag
@@ -25,14 +22,13 @@ class XtalJSONMerge extends XtalInsertJson {
              * If set to true, the JSON object will directly go to result during initialization
              */
             'pass-thru-on-init',
-            pass_to,
         ]);
     }
 
 
    // _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties(['passThruOnInit', pass_to, 'postMergeCallbackFn']);
+        this._upgradeProperties(['passThruOnInit']);
         super.connectedCallback();
         //this.onInputChange(this._input);
     }
@@ -42,59 +38,6 @@ class XtalJSONMerge extends XtalInsertJson {
     * @event transform
     */
     
-/*---------------------------------  Properties ---------------------------------------- */
-    
-
-    _mergedProp: object;
-    get mergedProp() {
-        return this._mergedProp;
-    }
-    set mergedProp(val) {
-        if(!this.cssKeyMappers && !this.postMergeCallbackFn){
-            super.mergedProp = val;
-            return;
-        }
-        this._mergedProp = val;
-        const mergedObjectChangedEvent = this.de(val);
-        if(this._postMergeCallbackFn){
-            this._postMergeCallbackFn(mergedObjectChangedEvent, this);
-            return;
-        }
-        if(this.cssKeyMappers){
-            this.cssKeyMappers.forEach(cssKeyMapper =>{
-                const targetEls = this.getParent().querySelectorAll(cssKeyMapper.cssSelector);
-                for(let i = 0, ii = targetEls.length; i < ii; i++){
-                    const targetEl = targetEls[i];
-                    for(const key in cssKeyMapper.propMapper){
-                        const pathSelector = cssKeyMapper.propMapper[key];
-                        let context = mergedObjectChangedEvent;
-                        pathSelector.forEach(path =>{
-                            if(context) context = context[path];
-                        });
-                        targetEl[key] = context;
-                    }
-                }
-            })
-            return;
-        }
-        this.dispatchEvent(mergedObjectChangedEvent);
-    }
-
-
-
-    _postMergeCallbackFn: (c: CustomEvent, t: XtalJSONMerge) => void;
-    /**
-     * @type {function}
-     * Pass in a function to handle the resulting merged object, rather than using events.
-     */
-    get postMergeCallbackFn(){
-        return this._postMergeCallbackFn;
-    }
-    set postMergeCallbackFn(val){
-        this._postMergeCallbackFn;
-    }
-
-/* ----------------------------- End properties ------------------------------------------- */
 /* ----------------------------- Attributes ----------------------------------------------- */
 
 
@@ -113,13 +56,13 @@ class XtalJSONMerge extends XtalInsertJson {
         } 
     }
 
-    _passTo: string;
-    get passTo(){
-        return this._passTo;
-    }
-    set passTo(val){
-        this.setAttribute(pass_to, val);
-    }
+    // _passTo: string;
+    // get passTo(){
+    //     return this._passTo;
+    // }
+    // set passTo(val){
+    //     this.setAttribute(pass_to, val);
+    // }
 /********************End Attributes ******************************/
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         super.attributeChangedCallback(name, oldVal, newVal)
@@ -130,41 +73,20 @@ class XtalJSONMerge extends XtalInsertJson {
                 break;
 
             
-            case pass_to:
-                this._passTo = newVal;
-                if(newVal){
-                    this.parsePassTo();
-                }else{
-                    this.cssKeyMappers = null;
-                }
+            // case pass_to:
+            //     this._passTo = newVal;
+            //     if(newVal){
+            //         this.parsePassDown();
+            //     }else{
+            //         this.cssKeyMappers = null;
+            //     }
                 
-                break;
+            //     break;
         }
         
     }
 
-    onInputChange(newVal){
-        if(!this._connected) return;
-        let mergedObj;
-        if (this._withPath) {
-            mergedObj = {};
-            const splitPath = this._withPath.split('.');
-            const lenMinus1 = splitPath.length - 1;
-            splitPath.forEach((pathToken, idx) => {
-                if(idx === lenMinus1){
-                    mergedObj[pathToken] = newVal;
-                }else{
-                    mergedObj = mergedObj[pathToken] = {};
-                }
-            })
-        } else {
-            mergedObj = newVal;
-        }
-        this.loadJSON(() =>{
-            this.postLoadJson(mergedObj);
-        });
 
-    }
 
     postLoadJson(mergedObj){
         if (this._objectsToMerge && mergedObj) {
@@ -233,30 +155,7 @@ class XtalJSONMerge extends XtalInsertJson {
     }
    
     
-    cssKeyMappers : ICssKeyMapper[];
-    parsePassTo(){
-        // const iPosOfOpenBrace = this._passTo.lastIndexOf('{');
-        // if(iPosOfOpenBrace < 0) return;
-        this.cssKeyMappers = [];
-        const endsWithBrace = this._passTo.endsWith('}');
-        const adjustedPassTo = this._passTo + (endsWithBrace ? ';' : '');
-        const splitPassTo = adjustedPassTo.split('};');
-        splitPassTo.forEach(passTo =>{
-            if(!passTo) return;
-            const splitPassTo2 = passTo.split('{');
-            const tokens = splitPassTo2[1].split(';');
-            const propMapper = {};
-            tokens.forEach(token =>{
-                const nameValuePair = token.split(':');
-                propMapper[nameValuePair[0]] = nameValuePair[1].split('.');
-            })
-            this.cssKeyMappers.push({
-                cssSelector: splitPassTo2[0],
-                propMapper: propMapper
-            });
-        })
-        
-    }
+
 }
 
 customElements.define(XtalJSONMerge.is, XtalJSONMerge);

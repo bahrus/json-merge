@@ -1,8 +1,14 @@
-
 const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
 const pass_down = 'pass-down';
+const disabled = 'disabled';
+
+export interface ICssKeyMapper{
+    cssSelector: string;
+    //propMapper: {[key: string]: string[]}
+    propTarget: string;
+}
 /**
  * `xtal-insert-json`
  *  Combine passed-in JSON with JSON defined within script tag
@@ -18,7 +24,8 @@ export class XtalInsertJson extends HTMLElement{
            delay, 
            with_path,
            input,
-           pass_down
+           pass_down,
+           disabled
         ];
     }
     /*----------------------------------------- Properties ------------------------------------ */
@@ -34,10 +41,10 @@ export class XtalInsertJson extends HTMLElement{
         this._input = val;
         if(this._delay){
             setTimeout(() =>{
-                this.onInputChange(val);
+                this.onPropChange();
             }, this._delay);
         }else{
-            this.onInputChange(val);
+            this.onPropChange();
         }
         
     }
@@ -75,11 +82,35 @@ export class XtalInsertJson extends HTMLElement{
     }
     set mergedProp(val) {
         this._mergedProp = val;
-        if(this._passDown){
-            this.nextElementSibling[this._passDown] = val;
+        if(this.cssKeyMappers){
+            let nextSibling = this.nextElementSibling;
+            while(nextSibling){
+                this.cssKeyMappers.forEach(map =>{
+                    if(nextSibling.matches(map.cssSelector)){
+                        nextSibling[map.propTarget] = val;
+                    }
+                })
+                nextSibling = nextSibling.nextElementSibling;
+            }
             return;
         }
-        this.dispatchEvent(this.de(val));
+        const mergedObjectChangedEvent = this.de(val);
+        if(this._postMergeCallbackFn){
+            this._postMergeCallbackFn(mergedObjectChangedEvent, this);
+            return;
+        }
+        this.dispatchEvent(mergedObjectChangedEvent);
+    }
+    _postMergeCallbackFn: (c: CustomEvent, t: XtalInsertJson) => void;
+    /**
+     * @type {function}
+     * Pass in a function to handle the resulting merged object, rather than using events.
+     */
+    get postMergeCallbackFn(){
+        return this._postMergeCallbackFn;
+    }
+    set postMergeCallbackFn(val){
+        this._postMergeCallbackFn;
     }
     /*------------------------------------------End properties ----------------------------------*/
     /*----------------------------------------- Attributes --------------------------------------*/
@@ -118,6 +149,18 @@ export class XtalInsertJson extends HTMLElement{
         this.setAttribute(pass_down, val);
     }
 
+    _disabled: boolean;
+    get disabled(){
+        return this._disabled;
+    }
+    set disabled(val){
+        if(val){
+            this.setAttribute(disabled, '');
+        }else{
+            this.removeAttribute(disabled);
+        }
+    }
+
     /*-------------------------------------------End Attributes -------------------------------*/
     
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
@@ -133,8 +176,13 @@ export class XtalInsertJson extends HTMLElement{
                 break;
             case pass_down:
                 this._passDown = newVal;
+                this.parsePassDown();
+                break;
+            case disabled:
+                this._disabled = newVal !== null;
                 break;
         }
+        this.onPropChange()
     }
     _objectsToMerge: Function[];
     loadJSON(callBack: any) {
@@ -176,8 +224,9 @@ export class XtalInsertJson extends HTMLElement{
 
         this.mergedProp = mergedObj;
     }
-    onInputChange(newVal){
-        if(!this._connected) return;
+    onPropChange(){
+        if(!this._connected || this._disabled) return;
+        // if(typeof(this._withPath) === 'undefined') return;
         let mergedObj;
         if (this._withPath) {
             mergedObj = {};
@@ -185,13 +234,13 @@ export class XtalInsertJson extends HTMLElement{
             const lenMinus1 = splitPath.length - 1;
             splitPath.forEach((pathToken, idx) => {
                 if(idx === lenMinus1){
-                    mergedObj[pathToken] = newVal;
+                    mergedObj[pathToken] = this._input;
                 }else{
                     mergedObj = mergedObj[pathToken] = {};
                 }
             })
         } else {
-            mergedObj = newVal;
+            mergedObj = this._input;
         }
         this.loadJSON(() =>{
             this.postLoadJson(mergedObj);
@@ -210,9 +259,24 @@ export class XtalInsertJson extends HTMLElement{
     }
     _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties([delay, input, 'refs', 'withPath']);
+        this._upgradeProperties([delay, input, 'refs', 'withPath', 'passDown', 'postMergeCallbackFn']);
         this._connected = true;
-        this.onInputChange(this._input);
+        this.onPropChange();
+    }
+
+    cssKeyMappers : ICssKeyMapper[];
+    parsePassDown(){
+        this.cssKeyMappers = [];
+        const splitPassDown = this._passDown.split('};');
+        splitPassDown.forEach(passDownSelectorAndProp =>{
+            if(!passDownSelectorAndProp) return;
+            const splitPassTo2 = passDownSelectorAndProp.split('{');
+            this.cssKeyMappers.push({
+                cssSelector: splitPassTo2[0],
+                propTarget: splitPassTo2[1]
+            });
+        })
+        
     }
 }
 if(!customElements.get(XtalInsertJson.is)){
