@@ -17,7 +17,7 @@ const delay = 'delay';
  * @polymer
  * @demo demo/index.html
  */
-export class XtalInsertJson extends XtallatX {
+export class XtalInsertJson extends XtallatX(HTMLElement) {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
         return super.observedAttributes.concat([
