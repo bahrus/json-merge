@@ -1,8 +1,14 @@
+import { XtallatX } from 'xtal-latx/xtal-latx.js';
 const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
-const pass_down = 'pass-down';
-const disabled = 'disabled';
+// const pass_down = 'pass-down';
+// const disabled = 'disabled';
+// export interface ICssKeyMapper{
+//     cssSelector: string;
+//     //propMapper: {[key: string]: string[]}
+//     propTarget: string;
+// }
 /**
  * `xtal-insert-json`
  *  Combine passed-in JSON with JSON defined within script tag
@@ -11,16 +17,14 @@ const disabled = 'disabled';
  * @polymer
  * @demo demo/index.html
  */
-export class XtalInsertJson extends HTMLElement {
+export class XtalInsertJson extends XtallatX {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
-        return [
+        return super.observedAttributes.concat([
             delay,
             with_path,
-            input,
-            pass_down,
-            disabled
-        ];
+            input
+        ]);
     }
     /**
     * @type {object}
@@ -53,16 +57,6 @@ export class XtalInsertJson extends HTMLElement {
         delete this._objectsToMerge;
         this.onPropChange();
     }
-    de(val) {
-        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
-            detail: {
-                value: val
-            },
-            bubbles: true,
-            composed: false,
-        });
-        return mergedObjectChangedEvent;
-    }
     /**
      * @type {object}
      * The result of merging the input property with the JSON inside the script tag.
@@ -72,16 +66,15 @@ export class XtalInsertJson extends HTMLElement {
     }
     set mergedProp(val) {
         this._mergedProp = val;
-        if (this.cssKeyMappers) {
+        if (this._cssPropMap) {
             this.passDownProp(val);
             return;
         }
-        const mergedObjectChangedEvent = this.de(val);
         if (this._postMergeCallbackFn) {
-            this._postMergeCallbackFn(mergedObjectChangedEvent, this);
+            this._postMergeCallbackFn(val, this);
             return;
         }
-        this.dispatchEvent(mergedObjectChangedEvent);
+        this.de('merged-prop', val);
     }
     /**
      * @type {function}
@@ -117,23 +110,24 @@ export class XtalInsertJson extends HTMLElement {
     set delay(newVal) {
         this.setAttribute(delay, newVal.toString());
     }
-    get passDown() {
-        return this._passDown;
-    }
-    set passDown(val) {
-        this.setAttribute(pass_down, val);
-    }
-    get disabled() {
-        return this._disabled;
-    }
-    set disabled(val) {
-        if (val) {
-            this.setAttribute(disabled, '');
-        }
-        else {
-            this.removeAttribute(disabled);
-        }
-    }
+    // _passDown: string;
+    // get passDown(){
+    //     return this._passDown;
+    // }
+    // set passDown(val){
+    //     this.setAttribute(pass_down, val);
+    // }
+    // _disabled: boolean;
+    // get disabled(){
+    //     return this._disabled;
+    // }
+    // set disabled(val){
+    //     if(val){
+    //         this.setAttribute(disabled, '');
+    //     }else{
+    //         this.removeAttribute(disabled);
+    //     }
+    // }
     /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
@@ -146,14 +140,15 @@ export class XtalInsertJson extends HTMLElement {
             case delay:
                 this._delay = parseFloat(newVal);
                 break;
-            case pass_down:
-                this._passDown = newVal;
-                this.parsePassDown();
-                break;
-            case disabled:
-                this._disabled = newVal !== null;
-                break;
+            // case pass_down:
+            //     this._passDown = newVal;
+            //     this.parsePassDown();
+            //     break;
+            // case disabled:
+            //     this._disabled = newVal !== null;
+            //     break;
         }
+        super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropChange();
     }
     loadJSON(callBack) {
@@ -223,43 +218,10 @@ export class XtalInsertJson extends HTMLElement {
             this.postLoadJson(mergedObj);
         });
     }
-    _upgradeProperties(props) {
-        props.forEach(prop => {
-            if (this.hasOwnProperty(prop)) {
-                let value = this[prop];
-                delete this[prop];
-                this[prop] = value;
-            }
-        });
-    }
     connectedCallback() {
         this._upgradeProperties([delay, input, 'refs', 'withPath', 'passDown', 'postMergeCallbackFn']);
         this._connected = true;
         this.onPropChange();
-    }
-    parsePassDown() {
-        this.cssKeyMappers = [];
-        const splitPassDown = this._passDown.split('};');
-        splitPassDown.forEach(passDownSelectorAndProp => {
-            if (!passDownSelectorAndProp)
-                return;
-            const splitPassTo2 = passDownSelectorAndProp.split('{');
-            this.cssKeyMappers.push({
-                cssSelector: splitPassTo2[0],
-                propTarget: splitPassTo2[1]
-            });
-        });
-    }
-    passDownProp(val) {
-        let nextSibling = this.nextElementSibling;
-        while (nextSibling) {
-            this.cssKeyMappers.forEach(map => {
-                if (nextSibling.matches(map.cssSelector)) {
-                    nextSibling[map.propTarget] = val;
-                }
-            });
-            nextSibling = nextSibling.nextElementSibling;
-        }
     }
 }
 if (!customElements.get(XtalInsertJson.is)) {
