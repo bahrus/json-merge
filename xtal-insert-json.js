@@ -73,15 +73,7 @@ export class XtalInsertJson extends HTMLElement {
     set mergedProp(val) {
         this._mergedProp = val;
         if (this.cssKeyMappers) {
-            let nextSibling = this.nextElementSibling;
-            while (nextSibling) {
-                this.cssKeyMappers.forEach(map => {
-                    if (nextSibling.matches(map.cssSelector)) {
-                        nextSibling[map.propTarget] = val;
-                    }
-                });
-                nextSibling = nextSibling.nextElementSibling;
-            }
+            this.passDownProp(val);
             return;
         }
         const mergedObjectChangedEvent = this.de(val);
@@ -257,6 +249,17 @@ export class XtalInsertJson extends HTMLElement {
                 propTarget: splitPassTo2[1]
             });
         });
+    }
+    passDownProp(val) {
+        let nextSibling = this.nextElementSibling;
+        while (nextSibling) {
+            this.cssKeyMappers.forEach(map => {
+                if (nextSibling.matches(map.cssSelector)) {
+                    nextSibling[map.propTarget] = val;
+                }
+            });
+            nextSibling = nextSibling.nextElementSibling;
+        }
     }
 }
 if (!customElements.get(XtalInsertJson.is)) {

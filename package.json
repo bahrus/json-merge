@@ -8,7 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
-    "jiife": "^0.0.0"
+    "jiife": "^0.0.0",
+    "xtal-latx": "^0.0.1"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.0-pre.12",

@@ -53,7 +53,8 @@ class XtalInsertJson extends HTMLElement {
     }
     set refs(val) {
         this._refs = val;
-        //this.onPropsChange();
+        delete this._objectsToMerge;
+        this.onPropChange();
     }
     de(val) {
         const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
@@ -175,23 +176,26 @@ class XtalInsertJson extends HTMLElement {
             return;
         }
         const stringToParse = scriptTag.innerText;
-        try {
-            if (this.refs) {
-                this._objectsToMerge = JSON.parse(stringToParse, (key, val) => {
-                    if (typeof val !== 'string')
-                        return val;
-                    if (!val.startsWith('${refs.') || !val.endsWith('}'))
-                        return val;
-                    const realKey = val.substring(7, val.length - 1);
-                    return this.refs[realKey];
-                });
+        if (!this._objectsToMerge) {
+            try {
+                if (this.refs) {
+                    this._objectsToMerge = JSON.parse(stringToParse, (key, val) => {
+                        if (typeof val !== 'string')
+                            return val;
+                        if (!val.startsWith('${refs.') || !val.endsWith('}'))
+                            return val;
+                        const realKey = val.substring(7, val.length - 1);
+                        return this.refs[realKey];
+                    });
+                }
+                else {
+                    if (!this._objectsToMerge)
+                        this._objectsToMerge = JSON.parse(stringToParse);
+                }
             }
-            else {
-                this._objectsToMerge = JSON.parse(stringToParse);
+            catch (e) {
+                console.error("Unable to parse " + stringToParse);
             }
-        }
-        catch (e) {
-            console.error("Unable to parse " + stringToParse);
         }
         callBack();
         //return this._objectsToMerge;
