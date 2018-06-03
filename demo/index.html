@@ -13,11 +13,11 @@
   <script async type="module" src="https://unpkg.com/xtal-json-merge@0.2.13/xtal-insert-json.js?module"></script>
 
 
-<script type="module">
+  <script type="module">
     import "https://unpkg.com/@polymer/iron-demo-helpers@3.0.0-pre.19/demo-pages-shared-styles.js?module";
     import "https://unpkg.com/@polymer/iron-demo-helpers@3.0.0-pre.19/demo-snippet.js?module";
     import "https://unpkg.com/@polymer/polymer@3.0.2/lib/elements/dom-bind.js?module";
-</script>
+  </script>
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -32,10 +32,10 @@
       <template>
         <dom-bind>
           <template>
-              
-              <div>Input:</div>
-                <xtal-insert-json input="[]" pass-down="#firstEditor{input};#insertData{input};">
-                  <script type="application/json">
+
+            <div>Input:</div>
+            <xtal-insert-json input="[]" pass-down="#firstEditor{input};#insertData{input};">
+              <script type="application/json">
                 [
                   [
                     {"name": "Harry Potter", "age":"13"},
@@ -43,11 +43,11 @@
                   ]
                 ]
                   </script>
-              </xtal-insert-json>
-              <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
-              <br>
-              <div>Merge with</div>
-              <pre>
+            </xtal-insert-json>
+            <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
+            <br>
+            <div>Merge with</div>
+            <pre>
                 [{
                   "columns":[
                       {"id": "index",       "name": "Index",      "field": "index"},
@@ -65,9 +65,9 @@
                   }
                 }]              
               </pre>
-              <br>
-              <xtal-insert-json id="insertData" with-path="data" merged-prop="{{fullObject}}" hidden>
-                  <script type="application/json">
+            <br>
+            <xtal-insert-json id="insertData" with-path="data" merged-prop="{{fullObject}}" hidden>
+              <script type="application/json">
                 [{
                   "columns":[
                       {"id": "index",       "name": "Index",      "field": "index"},
@@ -85,10 +85,10 @@
                   }
                 }]
               </script>
-              </xtal-insert-json>
-              <br>
-              <div>Output:</div>
-              <xtal-json-editor input="[[fullObject]]" options="{}"></xtal-json-editor>    
+            </xtal-insert-json>
+            <br>
+            <div>Output:</div>
+            <xtal-json-editor input="[[fullObject]]" options="{}"></xtal-json-editor>
           </template>
         </dom-bind>
       </template>

@@ -2,14 +2,7 @@ import {XtallatX} from 'xtal-latx/xtal-latx.js';
 const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
-// const pass_down = 'pass-down';
-// const disabled = 'disabled';
 
-// export interface ICssKeyMapper{
-//     cssSelector: string;
-//     //propMapper: {[key: string]: string[]}
-//     propTarget: string;
-// }
 /**
  * `xtal-insert-json`
  *  Combine passed-in JSON with JSON defined within script tag
@@ -62,16 +55,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
         delete this._objectsToMerge
         this.onPropChange();
     }
-    // de(val){
-    //     const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
-    //         detail:{
-    //             value: val
-    //         },
-    //         bubbles: true,
-    //         composed: false,
-    //     } as CustomEventInit);
-    //     return mergedObjectChangedEvent;
-    // }
+
     _mergedProp: object;
     /**
      * @type {object}
@@ -81,16 +65,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
         return this._mergedProp;
     }
     set mergedProp(val) {
-        this._mergedProp = val;
-        if(this._cssPropMap){
-            this.passDownProp(val);
-            return;
-        }
-        if(this._postMergeCallbackFn){
-            this._postMergeCallbackFn(val, this);
-            return;
-        }
-        this.de('merged-prop', val);
+        this.updateResultProp(val, 'merged-prop', '_mergedProp', this._postMergeCallbackFn);
     }
     _postMergeCallbackFn: (mergedObj: any, t: XtalInsertJson) => void;
     /**
@@ -132,25 +107,6 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
         this.setAttribute(delay, newVal.toString());
     }
 
-    // _passDown: string;
-    // get passDown(){
-    //     return this._passDown;
-    // }
-    // set passDown(val){
-    //     this.setAttribute(pass_down, val);
-    // }
-
-    // _disabled: boolean;
-    // get disabled(){
-    //     return this._disabled;
-    // }
-    // set disabled(val){
-    //     if(val){
-    //         this.setAttribute(disabled, '');
-    //     }else{
-    //         this.removeAttribute(disabled);
-    //     }
-    // }
 
     /*-------------------------------------------End Attributes -------------------------------*/
     
@@ -165,13 +121,6 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
             case delay:
                 this._delay = parseFloat(newVal);
                 break;
-            // case pass_down:
-            //     this._passDown = newVal;
-            //     this.parsePassDown();
-            //     break;
-            // case disabled:
-            //     this._disabled = newVal !== null;
-            //     break;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropChange()

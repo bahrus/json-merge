@@ -1,11 +1,105 @@
 
     //@ts-check
     (function () {
-    const input = 'input';
+    const pass_down = 'pass-down';
+const disabled = 'disabled';
+function XtallatX(superClass) {
+    return class extends superClass {
+        static get observedAttributes() {
+            return [disabled, pass_down];
+        }
+        get passDown() {
+            return this._passDown;
+        }
+        set passDown(val) {
+            this.setAttribute(pass_down, val);
+        }
+        get disabled() {
+            return this._disabled;
+        }
+        set disabled(val) {
+            if (val) {
+                this.setAttribute(disabled, '');
+            }
+            else {
+                this.removeAttribute(disabled);
+            }
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            switch (name) {
+                case pass_down:
+                    if (newVal && newVal.endsWith('}'))
+                        newVal += ';';
+                    this._passDown = newVal;
+                    this.parsePassDown();
+                    break;
+                case disabled:
+                    this._disabled = newVal !== null;
+                    break;
+            }
+        }
+        de(name, detail) {
+            const newEvent = new CustomEvent(name + '-changed', {
+                detail: detail,
+                bubbles: true,
+                composed: false,
+            });
+            this.dispatchEvent(newEvent);
+            return newEvent;
+        }
+        updateResultProp(val, eventName, propName, callBackFn) {
+            if (callBackFn) {
+                val = callBackFn(val, this);
+                if (!val)
+                    return;
+            }
+            this[propName] = val;
+            if (this._cssPropMap) {
+                this.passDownProp(val);
+            }
+            else {
+                this.de(eventName, val);
+            }
+        }
+        parsePassDown() {
+            this._cssPropMap = [];
+            const splitPassDown = this._passDown.split('};');
+            splitPassDown.forEach(passDownSelectorAndProp => {
+                if (!passDownSelectorAndProp)
+                    return;
+                const splitPassTo2 = passDownSelectorAndProp.split('{');
+                this._cssPropMap.push({
+                    cssSelector: splitPassTo2[0],
+                    propTarget: splitPassTo2[1]
+                });
+            });
+        }
+        passDownProp(val) {
+            let nextSibling = this.nextElementSibling;
+            while (nextSibling) {
+                this._cssPropMap.forEach(map => {
+                    if (nextSibling.matches(map.cssSelector)) {
+                        nextSibling[map.propTarget] = val;
+                    }
+                });
+                nextSibling = nextSibling.nextElementSibling;
+            }
+        }
+        _upgradeProperties(props) {
+            props.forEach(prop => {
+                if (this.hasOwnProperty(prop)) {
+                    let value = this[prop];
+                    delete this[prop];
+                    this[prop] = value;
+                }
+            });
+        }
+    };
+}
+//# sourceMappingURL=xtal-latx.js.map
+const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
-const pass_down = 'pass-down';
-const disabled = 'disabled';
 /**
  * `xtal-insert-json`
  *  Combine passed-in JSON with JSON defined within script tag
@@ -14,16 +108,14 @@ const disabled = 'disabled';
  * @polymer
  * @demo demo/index.html
  */
-class XtalInsertJson extends HTMLElement {
+class XtalInsertJson extends XtallatX(HTMLElement) {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
-        return [
+        return super.observedAttributes.concat([
             delay,
             with_path,
-            input,
-            pass_down,
-            disabled
-        ];
+            input
+        ]);
     }
     /**
     * @type {object}
@@ -56,16 +148,6 @@ class XtalInsertJson extends HTMLElement {
         delete this._objectsToMerge;
         this.onPropChange();
     }
-    de(val) {
-        const mergedObjectChangedEvent = new CustomEvent('merged-prop-changed', {
-            detail: {
-                value: val
-            },
-            bubbles: true,
-            composed: false,
-        });
-        return mergedObjectChangedEvent;
-    }
     /**
      * @type {object}
      * The result of merging the input property with the JSON inside the script tag.
@@ -74,25 +156,7 @@ class XtalInsertJson extends HTMLElement {
         return this._mergedProp;
     }
     set mergedProp(val) {
-        this._mergedProp = val;
-        if (this.cssKeyMappers) {
-            let nextSibling = this.nextElementSibling;
-            while (nextSibling) {
-                this.cssKeyMappers.forEach(map => {
-                    if (nextSibling.matches(map.cssSelector)) {
-                        nextSibling[map.propTarget] = val;
-                    }
-                });
-                nextSibling = nextSibling.nextElementSibling;
-            }
-            return;
-        }
-        const mergedObjectChangedEvent = this.de(val);
-        if (this._postMergeCallbackFn) {
-            this._postMergeCallbackFn(mergedObjectChangedEvent, this);
-            return;
-        }
-        this.dispatchEvent(mergedObjectChangedEvent);
+        this.updateResultProp(val, 'merged-prop', '_mergedProp', this._postMergeCallbackFn);
     }
     /**
      * @type {function}
@@ -128,23 +192,6 @@ class XtalInsertJson extends HTMLElement {
     set delay(newVal) {
         this.setAttribute(delay, newVal.toString());
     }
-    get passDown() {
-        return this._passDown;
-    }
-    set passDown(val) {
-        this.setAttribute(pass_down, val);
-    }
-    get disabled() {
-        return this._disabled;
-    }
-    set disabled(val) {
-        if (val) {
-            this.setAttribute(disabled, '');
-        }
-        else {
-            this.removeAttribute(disabled);
-        }
-    }
     /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
@@ -157,15 +204,17 @@ class XtalInsertJson extends HTMLElement {
             case delay:
                 this._delay = parseFloat(newVal);
                 break;
-            case pass_down:
-                this._passDown = newVal;
-                this.parsePassDown();
-                break;
-            case disabled:
-                this._disabled = newVal !== null;
-                break;
         }
+        super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropChange();
+    }
+    /**
+     * @type {array}
+     * The object array that is to be merged.
+     */
+    get objectsToMerge() { return this._objectsToMerge; }
+    set objectsToMerge(val) {
+        this._objectsToMerge = val;
     }
     loadJSON(callBack) {
         const scriptTag = this.querySelector('script[type="application\/json"]');
@@ -234,32 +283,10 @@ class XtalInsertJson extends HTMLElement {
             this.postLoadJson(mergedObj);
         });
     }
-    _upgradeProperties(props) {
-        props.forEach(prop => {
-            if (this.hasOwnProperty(prop)) {
-                let value = this[prop];
-                delete this[prop];
-                this[prop] = value;
-            }
-        });
-    }
     connectedCallback() {
         this._upgradeProperties([delay, input, 'refs', 'withPath', 'passDown', 'postMergeCallbackFn']);
         this._connected = true;
         this.onPropChange();
-    }
-    parsePassDown() {
-        this.cssKeyMappers = [];
-        const splitPassDown = this._passDown.split('};');
-        splitPassDown.forEach(passDownSelectorAndProp => {
-            if (!passDownSelectorAndProp)
-                return;
-            const splitPassTo2 = passDownSelectorAndProp.split('{');
-            this.cssKeyMappers.push({
-                cssSelector: splitPassTo2[0],
-                propTarget: splitPassTo2[1]
-            });
-        });
     }
 }
 if (!customElements.get(XtalInsertJson.is)) {

@@ -9,9 +9,9 @@ xtal-json-merge and xtal-insert-json are dependency free web components, that me
 
 These two components can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
-xtal-insert-json.js is ~1.5KB minified and gzipped.  xtal-json-merge.js is ~820b minified and gzipped.  Both require importing via ES6 Modules. 
+xtal-insert-json.js is ~1.2KB minified and gzipped (not counting a common utility mixin used by multiple xtal-* components, such as xtal-fetch mentioned below).  xtal-json-merge.js is ~820b minified and gzipped.  Both require importing via ES6 Modules. 
 
-The two files are combined into one IIFE file, json-merge.js, which can be imported via a classic script tag.  This combined file is ~2.0kb minified and gzipped
+The two files, plus the common utility mixin mentioned above, are combined into one IIFE file, json-merge.js, which can be imported via a classic script tag.  This combined file is ~1.9kb minified and gzipped
 
 ## Mission
 
@@ -34,7 +34,7 @@ Other components tend to view themselves primarily as a JavaScript api, and then
 
 These components, xtal-insert-json and xtal-json-merge, enforce the declarative, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bind).
 
-The JSON needs to be wrapped inside a script tag with type application/json, as shown below.
+If using a markup-centric framework, the JSON needs to be wrapped inside a script tag with type application/json, as shown below.
 
 ```html
 <xtal-insert-json>
@@ -87,9 +87,9 @@ I have heard, but never understood, a great number of reasons why this love tria
 
 It is, the data flows down the page.  
 
-Okay, by relying on two-way binding support, one could have the data flow "upwards."  But the pattern above clearly shows the data flowing down (at the sibling level).
+Okay, by relying on two-way binding support, one *could* have the data flow "upwards."  But the pattern above clearly shows the data flowing down (at the sibling level).
 
-In fact, in what we describe below, we provide an alternative way of explicitly passing the data down  the document, so there's no ambiguity that data flow is unidrectional, and no dependency on a two-way binding container needed.
+In fact, in what we describe below, we provide an alternative way of explicitly passing the data down the document, so there's no ambiguity that data flow is unidrectional, and no dependency on a two-way binding container needed.
 
 ###  That has no place in a render function!
 
@@ -105,12 +105,12 @@ True, we are using different technologies, but there's only one concern -- show 
 
 I'm too thick to understand the question.
 
-## Unidrectional data flow among siblings
+## Unidirectional data flow among siblings
 
-If you don't want to use Polymer's two-way binding support, you can attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  Or if you don't want to write repetitive code over and over again, you can simply do this:
+If you don't want to use Polymer's two-way binding support, you could, if you like to code everything, attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  Or if you don't want to write repetitive code over and over again, you can simply do this:
 
 ```html
-<xtal-insert-json  input="[[rowData]]"  with-path="data" pass-down="mygrid{gridOptions}">
+<xtal-insert-json  input="[[rowData]]"  with-path="data" pass-down="my-grid{gridOptions}">
     <script type="application/json">
     [{
         "columns":[
@@ -160,7 +160,7 @@ If you use xtal-fetch-get, it also supports the pass-down attribute.  So the com
 ```
 
 
-The presence of attribute pass-down causes xtal-fetch-get and xtal-insert-json to iterate through all its nextSiblings's, testing if the node matches the css selector (the stuff before the opening brace).  If it finds a match, it sets the property defined within the brace to the value of the merged object. 
+The presence of attribute pass-down causes xtal-fetch-get and xtal-insert-json to iterate through all its next siblings, testing if the node matches the css selector (the stuff before the opening brace).  If it finds a match, it sets the property defined within the brace to the value of the merged object. 
 
 
 ## Dynamic fields
@@ -191,7 +191,7 @@ During the parsing of the JSON, you can insert dynamic fields, if they are passe
 <my-grid gridOptions="[[gridOptions]]"></my-grid>
 ```
 
-Those refs are evaluated using the revivor function call back of JSON.parse.
+Those refs are evaluated using the revivor function callback of JSON.parse.
 
 ## Post Merge callback
 
@@ -206,6 +206,8 @@ If you want to handle the merged object yourself, but either can't live with the
 </xtal-json-merge>
 <my-grid>
 ```
+
+This may be useful if the declarative json (combined with dynamic refs in the revivor function) isn't quite powerful enough to handle your scenario.  I.e. you can use the callback or event handler (but not both) to make some adjustments before passing down.  The callback function should return the (modified) merged object.  If it is null, no further processing will take place.
 
 ## Final concession
 
