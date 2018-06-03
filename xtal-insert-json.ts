@@ -177,6 +177,14 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
         this.onPropChange()
     }
     _objectsToMerge: Function[];
+    /**
+     * @type {array}
+     * The object array that is to be merged.
+     */
+    get objectsToMerge(){return this._objectsToMerge;}
+    set objectsToMerge(val){
+        this._objectsToMerge = val;
+    }
     loadJSON(callBack: any) {
         const scriptTag = this.querySelector('script[type="application\/json"]') as HTMLScriptElement;
         if (!scriptTag) {
@@ -240,16 +248,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
         });
 
     }
-    // _upgradeProperties(props: string[]) {
-    //     props.forEach(prop => {
-    //         if (this.hasOwnProperty(prop)) {
-    //             let value = this[prop];
-    //             delete this[prop];
-    //             this[prop] = value;
-    //         }
-    //     })
 
-    // }
     _connected: boolean;
     connectedCallback() {
         this._upgradeProperties([delay, input, 'refs', 'withPath', 'passDown', 'postMergeCallbackFn']);
@@ -257,31 +256,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
         this.onPropChange();
     }
 
-    //cssKeyMappers : ICssKeyMapper[];
-    // parsePassDown(){
-    //     this.cssKeyMappers = [];
-    //     const splitPassDown = this._passDown.split('};');
-    //     splitPassDown.forEach(passDownSelectorAndProp =>{
-    //         if(!passDownSelectorAndProp) return;
-    //         const splitPassTo2 = passDownSelectorAndProp.split('{');
-    //         this.cssKeyMappers.push({
-    //             cssSelector: splitPassTo2[0],
-    //             propTarget: splitPassTo2[1]
-    //         });
-    //     })
-        
-    // }
-    // passDownProp(val: any){
-    //     let nextSibling = this.nextElementSibling;
-    //     while(nextSibling){
-    //         this.cssKeyMappers.forEach(map =>{
-    //             if(nextSibling.matches(map.cssSelector)){
-    //                 nextSibling[map.propTarget] = val;
-    //             }
-    //         })
-    //         nextSibling = nextSibling.nextElementSibling;
-    //     }        
-    // }
+
 }
 if(!customElements.get(XtalInsertJson.is)){
     customElements.define(XtalInsertJson.is, XtalInsertJson);

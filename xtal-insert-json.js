@@ -151,6 +151,14 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
         super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropChange();
     }
+    /**
+     * @type {array}
+     * The object array that is to be merged.
+     */
+    get objectsToMerge() { return this._objectsToMerge; }
+    set objectsToMerge(val) {
+        this._objectsToMerge = val;
+    }
     loadJSON(callBack) {
         const scriptTag = this.querySelector('script[type="application\/json"]');
         if (!scriptTag) {

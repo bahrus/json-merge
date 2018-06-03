@@ -207,6 +207,11 @@ If you want to handle the merged object yourself, but either can't live with the
 <my-grid>
 ```
 
+## Final concession
+
+Finally, the whole concept of adhering to strict declarative syntax when using a code-centric framework is kind of moot.  Claims to the contrary, these frameworks only dimly resemble true declarative solutions.  Where this becomes most apparent is in defining side-effect free JSON inside a JavaScript method.  What's the point?
+
+In these scenarios, you can simply pass the configuration to xtal-insert-json's "objectsToMerge" property.  You will still benefit from fewer callback boilerplate code.
 
 ## Install the Polymer-CLI
 
