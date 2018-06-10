@@ -9,7 +9,7 @@
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
     "jiife": "^0.0.0",
-    "xtal-latx": "^0.0.9"
+    "xtal-latx": "^0.0.10"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.0-pre.12",
