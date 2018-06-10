@@ -71,7 +71,8 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
             newVal = this._postMergeCallbackFn(val, this);
             if(!newVal) return;
         }
-        this.de('merged-prop', newVal);
+        this._mergedProp = newVal;
+        this.de('merged-prop', {value: newVal});
     }
     _postMergeCallbackFn: (mergedObj: any, t: XtalInsertJson) => any;
     /**

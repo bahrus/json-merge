@@ -10,6 +10,7 @@
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <!-- <script async src="https://cdn.jsdelivr.net/npm/xtal-json-editor@0.0.19/build/ES6/xtal-json-editor.js"></script> -->
   <script async src="https://unpkg.com/xtal-json-editor@0.0.19/build/ES6/xtal-json-editor.js"></script>
+  <script async type="module" src="https://unpkg.com/p-d.p-u@0.0.1/p-d.js?module"></script>
   <script async type="module" src="../xtal-json-merge.js"></script>
   <script async type="module" src="../xtal-insert-json.js"></script>
 
@@ -32,9 +33,9 @@
       <template>
         <dom-bind>
           <template>
-              
+              <div>
               <div>Input:</div>
-                <xtal-json-merge input="[]" pass-down="#firstEditor{input};#insertData{input};">
+                <xtal-json-merge disabled input="[]">
                   <script type="application/json">
                 [
                   [
@@ -44,6 +45,7 @@
                 ]
                   </script>
               </xtal-json-merge>
+              <p-d to="#firstEditor{input:detail};#insertData{input:detail}" on="merged-prop-changed"></p-d>
               <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
               <br>
               <div>Merge with</div>
@@ -88,7 +90,8 @@
               </xtal-insert-json>
               <br>
               <div>Output:</div>
-              <xtal-json-editor input="[[fullObject]]" options="{}"></xtal-json-editor>    
+              <xtal-json-editor input="[[fullObject]]" options="{}"></xtal-json-editor>
+            </div>    
           </template>
         </dom-bind>
       </template>

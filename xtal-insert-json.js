@@ -65,7 +65,8 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
             if (!newVal)
                 return;
         }
-        this.de('merged-prop', newVal);
+        this._mergedProp = newVal;
+        this.de('merged-prop', { value: newVal });
     }
     /**
      * @type {function}

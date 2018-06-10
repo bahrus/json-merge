@@ -89,7 +89,7 @@ It is, the data flows down the page.
 
 Okay, by relying on two-way binding support, one *could* have the data flow "upwards."  But the pattern above clearly shows the data flowing down (at the sibling level).
 
-In fact, in what we describe below, we provide an alternative way of explicitly passing the data down the document, so there's no ambiguity that data flow is unidrectional, and no dependency on a two-way binding container needed.
+In fact, another component, [https://www.webcomponents.org/element/p-d.p-u](p-d) provides an alternative way of explicitly passing the data down the document, so there's no ambiguity that data flow is unidrectional, and no dependency on a two-way binding container needed.
 
 ###  That has no place in a render function!
 
@@ -104,63 +104,6 @@ True, we are using different technologies, but there's only one concern -- show 
 ###  Isn't your component too thick?
 
 I'm too thick to understand the question.
-
-## Unidirectional data flow among siblings
-
-If you don't want to use Polymer's two-way binding support, you could, if you like to code everything, attach an event handler to the xtal-insert-json for event "merged-prop-changed" and add some boilerplate code to do the same thing.  Or if you don't want to write repetitive code over and over again, you can simply do this:
-
-```html
-<xtal-insert-json  input="[[rowData]]"  with-path="data" pass-down="my-grid{gridOptions}">
-    <script type="application/json">
-    [{
-        "columns":[
-            {"id": "index",       "name": "Index",      "field": "index"},
-            {"id": "isActive",    "name": "Active",     "field": "isActive"},
-            {"id": "salary",     "name": "Salary",      "field": "balance"},
-            {"id": "age",         "name": "Age",        "field": "age"},
-            {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-            {"id": "name",        "name": "Name",       "field": "name"},
-            {"id": "gender",      "name": "Gender",     "field": "gender"},
-        ],
-        "gridSettings":{
-            "enableCellNavigation": true,
-            "enableColumnReorder": false
-        }
-    }]
-    </script>
-</xtal-insert-json>
-<my-grid></my-grid>
-```
-
-If you use xtal-fetch-get, it also supports the pass-down attribute.  So the complete markup looks like:
-
-```html
-<!--- Polymer Syntax -->
-<xtal-fetch-get href="https://HRDatabase.com" pass-down="xtal-insert-json{input}"></fetch-data>
-<xtal-insert-json  refs="[[formatters]]" with-path="data" pass-down="my-grid{gridOptions}">
-    <script type="application/json">
-    [{
-        "columns":[
-            {"id": "index",       "name": "Index",      "field": "index"},
-            {"id": "isActive",    "name": "Active",     "field": "isActive"},
-            {"id": "salary",     "name": "Salary",      "field": "balance", "formatter":  "${refs.dollarFormatter}"},
-            {"id": "age",         "name": "Age",        "field": "age"},
-            {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-            {"id": "name",        "name": "Name",       "field": "name"},
-            {"id": "gender",      "name": "Gender",     "field": "gender"}
-        ],
-        "gridSettings":{
-            "enableCellNavigation": true,
-            "enableColumnReorder": false
-        }
-    }]
-    </script>
-</xtal-insert-json>
-<my-grid></my-grid>
-```
-
-
-The presence of attribute pass-down causes xtal-fetch-get and xtal-insert-json to iterate through all its next siblings, testing if the node matches the css selector (the stuff before the opening brace).  If it finds a match, it sets the property defined within the brace to the value of the merged object. 
 
 
 ## Dynamic fields
@@ -207,7 +150,7 @@ If you want to handle the merged object yourself, but either can't live with the
 <my-grid>
 ```
 
-This may be useful if the declarative json (combined with dynamic refs in the revivor function) isn't quite powerful enough to handle your scenario.  I.e. you can use the callback or event handler (but not both) to make some adjustments before passing down.  The callback function should return the (modified) merged object.  If it is null, no further processing will take place.
+This may be useful if the declarative json (combined with dynamic refs in the revivor function) isn't quite powerful enough to handle your scenario.  The callback function should return the (modified) merged object.  If it is null, no further processing will take place.
 
 ## Final concession
 

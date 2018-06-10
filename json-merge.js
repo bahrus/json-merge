@@ -1,18 +1,11 @@
 
     //@ts-check
     (function () {
-    const pass_down = 'pass-down';
-const disabled = 'disabled';
+    const disabled = 'disabled';
 function XtallatX(superClass) {
     return class extends superClass {
         static get observedAttributes() {
-            return [disabled, pass_down];
-        }
-        get passDown() {
-            return this._passDown;
-        }
-        set passDown(val) {
-            this.setAttribute(pass_down, val);
+            return [disabled];
         }
         get disabled() {
             return this._disabled;
@@ -27,12 +20,6 @@ function XtallatX(superClass) {
         }
         attributeChangedCallback(name, oldVal, newVal) {
             switch (name) {
-                case pass_down:
-                    if (newVal && newVal.endsWith('}'))
-                        newVal += ';';
-                    this._passDown = newVal;
-                    this.parsePassDown();
-                    break;
                 case disabled:
                     this._disabled = newVal !== null;
                     break;
@@ -46,44 +33,6 @@ function XtallatX(superClass) {
             });
             this.dispatchEvent(newEvent);
             return newEvent;
-        }
-        updateResultProp(val, eventName, propName, callBackFn) {
-            if (callBackFn) {
-                val = callBackFn(val, this);
-                if (!val)
-                    return;
-            }
-            this[propName] = val;
-            if (this._cssPropMap) {
-                this.passDownProp(val);
-            }
-            else {
-                this.de(eventName, val);
-            }
-        }
-        parsePassDown() {
-            this._cssPropMap = [];
-            const splitPassDown = this._passDown.split('};');
-            splitPassDown.forEach(passDownSelectorAndProp => {
-                if (!passDownSelectorAndProp)
-                    return;
-                const splitPassTo2 = passDownSelectorAndProp.split('{');
-                this._cssPropMap.push({
-                    cssSelector: splitPassTo2[0],
-                    propTarget: splitPassTo2[1]
-                });
-            });
-        }
-        passDownProp(val) {
-            let nextSibling = this.nextElementSibling;
-            while (nextSibling) {
-                this._cssPropMap.forEach(map => {
-                    if (nextSibling.matches(map.cssSelector)) {
-                        nextSibling[map.propTarget] = val;
-                    }
-                });
-                nextSibling = nextSibling.nextElementSibling;
-            }
         }
         _upgradeProperties(props) {
             props.forEach(prop => {
@@ -156,7 +105,15 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         return this._mergedProp;
     }
     set mergedProp(val) {
-        this.updateResultProp(val, 'merged-prop', '_mergedProp', this._postMergeCallbackFn);
+        //this.updateResultProp(val, 'merged-prop', '_mergedProp', this._postMergeCallbackFn);
+        let newVal = val;
+        if (this._postMergeCallbackFn) {
+            newVal = this._postMergeCallbackFn(val, this);
+            if (!newVal)
+                return;
+        }
+        this._mergedProp = newVal;
+        this.de('merged-prop', { value: newVal });
     }
     /**
      * @type {function}
