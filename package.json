@@ -1,6 +1,6 @@
 {
   "name": "xtal-json-merge",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "description": "Dependency free web component  designed to merge JSON objects into other objects",
   "main": "xtal-json-merge.js",
   "repository": "https://github.com/bahrus/json-merge",
@@ -13,7 +13,7 @@
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.0-pre.12",
     "@webcomponents/webcomponentsjs": "^2.0.0",
-	"jiife": "^0.0.0",
+    "jiife": "^0.0.0",
     "wct-browser-legacy": "^1.0.0"
   },
   "scripts": {
