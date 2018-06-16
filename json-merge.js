@@ -112,7 +112,7 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
             if (!newVal)
                 return;
         }
-        this._mergedProp = newVal;
+        this.value = this._mergedProp = newVal;
         this.de('merged-prop', { value: newVal });
     }
     /**
