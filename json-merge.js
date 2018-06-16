@@ -74,13 +74,14 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         return this._input;
     }
     set input(val) {
-        this._input = val;
         if (this._delay) {
             setTimeout(() => {
+                this._input = val;
                 this.onPropChange();
             }, this._delay);
         }
         else {
+            this._input = val;
             this.onPropChange();
         }
     }
