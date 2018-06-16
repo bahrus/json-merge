@@ -89,7 +89,7 @@ It is, the data flows down the page.
 
 Okay, by relying on two-way binding support, one *could* have the data flow "upwards."  But the pattern above clearly shows the data flowing down (at the sibling level).
 
-In fact, another component, [https://www.webcomponents.org/element/p-d.p-u](p-d) provides an alternative way of explicitly passing the data down the document, so there's no ambiguity that data flow is unidrectional, and no dependency on a two-way binding container needed.
+In fact, another component, [p-d](https://www.webcomponents.org/element/p-d.p-u) provides an alternative way of explicitly passing the data down the document, so there's no ambiguity that data flow is unidrectional, and no dependency on a two-way binding container needed.
 
 ###  That has no place in a render function!
 
