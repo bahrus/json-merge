@@ -53,7 +53,9 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
     }
     /**
      * @type {object}
+     * ⚡merged-prop-changed
      * The result of merging the input property with the JSON inside the script tag.
+     *
      */
     get mergedProp() {
         return this._mergedProp;
@@ -91,7 +93,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
         return this._withPath;
     }
     set withPath(val) {
-        this.setAttribute(with_path, val);
+        this.attr(with_path, val);
     }
     /**
      * @type {number}
@@ -101,7 +103,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
         return this._delay;
     }
     set delay(newVal) {
-        this.setAttribute(delay, newVal.toString());
+        this.attr(delay, newVal.toString());
     }
     /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name, oldVal, newVal) {
@@ -195,7 +197,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
         });
     }
     connectedCallback() {
-        this._upgradeProperties([delay, input, 'refs', 'withPath', 'passDown', 'postMergeCallbackFn']);
+        this._upgradeProperties([delay, input, 'refs', 'withPath', 'postMergeCallbackFn']);
         this._connected = true;
         this.onPropChange();
     }

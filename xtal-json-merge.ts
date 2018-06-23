@@ -18,9 +18,7 @@ class XtalJSONMerge extends XtalInsertJson {
     static get is() { return 'xtal-json-merge'; }
     static get observedAttributes() {
         return super.observedAttributes.concat( [
-            /**
-             * If set to true, the JSON object will directly go to result during initialization
-             */
+
             'pass-thru-on-init',
         ]);
     }
@@ -44,17 +42,17 @@ class XtalJSONMerge extends XtalInsertJson {
    
 
     _passThruOnInit: boolean;
+    /**
+     * @type{boolean} 
+     * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.
+     */
     get passThruOnInit(){
         return this._passThruOnInit;
     }
 
     set passThruOnInit(val){
-        if(val){
-            this.setAttribute(pass_thru_on_init, '');
-        }else{
-            this.removeAttribute(pass_thru_on_init);
-        } 
-    }
+        this.attr(pass_thru_on_init, val, '');
+m    }
 
     // _passTo: string;
     // get passTo(){
@@ -71,17 +69,6 @@ class XtalJSONMerge extends XtalInsertJson {
             case pass_thru_on_init:
                 this._passThruOnInit = newVal !== null;
                 break;
-
-            
-            // case pass_to:
-            //     this._passTo = newVal;
-            //     if(newVal){
-            //         this.parsePassDown();
-            //     }else{
-            //         this.cssKeyMappers = null;
-            //     }
-                
-            //     break;
         }
         
     }

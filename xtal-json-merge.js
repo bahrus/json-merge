@@ -13,9 +13,6 @@ import { XtalInsertJson } from './xtal-insert-json.js';
         static get is() { return 'xtal-json-merge'; }
         static get observedAttributes() {
             return super.observedAttributes.concat([
-                /**
-                 * If set to true, the JSON object will directly go to result during initialization
-                 */
                 'pass-thru-on-init',
             ]);
         }
@@ -25,16 +22,16 @@ import { XtalInsertJson } from './xtal-insert-json.js';
             super.connectedCallback();
             //this.onInputChange(this._input);
         }
+        /**
+         * @type{boolean}
+         * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.
+         */
         get passThruOnInit() {
             return this._passThruOnInit;
         }
         set passThruOnInit(val) {
-            if (val) {
-                this.setAttribute(pass_thru_on_init, '');
-            }
-            else {
-                this.removeAttribute(pass_thru_on_init);
-            }
+            this.attr(pass_thru_on_init, val, '');
+            m;
         }
         // _passTo: string;
         // get passTo(){
@@ -50,14 +47,6 @@ import { XtalInsertJson } from './xtal-insert-json.js';
                 case pass_thru_on_init:
                     this._passThruOnInit = newVal !== null;
                     break;
-                // case pass_to:
-                //     this._passTo = newVal;
-                //     if(newVal){
-                //         this.parsePassDown();
-                //     }else{
-                //         this.cssKeyMappers = null;
-                //     }
-                //     break;
             }
         }
         postLoadJson(mergedObj) {
