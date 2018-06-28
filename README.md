@@ -11,7 +11,7 @@ These two components can also be useful for demo pages that use html markup as t
 
 xtal-insert-json.js is ~1.2KB minified and gzipped (not counting a common utility mixin used by multiple xtal-* components, such as xtal-fetch mentioned below).  xtal-json-merge.js is ~820b minified and gzipped.  Both require importing via ES6 Modules. 
 
-The two files, plus the common utility mixin mentioned above, are combined into one IIFE file, json-merge.js, which can be imported via a classic script tag.  This combined file is ~1.9kb minified and gzipped
+The two files, plus the common utility mixin mentioned above, are combined into one IIFE file, json-merge.js, which can be imported via a classic script tag.  This combined file is ~1.8kb minified and gzipped
 
 ## Mission
 

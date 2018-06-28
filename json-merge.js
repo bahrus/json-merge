@@ -4,6 +4,10 @@
     const disabled = 'disabled';
 function XtallatX(superClass) {
     return class extends superClass {
+        constructor() {
+            super(...arguments);
+            this._evCount = {};
+        }
         static get observedAttributes() {
             return [disabled];
         }
@@ -11,12 +15,25 @@ function XtallatX(superClass) {
             return this._disabled;
         }
         set disabled(val) {
+            this.attr(disabled, val, '');
+        }
+        attr(name, val, trueVal) {
             if (val) {
-                this.setAttribute(disabled, '');
+                this.setAttribute(name, trueVal || val);
             }
             else {
-                this.removeAttribute(disabled);
+                this.removeAttribute(name);
             }
+        }
+        incAttr(name) {
+            const ec = this._evCount;
+            if (name in ec) {
+                ec[name]++;
+            }
+            else {
+                ec[name] = 0;
+            }
+            this.attr(name, ec[name].toString());
         }
         attributeChangedCallback(name, oldVal, newVal) {
             switch (name) {
@@ -26,12 +43,14 @@ function XtallatX(superClass) {
             }
         }
         de(name, detail) {
-            const newEvent = new CustomEvent(name + '-changed', {
+            const eventName = name + '-changed';
+            const newEvent = new CustomEvent(eventName, {
                 detail: detail,
                 bubbles: true,
                 composed: false,
             });
             this.dispatchEvent(newEvent);
+            this.incAttr(eventName);
             return newEvent;
         }
         _upgradeProperties(props) {
@@ -100,7 +119,9 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
     }
     /**
      * @type {object}
+     * ⚡merged-prop-changed
      * The result of merging the input property with the JSON inside the script tag.
+     *
      */
     get mergedProp() {
         return this._mergedProp;
@@ -138,7 +159,7 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         return this._withPath;
     }
     set withPath(val) {
-        this.setAttribute(with_path, val);
+        this.attr(with_path, val);
     }
     /**
      * @type {number}
@@ -148,7 +169,7 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         return this._delay;
     }
     set delay(newVal) {
-        this.setAttribute(delay, newVal.toString());
+        this.attr(delay, newVal.toString());
     }
     /*-------------------------------------------End Attributes -------------------------------*/
     attributeChangedCallback(name, oldVal, newVal) {
@@ -217,7 +238,7 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         this.mergedProp = mergedObj;
     }
     onPropChange() {
-        if (!this._connected || this._disabled)
+        if (!this._connected || this._disabled || !this._input)
             return;
         // if(typeof(this._withPath) === 'undefined') return;
         let mergedObj;
@@ -242,7 +263,7 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         });
     }
     connectedCallback() {
-        this._upgradeProperties([delay, input, 'refs', 'withPath', 'passDown', 'postMergeCallbackFn']);
+        this._upgradeProperties([delay, input, 'refs', 'withPath', 'postMergeCallbackFn']);
         this._connected = true;
         this.onPropChange();
     }
@@ -265,9 +286,6 @@ if (!customElements.get(XtalInsertJson.is)) {
         static get is() { return 'xtal-json-merge'; }
         static get observedAttributes() {
             return super.observedAttributes.concat([
-                /**
-                 * If set to true, the JSON object will directly go to result during initialization
-                 */
                 'pass-thru-on-init',
             ]);
         }
@@ -277,16 +295,16 @@ if (!customElements.get(XtalInsertJson.is)) {
             super.connectedCallback();
             //this.onInputChange(this._input);
         }
+        /**
+         * @type{boolean}
+         * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.
+         */
         get passThruOnInit() {
             return this._passThruOnInit;
         }
         set passThruOnInit(val) {
-            if (val) {
-                this.setAttribute(pass_thru_on_init, '');
-            }
-            else {
-                this.removeAttribute(pass_thru_on_init);
-            }
+            this.attr(pass_thru_on_init, val, '');
+            m;
         }
         // _passTo: string;
         // get passTo(){
@@ -302,14 +320,6 @@ if (!customElements.get(XtalInsertJson.is)) {
                 case pass_thru_on_init:
                     this._passThruOnInit = newVal !== null;
                     break;
-                // case pass_to:
-                //     this._passTo = newVal;
-                //     if(newVal){
-                //         this.parsePassDown();
-                //     }else{
-                //         this.cssKeyMappers = null;
-                //     }
-                //     break;
             }
         }
         postLoadJson(mergedObj) {

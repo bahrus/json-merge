@@ -172,7 +172,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
         this.mergedProp = mergedObj;
     }
     onPropChange() {
-        if (!this._connected || this._disabled)
+        if (!this._connected || this._disabled || !this._input)
             return;
         // if(typeof(this._withPath) === 'undefined') return;
         let mergedObj;
