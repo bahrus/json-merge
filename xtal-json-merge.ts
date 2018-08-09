@@ -1,5 +1,4 @@
 import {XtalInsertJson} from './xtal-insert-json.js';
-(function () {
 
 const pass_thru_on_init = 'pass-thru-on-init';
 
@@ -13,7 +12,7 @@ const pass_thru_on_init = 'pass-thru-on-init';
  * @polymer
  * @demo demo/index.html
  */
-class XtalJSONMerge extends XtalInsertJson {
+export class XtalJSONMerge extends XtalInsertJson {
 
     static get is() { return 'xtal-json-merge'; }
     static get observedAttributes() {
@@ -52,7 +51,7 @@ class XtalJSONMerge extends XtalInsertJson {
 
     set passThruOnInit(val){
         this.attr(pass_thru_on_init, val, '');
-m    }
+    }
 
     // _passTo: string;
     // get passTo(){
@@ -146,5 +145,3 @@ m    }
 }
 
 customElements.define(XtalJSONMerge.is, XtalJSONMerge);
-
-})();
