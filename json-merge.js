@@ -25,6 +25,10 @@ function XtallatX(superClass) {
                 this.removeAttribute(name);
             }
         }
+        to$(number) {
+            const mod = number % 2;
+            return (number - mod) / 2 + '-' + mod;
+        }
         incAttr(name) {
             const ec = this._evCount;
             if (name in ec) {
@@ -33,7 +37,7 @@ function XtallatX(superClass) {
             else {
                 ec[name] = 0;
             }
-            this.attr(name, ec[name].toString());
+            this.attr('data-' + name, this.to$(ec[name]));
         }
         attributeChangedCallback(name, oldVal, newVal) {
             switch (name) {
@@ -64,7 +68,6 @@ function XtallatX(superClass) {
         }
     };
 }
-//# sourceMappingURL=xtal-latx.js.map
 const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
@@ -271,7 +274,6 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
 if (!customElements.get(XtalInsertJson.is)) {
     customElements.define(XtalInsertJson.is, XtalInsertJson);
 }
-//# sourceMappingURL=xtal-insert-json.js.map
 const pass_thru_on_init = 'pass-thru-on-init';
 /**
  * `xtal-json-merge`
@@ -387,6 +389,5 @@ class XtalJSONMerge extends XtalInsertJson {
     }
 }
 customElements.define(XtalJSONMerge.is, XtalJSONMerge);
-//# sourceMappingURL=xtal-json-merge.js.map
     })();  
         
