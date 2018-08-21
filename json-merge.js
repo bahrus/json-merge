@@ -1,7 +1,15 @@
 
     //@ts-check
     (function () {
-    const disabled = 'disabled';
+    function define(custEl) {
+    let tagName = custEl.is;
+    if (customElements.get(tagName)) {
+        console.warn('Already registered ' + tagName);
+        return;
+    }
+    customElements.define(tagName, custEl);
+}
+const disabled = 'disabled';
 function XtallatX(superClass) {
     return class extends superClass {
         constructor() {
@@ -18,12 +26,8 @@ function XtallatX(superClass) {
             this.attr(disabled, val, '');
         }
         attr(name, val, trueVal) {
-            if (val) {
-                this.setAttribute(name, trueVal || val);
-            }
-            else {
-                this.removeAttribute(name);
-            }
+            const setOrRemove = val ? 'set' : 'remove';
+            this[setOrRemove + 'Attribute'](name, trueVal || val);
         }
         to$(number) {
             const mod = number % 2;
@@ -271,9 +275,7 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         this.onPropChange();
     }
 }
-if (!customElements.get(XtalInsertJson.is)) {
-    customElements.define(XtalInsertJson.is, XtalInsertJson);
-}
+define(XtalInsertJson);
 const pass_thru_on_init = 'pass-thru-on-init';
 /**
  * `xtal-json-merge`
@@ -388,6 +390,6 @@ class XtalJSONMerge extends XtalInsertJson {
         return target;
     }
 }
-customElements.define(XtalJSONMerge.is, XtalJSONMerge);
+define(XtalJSONMerge);
     })();  
         

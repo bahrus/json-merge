@@ -1,4 +1,5 @@
 import {XtallatX} from 'xtal-latx/xtal-latx.js';
+import {define} from 'xtal-latx/define.js';
 const input = 'input';
 const with_path = 'with-path';
 const delay = 'delay';
@@ -217,6 +218,4 @@ export class XtalInsertJson extends XtallatX(HTMLElement){
 
 
 }
-if(!customElements.get(XtalInsertJson.is)){
-    customElements.define(XtalInsertJson.is, XtalInsertJson);
-}
+define(XtalInsertJson);

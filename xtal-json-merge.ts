@@ -1,4 +1,5 @@
 import {XtalInsertJson} from './xtal-insert-json.js';
+import {define} from 'xtal-latx/define.js';
 
 const pass_thru_on_init = 'pass-thru-on-init';
 
@@ -143,5 +144,4 @@ export class XtalJSONMerge extends XtalInsertJson {
     
 
 }
-
-customElements.define(XtalJSONMerge.is, XtalJSONMerge);
+define(XtalJSONMerge);
