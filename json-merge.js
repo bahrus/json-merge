@@ -10,6 +10,10 @@
     customElements.define(tagName, custEl);
 }
 const disabled = 'disabled';
+/**
+ * Base class for many xtal- components
+ * @param superClass
+ */
 function XtallatX(superClass) {
     return class extends superClass {
         constructor() {
@@ -19,20 +23,39 @@ function XtallatX(superClass) {
         static get observedAttributes() {
             return [disabled];
         }
+        /**
+         * Any component that emits events should not do so if it is disabled.
+         * Note that this is not enforced, but the disabled property is made available.
+         * Users of this mix-in should ensure not to call "de" if this property is set to true.
+         */
         get disabled() {
             return this._disabled;
         }
         set disabled(val) {
             this.attr(disabled, val, '');
         }
+        /**
+         * Set attribute value.
+         * @param name
+         * @param val
+         * @param trueVal String to set attribute if true.
+         */
         attr(name, val, trueVal) {
-            const setOrRemove = val ? 'set' : 'remove';
-            this[setOrRemove + 'Attribute'](name, trueVal || val);
+            const v = val ? 'set' : 'remove'; //verb
+            this[v + 'Attribute'](name, trueVal || val);
         }
-        to$(number) {
-            const mod = number % 2;
-            return (number - mod) / 2 + '-' + mod;
+        /**
+         * Turn number into string with even and odd values easy to query via css.
+         * @param n
+         */
+        to$(n) {
+            const mod = n % 2;
+            return (n - mod) / 2 + '-' + mod;
         }
+        /**
+         * Increment event count
+         * @param name
+         */
         incAttr(name) {
             const ec = this._evCount;
             if (name in ec) {
@@ -50,8 +73,14 @@ function XtallatX(superClass) {
                     break;
             }
         }
-        de(name, detail) {
-            const eventName = name + '-changed';
+        /**
+         * Dispatch Custom Event
+         * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
+         * @param detail Information to be passed with the event
+         * @param asIs If true, don't append event name with '-changed'
+         */
+        de(name, detail, asIs) {
+            const eventName = name + (asIs ? '' : '-changed');
             const newEvent = new CustomEvent(eventName, {
                 detail: detail,
                 bubbles: true,
@@ -61,6 +90,10 @@ function XtallatX(superClass) {
             this.incAttr(eventName);
             return newEvent;
         }
+        /**
+         * Needed for asynchronous loading
+         * @param props Array of property names to "upgrade", without losing value set while element was Unknown
+         */
         _upgradeProperties(props) {
             props.forEach(prop => {
                 if (this.hasOwnProperty(prop)) {
@@ -83,7 +116,7 @@ const delay = 'delay';
  * @polymer
  * @demo demo/index.html
  */
-class XtalInsertJson extends XtallatX(HTMLElement) {
+class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
         return super.observedAttributes.concat([
@@ -153,20 +186,6 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
     }
     set postMergeCallbackFn(val) {
         this._postMergeCallbackFn;
-    }
-    /**
-    * @type {string}
-    * object inside a new empty object, with key equal to this value.
-    * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
-    * and with-path = 'myPath'
-    * then the source object which be merged into is:
-    * {myPath: {foo: 'hello', bar: 'world'}}
-    */
-    get withPath() {
-        return this._withPath;
-    }
-    set withPath(val) {
-        this.attr(with_path, val);
     }
     /**
      * @type {number}
@@ -248,23 +267,7 @@ class XtalInsertJson extends XtallatX(HTMLElement) {
         if (!this._connected || this._disabled || !this._input)
             return;
         // if(typeof(this._withPath) === 'undefined') return;
-        let mergedObj;
-        if (this._withPath) {
-            mergedObj = {};
-            const splitPath = this._withPath.split('.');
-            const lenMinus1 = splitPath.length - 1;
-            splitPath.forEach((pathToken, idx) => {
-                if (idx === lenMinus1) {
-                    mergedObj[pathToken] = this._input;
-                }
-                else {
-                    mergedObj = mergedObj[pathToken] = {};
-                }
-            });
-        }
-        else {
-            mergedObj = this._input;
-        }
+        let mergedObj = this.wrap(this._input);
         this.loadJSON(() => {
             this.postLoadJson(mergedObj);
         });
