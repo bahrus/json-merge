@@ -1,4 +1,5 @@
 import { XtallatX } from 'xtal-latx/xtal-latx.js';
+import { WithPath } from 'xtal-latx/with-path.js';
 import { define } from 'xtal-latx/define.js';
 const input = 'input';
 const with_path = 'with-path';
@@ -11,7 +12,7 @@ const delay = 'delay';
  * @polymer
  * @demo demo/index.html
  */
-export class XtalInsertJson extends XtallatX(HTMLElement) {
+export class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
     static get is() { return 'xtal-insert-json'; }
     static get observedAttributes() {
         return super.observedAttributes.concat([
@@ -81,20 +82,6 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
     }
     set postMergeCallbackFn(val) {
         this._postMergeCallbackFn;
-    }
-    /**
-    * @type {string}
-    * object inside a new empty object, with key equal to this value.
-    * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
-    * and with-path = 'myPath'
-    * then the source object which be merged into is:
-    * {myPath: {foo: 'hello', bar: 'world'}}
-    */
-    get withPath() {
-        return this._withPath;
-    }
-    set withPath(val) {
-        this.attr(with_path, val);
     }
     /**
      * @type {number}
@@ -176,23 +163,7 @@ export class XtalInsertJson extends XtallatX(HTMLElement) {
         if (!this._connected || this._disabled || !this._input)
             return;
         // if(typeof(this._withPath) === 'undefined') return;
-        let mergedObj;
-        if (this._withPath) {
-            mergedObj = {};
-            const splitPath = this._withPath.split('.');
-            const lenMinus1 = splitPath.length - 1;
-            splitPath.forEach((pathToken, idx) => {
-                if (idx === lenMinus1) {
-                    mergedObj[pathToken] = this._input;
-                }
-                else {
-                    mergedObj = mergedObj[pathToken] = {};
-                }
-            });
-        }
-        else {
-            mergedObj = this._input;
-        }
+        let mergedObj = this.wrap(this._input);
         this.loadJSON(() => {
             this.postLoadJson(mergedObj);
         });
