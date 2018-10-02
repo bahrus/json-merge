@@ -2,7 +2,7 @@ import { XtallatX } from 'xtal-latx/xtal-latx.js';
 import { WithPath } from 'xtal-latx/with-path.js';
 import { define } from 'xtal-latx/define.js';
 const input = 'input';
-const with_path = 'with-path';
+//const with_path = 'with-path';
 const delay = 'delay';
 /**
  * `xtal-insert-json`
@@ -17,7 +17,7 @@ export class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
     static get observedAttributes() {
         return super.observedAttributes.concat([
             delay,
-            with_path,
+            'with-path',
             input
         ]);
     }
@@ -99,7 +99,7 @@ export class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
             case input:
                 this.input = JSON.parse(newVal);
                 break;
-            case with_path:
+            case 'with-path':
                 this._withPath = newVal;
                 break;
             case delay:

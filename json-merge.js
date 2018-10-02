@@ -106,7 +106,7 @@ function XtallatX(superClass) {
     };
 }
 const input = 'input';
-const with_path = 'with-path';
+//const with_path = 'with-path';
 const delay = 'delay';
 /**
  * `xtal-insert-json`
@@ -121,7 +121,7 @@ class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
     static get observedAttributes() {
         return super.observedAttributes.concat([
             delay,
-            with_path,
+            'with-path',
             input
         ]);
     }
@@ -203,7 +203,7 @@ class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
             case input:
                 this.input = JSON.parse(newVal);
                 break;
-            case with_path:
+            case 'with-path':
                 this._withPath = newVal;
                 break;
             case delay:
