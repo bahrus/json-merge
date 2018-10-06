@@ -316,6 +316,7 @@ class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
         });
     }
     connectedCallback() {
+        this.style.display = 'none';
         this._upgradeProperties([delay, input, 'refs', 'withPath', 'postMergeCallbackFn']);
         this._connected = true;
         this.onPropChange();

@@ -184,6 +184,7 @@ export class XtalInsertJson extends WithPath(XtallatX(HTMLElement)){
 
     _connected: boolean;
     connectedCallback() {
+        this.style.display = 'none';
         this._upgradeProperties([delay, input, 'refs', 'withPath', 'postMergeCallbackFn']);
         this._connected = true;
         this.onPropChange();
