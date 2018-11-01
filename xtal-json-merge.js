@@ -1,5 +1,6 @@
 import { XtalInsertJson } from './xtal-insert-json.js';
 import { define } from 'xtal-latx/define.js';
+import { mergeDeep } from 'xtal-latx/mergeDeep.js';
 const pass_thru_on_init = 'pass-thru-on-init';
 /**
  * `xtal-json-merge`
@@ -54,7 +55,7 @@ export class XtalJSONMerge extends XtalInsertJson {
                 const objToMerge = this._objectsToMerge[i];
                 switch (typeof (objToMerge)) {
                     case 'object':
-                        this.mergeDeep(mergedObj, objToMerge);
+                        mergeDeep(mergedObj, objToMerge);
                         break;
                     default:
                         throw 'TODO:  error message';
@@ -65,53 +66,6 @@ export class XtalJSONMerge extends XtalInsertJson {
     }
     getParent() {
         return this.parentElement;
-    }
-    /**
-     * Deep merge two objects.
-     * Inspired by Stackoverflow.com/questions/27936772/deep-object-merging-in-es6-es7
-     * @param target
-     * @param source
-     *
-     */
-    mergeDeep(target, source) {
-        if (typeof target !== 'object')
-            return;
-        if (typeof source !== 'object')
-            return;
-        for (const key in source) {
-            const sourceVal = source[key];
-            const targetVal = target[key];
-            if (!sourceVal)
-                continue; //TODO:  null out property?
-            if (!targetVal) {
-                target[key] = sourceVal;
-                continue;
-            }
-            if (Array.isArray(sourceVal) && Array.isArray(targetVal)) {
-                //warning!! code below not yet tested
-                if (targetVal.length > 0 && typeof targetVal[0].id === 'undefined')
-                    continue;
-                for (var i = 0, ii = sourceVal.length; i < ii; i++) {
-                    const srcEl = sourceVal[i];
-                }
-                continue;
-            }
-            switch (typeof sourceVal) {
-                case 'object':
-                    switch (typeof targetVal) {
-                        case 'object':
-                            this.mergeDeep(targetVal, sourceVal);
-                            break;
-                        default:
-                            target[key] = sourceVal;
-                            break;
-                    }
-                    break;
-                default:
-                    target[key] = sourceVal;
-            }
-        }
-        return target;
     }
 }
 define(XtalJSONMerge);
