@@ -1,6 +1,6 @@
-import { XtallatX } from 'xtal-latx/xtal-latx.js';
-import { WithPath } from 'xtal-latx/with-path.js';
-import { define } from 'xtal-latx/define.js';
+import { XtallatX } from 'xtal-element/xtal-latx.js';
+import { WithPath } from 'xtal-element/with-path.js';
+import { define } from 'xtal-element/define.js';
 const input = 'input';
 //const with_path = 'with-path';
 const delay = 'delay';
@@ -176,4 +176,3 @@ export class XtalInsertJson extends WithPath(XtallatX(HTMLElement)) {
     }
 }
 define(XtalInsertJson);
-//# sourceMappingURL=xtal-insert-json.js.map
