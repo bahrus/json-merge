@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
-		"target": "ES6",
-		"module":"es2015",
+		"target": "esnext",
+		"module":"esnext",
 		"sourceMap": false,
 		"experimentalDecorators": true,
-		"newLine": "LF"
+		"newLine": "LF",
+		"watch": true
 	},
 	"exclude":[
 		"build",

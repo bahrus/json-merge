@@ -1,6 +1,7 @@
 import {XtalInsertJson} from './xtal-insert-json.js';
-import {define} from 'xtal-element/define.js';
-import {mergeDeep} from 'xtal-element/mergeDeep.js'
+import {define} from 'trans-render/define.js';
+import {mergeDeep} from 'trans-render/mergeDeep.js';
+import {up} from 'trans-render/hydrate.js';
 const pass_thru_on_init = 'pass-thru-on-init';
 
 
@@ -26,7 +27,7 @@ export class XtalJSONMerge extends XtalInsertJson {
 
    // _connected: boolean;
     connectedCallback() {
-        this._upgradeProperties(['passThruOnInit']);
+        this[up](['passThruOnInit']);
         super.connectedCallback();
         //this.onInputChange(this._input);
     }
