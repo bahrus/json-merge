@@ -1,7 +1,7 @@
 import { XtallatX } from 'xtal-element/xtal-latx.js';
 import { WithPath } from 'xtal-element/with-path.js';
 import { define } from 'trans-render/define.js';
-import { hydrate, up } from 'trans-render/hydrate.js';
+import { hydrate } from 'trans-render/hydrate.js';
 const input = 'input';
 //const with_path = 'with-path';
 const delay = 'delay';
@@ -171,7 +171,7 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))) {
     }
     connectedCallback() {
         this.style.display = 'none';
-        this[up]([delay, input, 'refs', 'withPath', 'postMergeCallbackFn']);
+        this.propUp([delay, input, 'refs', 'withPath', 'postMergeCallbackFn']);
         this._connected = true;
         this.onPropChange();
     }
