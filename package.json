@@ -1,6 +1,6 @@
 {
   "name": "xtal-json-merge",
-  "version": "0.2.37",
+  "version": "0.2.38",
   "description": "Dependency free web component designed to deep merge JSON objects into other objects",
   "main": "xtal-json-merge.js",
   "module": "xtal-json-merge.js",
