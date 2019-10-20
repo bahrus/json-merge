@@ -6,12 +6,9 @@ const input = 'input';
 //const with_path = 'with-path';
 const delay = 'delay';
 /**
- * `xtal-insert-json`
- *  Combine passed-in JSON with JSON defined within script tag
+ * Combine passed-in JSON with JSON defined within script tag
+ * @element xtal-insert-json
  *
- * @customElement
- * @polymer
- * @demo demo/index.html
  */
 export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))) {
     static get is() { return 'xtal-insert-json'; }
@@ -22,13 +19,14 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))) {
             input
         ]);
     }
-    /**
-    * @type {object}
-    * An object that should be merged with the JSON inside the element
-    **/
     get input() {
         return this._input;
     }
+    /**
+     * An object that should be merged with the JSON inside the element
+     * @type {object}
+     * @attr
+     **/
     set input(val) {
         if (this._delay) {
             setTimeout(() => {
@@ -41,18 +39,20 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))) {
             this.onPropChange();
         }
     }
-    /**
-     * @type {object}
-     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
-     *
-     */
     get refs() {
         return this._refs;
     }
+    /**
+     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
+     * @type {object}
+     */
     set refs(val) {
         this._refs = val;
         delete this._objectsToMerge;
         this.onPropChange();
+    }
+    get mergedProp() {
+        return this._mergedProp;
     }
     /**
      * @type {object}
@@ -60,9 +60,6 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))) {
      * The result of merging the input property with the JSON inside the script tag.
      *
      */
-    get mergedProp() {
-        return this._mergedProp;
-    }
     set mergedProp(val) {
         //this.updateResultProp(val, 'merged-prop', '_mergedProp', this._postMergeCallbackFn);
         let newVal = val;
@@ -74,23 +71,25 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))) {
         this.value = this._mergedProp = newVal;
         this.de('merged-prop', { value: newVal });
     }
-    /**
-     * @type {function}
-     * Pass in a function to handle the resulting merged object, rather than using events.
-     */
     get postMergeCallbackFn() {
         return this._postMergeCallbackFn;
     }
+    /**
+     * Pass in a function to handle the resulting merged object, rather than using events.
+     * @type {function}
+     *
+     */
     set postMergeCallbackFn(val) {
         this._postMergeCallbackFn;
     }
-    /**
-     * @type {number}
-     * Number of milliseconds to wait before passing the input on for processing.
-     */
     get delay() {
         return this._delay;
     }
+    /**
+     * Number of milliseconds to wait before passing the input on for processing.
+     * @type {number}
+     *
+     */
     set delay(newVal) {
         this.attr(delay, newVal.toString());
     }
@@ -110,11 +109,12 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))) {
         super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropChange();
     }
-    /**
-     * @type {array}
-     * The object array that is to be merged.
-     */
     get objectsToMerge() { return this._objectsToMerge; }
+    /**
+     * The object array that is to be merged.
+     * @type {array}
+     *
+     */
     set objectsToMerge(val) {
         this._objectsToMerge = val;
     }

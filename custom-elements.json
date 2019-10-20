@@ -1,0 +1,201 @@
+{
+  "version": 2,
+  "tags": [
+    {
+      "name": "xtal-insert-json",
+      "description": "Combine passed-in JSON with JSON defined within script tag",
+      "jsDoc": "/**\n * Combine passed-in JSON with JSON defined within script tag\n * @element xtal-insert-json\n *\n */",
+      "attributes": [
+        {
+          "name": "disabled",
+          "description": "Any component that emits events should not do so if it is disabled.\r\nNote that this is not enforced, but the disabled property is made available.\r\nUsers of this mix-in should ensure not to call \"de\" if this property is set to true.",
+          "jsDoc": "/**\r\n         * Any component that emits events should not do so if it is disabled.\r\n         * Note that this is not enforced, but the disabled property is made available.\r\n         * Users of this mix-in should ensure not to call \"de\" if this property is set to true.\r\n         * @attr\r\n         */",
+          "type": "boolean"
+        },
+        {
+          "name": "with-path",
+          "description": "object inside a new empty object, with key equal to this value.\r\nE.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\nand with-path = 'myPath'\r\nthen the source object which be merged into is:\r\n{myPath: {foo: 'hello', bar: 'world'}}",
+          "jsDoc": "/**\r\n        * object inside a new empty object, with key equal to this value.\r\n        * E.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\n        * and with-path = 'myPath'\r\n        * then the source object which be merged into is:\r\n        * {myPath: {foo: 'hello', bar: 'world'}}\r\n        * @attr with-path\r\n        */",
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "description": "An object that should be merged with the JSON inside the element",
+          "jsDoc": "/**\n     * An object that should be merged with the JSON inside the element\n     * @type {object}\n     * @attr\n     **/",
+          "type": "any"
+        }
+      ],
+      "properties": [
+        {
+          "name": "val",
+          "type": "\"set\" | \"remove\""
+        },
+        {
+          "name": "disabled",
+          "description": "Any component that emits events should not do so if it is disabled.\r\nNote that this is not enforced, but the disabled property is made available.\r\nUsers of this mix-in should ensure not to call \"de\" if this property is set to true.",
+          "jsDoc": "/**\r\n         * Any component that emits events should not do so if it is disabled.\r\n         * Note that this is not enforced, but the disabled property is made available.\r\n         * Users of this mix-in should ensure not to call \"de\" if this property is set to true.\r\n         * @attr\r\n         */",
+          "type": "boolean"
+        },
+        {
+          "name": "evCount",
+          "description": "Tracks how many times each event type was called.",
+          "jsDoc": "/**\r\n         * Tracks how many times each event type was called.\r\n         */",
+          "type": "{ [key: string]: number; }"
+        },
+        {
+          "name": "asIs",
+          "type": "\"\" | \"-changed\""
+        },
+        {
+          "name": "withPath",
+          "description": "object inside a new empty object, with key equal to this value.\r\nE.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\nand with-path = 'myPath'\r\nthen the source object which be merged into is:\r\n{myPath: {foo: 'hello', bar: 'world'}}",
+          "jsDoc": "/**\r\n        * object inside a new empty object, with key equal to this value.\r\n        * E.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\n        * and with-path = 'myPath'\r\n        * then the source object which be merged into is:\r\n        * {myPath: {foo: 'hello', bar: 'world'}}\r\n        * @attr with-path\r\n        */",
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "description": "An object that should be merged with the JSON inside the element",
+          "jsDoc": "/**\n     * An object that should be merged with the JSON inside the element\n     * @type {object}\n     * @attr\n     **/",
+          "type": "any"
+        },
+        {
+          "name": "refs",
+          "description": "A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.",
+          "jsDoc": "/**\n     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.\n     * @type {object}\n     */",
+          "type": "any"
+        },
+        {
+          "name": "mergedProp",
+          "jsDoc": "/**\n     * @type {object}\n     * ⚡merged-prop-changed\n     * The result of merging the input property with the JSON inside the script tag.\n     *\n     */",
+          "type": "any"
+        },
+        {
+          "name": "postMergeCallbackFn",
+          "description": "Pass in a function to handle the resulting merged object, rather than using events.",
+          "jsDoc": "/**\n     * Pass in a function to handle the resulting merged object, rather than using events.\n     * @type {function}\n     *\n     */",
+          "type": "any"
+        },
+        {
+          "name": "delay",
+          "description": "Number of milliseconds to wait before passing the input on for processing.",
+          "jsDoc": "/**\n     * Number of milliseconds to wait before passing the input on for processing.\n     * @type {number}\n     *\n     */",
+          "type": "number | undefined"
+        },
+        {
+          "name": "objectsToMerge",
+          "description": "The object array that is to be merged.",
+          "jsDoc": "/**\n     * The object array that is to be merged.\n     * @type {array}\n     *\n     */",
+          "type": "any"
+        }
+      ],
+      "events": [],
+      "slots": []
+    },
+    {
+      "name": "xtal-json-merge",
+      "description": "Deep merge passed-in JSON into JSON defined within script tag",
+      "jsDoc": "/**\n * Deep merge passed-in JSON into JSON defined within script tag\n * @element xtal-json-merge\n */",
+      "attributes": [
+        {
+          "name": "disabled",
+          "description": "Any component that emits events should not do so if it is disabled.\r\nNote that this is not enforced, but the disabled property is made available.\r\nUsers of this mix-in should ensure not to call \"de\" if this property is set to true.",
+          "jsDoc": "/**\r\n         * Any component that emits events should not do so if it is disabled.\r\n         * Note that this is not enforced, but the disabled property is made available.\r\n         * Users of this mix-in should ensure not to call \"de\" if this property is set to true.\r\n         * @attr\r\n         */",
+          "type": "boolean"
+        },
+        {
+          "name": "with-path",
+          "description": "object inside a new empty object, with key equal to this value.\r\nE.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\nand with-path = 'myPath'\r\nthen the source object which be merged into is:\r\n{myPath: {foo: 'hello', bar: 'world'}}",
+          "jsDoc": "/**\r\n        * object inside a new empty object, with key equal to this value.\r\n        * E.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\n        * and with-path = 'myPath'\r\n        * then the source object which be merged into is:\r\n        * {myPath: {foo: 'hello', bar: 'world'}}\r\n        * @attr with-path\r\n        */",
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "description": "An object that should be merged with the JSON inside the element",
+          "jsDoc": "/**\r\n     * An object that should be merged with the JSON inside the element\r\n     * @type {object}\r\n     * @attr\r\n     **/",
+          "type": "object"
+        },
+        {
+          "name": "pass-thru-on-init",
+          "description": "If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.",
+          "jsDoc": "/**\n     * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.\n     * @type{boolean}\n     * @attr pass-thru-on-init\n     */",
+          "type": "boolean | undefined"
+        }
+      ],
+      "properties": [
+        {
+          "name": "val",
+          "type": "\"set\" | \"remove\""
+        },
+        {
+          "name": "disabled",
+          "description": "Any component that emits events should not do so if it is disabled.\r\nNote that this is not enforced, but the disabled property is made available.\r\nUsers of this mix-in should ensure not to call \"de\" if this property is set to true.",
+          "jsDoc": "/**\r\n         * Any component that emits events should not do so if it is disabled.\r\n         * Note that this is not enforced, but the disabled property is made available.\r\n         * Users of this mix-in should ensure not to call \"de\" if this property is set to true.\r\n         * @attr\r\n         */",
+          "type": "boolean"
+        },
+        {
+          "name": "evCount",
+          "description": "Tracks how many times each event type was called.",
+          "jsDoc": "/**\r\n         * Tracks how many times each event type was called.\r\n         */",
+          "type": "{ [key: string]: number; }"
+        },
+        {
+          "name": "asIs",
+          "type": "\"\" | \"-changed\""
+        },
+        {
+          "name": "withPath",
+          "description": "object inside a new empty object, with key equal to this value.\r\nE.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\nand with-path = 'myPath'\r\nthen the source object which be merged into is:\r\n{myPath: {foo: 'hello', bar: 'world'}}",
+          "jsDoc": "/**\r\n        * object inside a new empty object, with key equal to this value.\r\n        * E.g. if the incoming object is {foo: 'hello', bar: 'world'}\r\n        * and with-path = 'myPath'\r\n        * then the source object which be merged into is:\r\n        * {myPath: {foo: 'hello', bar: 'world'}}\r\n        * @attr with-path\r\n        */",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "type": "any"
+        },
+        {
+          "name": "input",
+          "description": "An object that should be merged with the JSON inside the element",
+          "jsDoc": "/**\r\n     * An object that should be merged with the JSON inside the element\r\n     * @type {object}\r\n     * @attr\r\n     **/",
+          "type": "object"
+        },
+        {
+          "name": "refs",
+          "description": "A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.",
+          "jsDoc": "/**\r\n     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.\r\n     * @type {object}\r\n     */",
+          "type": "object"
+        },
+        {
+          "name": "mergedProp",
+          "jsDoc": "/**\r\n     * @type {object}\r\n     * ⚡merged-prop-changed\r\n     * The result of merging the input property with the JSON inside the script tag.\r\n     * \r\n     */",
+          "type": "object"
+        },
+        {
+          "name": "postMergeCallbackFn",
+          "description": "Pass in a function to handle the resulting merged object, rather than using events.",
+          "jsDoc": "/**\r\n     * Pass in a function to handle the resulting merged object, rather than using events.\r\n     * @type {function}\r\n     * \r\n     */",
+          "type": "(mergedObj: any, t: XtalInsertJson) => any"
+        },
+        {
+          "name": "delay",
+          "description": "Number of milliseconds to wait before passing the input on for processing.",
+          "jsDoc": "/**\r\n     * Number of milliseconds to wait before passing the input on for processing.\r\n     * @type {number}\r\n     * \r\n     */",
+          "type": "number"
+        },
+        {
+          "name": "objectsToMerge",
+          "description": "The object array that is to be merged.",
+          "jsDoc": "/**\r\n     * The object array that is to be merged.\r\n     * @type {array}\r\n     * \r\n     */",
+          "type": "object[]"
+        },
+        {
+          "name": "passThruOnInit",
+          "description": "If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.",
+          "jsDoc": "/**\n     * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.\n     * @type{boolean}\n     * @attr pass-thru-on-init\n     */",
+          "type": "boolean | undefined"
+        }
+      ],
+      "events": [],
+      "slots": []
+    }
+  ]
+}

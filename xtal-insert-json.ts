@@ -7,12 +7,9 @@ const input = 'input';
 const delay = 'delay';
 
 /**
- * `xtal-insert-json`
- *  Combine passed-in JSON with JSON defined within script tag
- *
- * @customElement
- * @polymer
- * @demo demo/index.html
+ * Combine passed-in JSON with JSON defined within script tag
+ * @element xtal-insert-json
+ *  
  */
 export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))){
     static get is() { return 'xtal-insert-json';}
@@ -26,13 +23,15 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))){
     value: any;
     /*----------------------------------------- Properties ------------------------------------ */
     _input: object;
-     /**
-     * @type {object}
-     * An object that should be merged with the JSON inside the element
-     **/
+
     get input() {
         return this._input;
     }
+    /**
+     * An object that should be merged with the JSON inside the element
+     * @type {object}
+     * @attr
+     **/
     set input(val) {
         if(this._delay){
             setTimeout(() =>{
@@ -47,14 +46,13 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))){
     }
 
     _refs: object;
-    /**
-     * @type {object}
-     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
-     * 
-     */
     get refs() {
         return this._refs;
     }
+    /**
+     * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
+     * @type {object}
+     */
     set refs(val) {
         this._refs = val;
         delete this._objectsToMerge
@@ -62,15 +60,15 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))){
     }
 
     _mergedProp: object;
+    get mergedProp() {
+        return this._mergedProp;
+    }
     /**
      * @type {object}
      * ⚡merged-prop-changed
      * The result of merging the input property with the JSON inside the script tag.
      * 
      */
-    get mergedProp() {
-        return this._mergedProp;
-    }
     set mergedProp(val) {
         //this.updateResultProp(val, 'merged-prop', '_mergedProp', this._postMergeCallbackFn);
         let newVal = val;
@@ -82,26 +80,28 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))){
         this.de('merged-prop', {value: newVal});
     }
     _postMergeCallbackFn: (mergedObj: any, t: XtalInsertJson) => any;
-    /**
-     * @type {function}
-     * Pass in a function to handle the resulting merged object, rather than using events.
-     */
     get postMergeCallbackFn(){
         return this._postMergeCallbackFn;
     }
+    /**
+     * Pass in a function to handle the resulting merged object, rather than using events.
+     * @type {function}
+     * 
+     */
     set postMergeCallbackFn(val){
         this._postMergeCallbackFn;
     }
     /*------------------------------------------End properties ----------------------------------*/
     /*----------------------------------------- Attributes --------------------------------------*/
     _delay: number;
-    /**
-     * @type {number}
-     * Number of milliseconds to wait before passing the input on for processing.
-     */
     get delay(){
         return this._delay;
     }
+    /**
+     * Number of milliseconds to wait before passing the input on for processing.
+     * @type {number}
+     * 
+     */
     set delay(newVal: number){
         this.attr(delay, newVal.toString());
     }
@@ -124,12 +124,14 @@ export class XtalInsertJson extends WithPath(XtallatX(hydrate(HTMLElement))){
         super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropChange()
     }
-    _objectsToMerge: Function[];
-    /**
-     * @type {array}
-     * The object array that is to be merged.
-     */
+    _objectsToMerge: object[];
+
     get objectsToMerge(){return this._objectsToMerge;}
+    /**
+     * The object array that is to be merged.
+     * @type {array}
+     * 
+     */
     set objectsToMerge(val){
         this._objectsToMerge = val;
     }

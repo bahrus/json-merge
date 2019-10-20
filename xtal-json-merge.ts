@@ -6,12 +6,8 @@ const pass_thru_on_init = 'pass-thru-on-init';
 
 
 /**
- * `xtal-json-merge`
- *  Merge passed-in JSON into JSON defined within script tag
- *
- * @customElement
- * @polymer
- * @demo demo/index.html
+ * Deep merge passed-in JSON into JSON defined within script tag
+ * @element xtal-json-merge
  */
 export class XtalJSONMerge extends XtalInsertJson {
 
@@ -31,10 +27,7 @@ export class XtalJSONMerge extends XtalInsertJson {
         //this.onInputChange(this._input);
     }
     /**
-    * Fired when a transform is in progress.
-    *
-    * @event transform
-    */
+
     
 /* ----------------------------- Attributes ----------------------------------------------- */
 
@@ -42,25 +35,20 @@ export class XtalJSONMerge extends XtalInsertJson {
    
 
     _passThruOnInit: boolean;
-    /**
-     * @type{boolean} 
-     * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.
-     */
+
     get passThruOnInit(){
         return this._passThruOnInit;
     }
 
+    /**
+     * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.
+     * @type{boolean} 
+     * @attr pass-thru-on-init
+     */
     set passThruOnInit(val){
         this.attr(pass_thru_on_init, val, '');
     }
 
-    // _passTo: string;
-    // get passTo(){
-    //     return this._passTo;
-    // }
-    // set passTo(val){
-    //     this.setAttribute(pass_to, val);
-    // }
 /********************End Attributes ******************************/
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         super.attributeChangedCallback(name, oldVal, newVal)

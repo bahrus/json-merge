@@ -19,6 +19,6 @@
   },
   "scripts": {
     "serve": "node node_modules/xtal-test/serve.js",
-    "doc": "wca analyze if-*.js --outFile custom-elements.json"
+    "doc": "wca analyze xtal-*.js --outFile custom-elements.json"
   }
 }
