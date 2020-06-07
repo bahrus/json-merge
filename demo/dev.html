@@ -21,7 +21,7 @@
     <h3>Basic xtal-json-merge demo</h3>
     <div>
     <div>Input:</div>
-    <!-- <xtal-json-merge disabled input="[]">
+    <xtal-json-merge disabled input="[]">
       <script type="application/json">
     [
       [
@@ -32,7 +32,7 @@
       </script>
     </xtal-json-merge>
     <p-d on=merged-prop-changed to=[-input] val=detail.value m=2></p-d>
-    <xtal-json-editor id="firstEditor" -input options='{"mode":"view"}'></xtal-json-editor>
+    <xtal-json-editor -input options='{"mode":"view"}'></xtal-json-editor>
     <br>
     <div>Merge with</div>
     <pre>
@@ -52,9 +52,9 @@
             "enableColumnReorder": false
         }
       }]              
-    </pre> -->
+    </pre>
     <br>
-    <xtal-insert-json input='{"a": "b"}' id="insertData" with-path="data" hidden>
+    <xtal-insert-json -input id="insertData" with-path="data" hidden>
     <script type="application/json">
       [{
         "columns":[
