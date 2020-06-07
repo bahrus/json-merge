@@ -11,82 +11,22 @@ const pass_thru_on_init = 'pass-thru-on-init';
  */
 export class XtalJSONMerge extends XtalInsertJson {
 
-    static get is() { return 'xtal-json-merge'; }
-    static get observedAttributes() {
-        return super.observedAttributes.concat( [
+    static is = 'xtal-json-merge'; 
 
-            'pass-thru-on-init',
-        ]);
-    }
-
-
-   // _connected: boolean;
-    connectedCallback() {
-        this.propUp(['passThruOnInit']);
-        super.connectedCallback();
-        //this.onInputChange(this._input);
-    }
-    /**
-
-    
-/* ----------------------------- Attributes ----------------------------------------------- */
+    // /**
+    //  * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.
+    //  * @type{boolean} 
+    //  * @attr pass-thru-on-init
+    //  */
+    // passThruOnInit: boolean;
 
 
-   
-
-    _passThruOnInit: boolean;
-
-    get passThruOnInit(){
-        return this._passThruOnInit;
-    }
-
-    /**
-     * If set to true, the JSON object will directly go to result during initialization, regardless of debounce value.
-     * @type{boolean} 
-     * @attr pass-thru-on-init
-     */
-    set passThruOnInit(val){
-        this.attr(pass_thru_on_init, val, '');
-    }
-
-/********************End Attributes ******************************/
-    attributeChangedCallback(name: string, oldVal: string, newVal: string) {
-        super.attributeChangedCallback(name, oldVal, newVal)
-        switch (name) {
-            
-            case pass_thru_on_init:
-                this._passThruOnInit = newVal !== null;
-                break;
-        }
-        
+    merge(dest: object, src: object){
+        mergeDeep(dest, src);
     }
 
 
 
-    postLoadJson(mergedObj){
-        if (this._objectsToMerge && mergedObj) {
-            for (let i = 0, ii = this._objectsToMerge.length; i < ii; i++) {
-                const objToMerge = this._objectsToMerge[i];
-                switch (typeof (objToMerge)) {
-                    case 'object':
-                        mergeDeep(mergedObj, objToMerge);
-                        break;
-                    default:
-                        throw 'TODO:  error message'
-
-                }
-            }
-        }
-
-        this.mergedProp = mergedObj;
-    }
-
-    getParent(){
-        return this.parentElement;
-    }
-
-
-   
     
 
 }
