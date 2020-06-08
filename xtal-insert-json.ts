@@ -11,6 +11,59 @@ import { AttributeProps } from 'xtal-element/types.d.js';
 export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
     static is = 'xtal-insert-json';
 
+    static attributeProps: any = ({ mergedProp, refs, input, objectsToMerge, stringToParse, withPath, rawMergedProp }: XtalInsertJson) => ({
+        obj: [mergedProp, refs, objectsToMerge, stringToParse, rawMergedProp, input],
+        str: [withPath],
+        jsonProp: [input],
+        notify: [mergedProp],
+        dry: [input, objectsToMerge]
+    } as AttributeProps);
+
+    static parse =  ({ stringToParse, disabled, self, refs, delay }: XtalInsertJson) => {
+        if (stringToParse === undefined || disabled) return;
+
+        setTimeout(() => {
+            try {
+                if (refs) {
+                    self.objectsToMerge = JSON.parse(stringToParse, (key, val) => {
+                        if (typeof val !== 'string') return val;
+                        if (!val.startsWith('${refs.') || !val.endsWith('}')) return val;
+                        const realKey = val.substring(7, val.length - 1);
+                        return self.refs[realKey];
+                    });
+                } else {
+                    if (!self.objectsToMerge) self.objectsToMerge = JSON.parse(stringToParse);
+                }
+                self.stringToParse = undefined;
+            } catch (e) {
+                console.error("Unable to parse " + stringToParse);
+            }
+        }, delay === undefined ? 0 : delay);
+
+
+    };
+
+
+    static wrapAndMerge =  ({ input, objectsToMerge, withPath, self, disabled, delay }: XtalInsertJson) => {
+        if (disabled || input === undefined || objectsToMerge === undefined) return;
+        const wrappedObject = self.wrap(input);
+        objectsToMerge.forEach(objToMerge => {
+            self.merge(wrappedObject, objToMerge);
+        })
+        self.rawMergedProp = wrappedObject
+    };
+
+    static postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }: XtalInsertJson) => {
+        if (disabled || rawMergedProp === undefined) return;
+        let newVal = undefined;
+
+        if (postMergeCallbackFn) {
+            newVal = postMergeCallbackFn(rawMergedProp, self);
+            if (!newVal) return;
+        }
+        self.mergedProp = newVal ? newVal : rawMergedProp;
+    };
+
     value: any;
 
     /**
@@ -62,61 +115,19 @@ export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
      */
     objectsToMerge: object[];
 
-    static attributeProps: any = ({ mergedProp, refs, input, objectsToMerge, stringToParse, withPath, rawMergedProp }: XtalInsertJson) => ({
-        obj: [mergedProp, refs, objectsToMerge, stringToParse, rawMergedProp],
-        str: [withPath],
-        jsonProp: [input],
-        notify: [mergedProp],
-        dry: [input, objectsToMerge]
-    } as AttributeProps);
+
 
     merge(dest: object, src: object) {
         Object.assign(dest, src);
     }
 
     propActions = [
-        ({ stringToParse, disabled, self, refs, delay }: XtalInsertJson) => {
-            if (stringToParse === undefined || disabled) return;
-
-            setTimeout(() => {
-                try {
-                    if (refs) {
-                        self.objectsToMerge = JSON.parse(stringToParse, (key, val) => {
-                            if (typeof val !== 'string') return val;
-                            if (!val.startsWith('${refs.') || !val.endsWith('}')) return val;
-                            const realKey = val.substring(7, val.length - 1);
-                            return self.refs[realKey];
-                        });
-                    } else {
-                        if (!self.objectsToMerge) self.objectsToMerge = JSON.parse(stringToParse);
-                    }
-                    self.stringToParse = undefined;
-                } catch (e) {
-                    console.error("Unable to parse " + stringToParse);
-                }
-            }, delay === undefined ? 0 : delay);
+        XtalInsertJson.parse,
+        XtalInsertJson.wrapAndMerge,
+        XtalInsertJson.postMergeCallback,
+    ];
 
 
-        },
-        ({ input, objectsToMerge, withPath, self, disabled, delay }: XtalInsertJson) => {
-            if (disabled || input === undefined || objectsToMerge === undefined) return;
-            const wrappedObject = self.wrap(input);
-            objectsToMerge.forEach(objToMerge => {
-                self.merge(wrappedObject, objToMerge);
-            })
-            self.rawMergedProp = wrappedObject
-        },
-        ({ rawMergedProp, self, disabled, postMergeCallbackFn }: XtalInsertJson) => {
-            if (disabled || rawMergedProp === undefined) return;
-            let newVal = undefined;
-
-            if (postMergeCallbackFn) {
-                newVal = postMergeCallbackFn(rawMergedProp, self);
-                if (!newVal) return;
-            }
-            self.mergedProp = newVal ? newVal : rawMergedProp;
-        },
-    ]
 
     loadJSON() {
         const scriptTag = this.querySelector('script[type="application\/json"]') as HTMLScriptElement;
