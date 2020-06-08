@@ -3,23 +3,9 @@ import { WithPath } from 'xtal-element/with-path.js';
 import { hydrate } from 'trans-render/hydrate.js';
 import { AttributeProps } from 'xtal-element/types.d.js';
 
-/**
- * Combine passed-in JSON with JSON defined within script tag
- * @element xtal-insert-json
- *  
- */
-export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
-    static is = 'xtal-insert-json';
+export const PropActions = {
 
-    static attributeProps: any = ({ mergedProp, refs, input, objectsToMerge, stringToParse, withPath, rawMergedProp }: XtalInsertJson) => ({
-        obj: [mergedProp, refs, objectsToMerge, stringToParse, rawMergedProp, input],
-        str: [withPath],
-        jsonProp: [input],
-        notify: [mergedProp],
-        dry: [input, objectsToMerge]
-    } as AttributeProps);
-
-    static parse =  ({ stringToParse, disabled, self, refs, delay }: XtalInsertJson) => {
+    parse:  ({ stringToParse, disabled, self, refs, delay }: XtalInsertJson) => {
         if (stringToParse === undefined || disabled) return;
 
         setTimeout(() => {
@@ -41,19 +27,18 @@ export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
         }, delay === undefined ? 0 : delay);
 
 
-    };
+    },
 
-
-    static wrapAndMerge =  ({ input, objectsToMerge, withPath, self, disabled, delay }: XtalInsertJson) => {
+    wrapAndMerge:  ({ input, objectsToMerge, withPath, self, disabled, delay }: XtalInsertJson) => {
         if (disabled || input === undefined || objectsToMerge === undefined) return;
         const wrappedObject = self.wrap(input);
         objectsToMerge.forEach(objToMerge => {
             self.merge(wrappedObject, objToMerge);
         })
         self.rawMergedProp = wrappedObject
-    };
+    },
 
-    static postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }: XtalInsertJson) => {
+    postMergeCallback: ({ rawMergedProp, self, disabled, postMergeCallbackFn }: XtalInsertJson) => {
         if (disabled || rawMergedProp === undefined) return;
         let newVal = undefined;
 
@@ -62,7 +47,24 @@ export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
             if (!newVal) return;
         }
         self.mergedProp = newVal ? newVal : rawMergedProp;
-    };
+    },
+
+}
+/**
+ * Combine passed-in JSON with JSON defined within script tag
+ * @element xtal-insert-json
+ *  
+ */
+export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
+    static is = 'xtal-insert-json';
+
+    static attributeProps: any = ({ mergedProp, refs, input, objectsToMerge, stringToParse, withPath, rawMergedProp }: XtalInsertJson) => ({
+        obj: [mergedProp, refs, objectsToMerge, stringToParse, rawMergedProp, input],
+        str: [withPath],
+        jsonProp: [input],
+        notify: [mergedProp],
+        dry: [input, objectsToMerge]
+    } as AttributeProps);
 
     value: any;
 
@@ -122,9 +124,9 @@ export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
     }
 
     propActions = [
-        XtalInsertJson.parse,
-        XtalInsertJson.wrapAndMerge,
-        XtalInsertJson.postMergeCallback,
+        PropActions.parse,
+        PropActions.wrapAndMerge,
+        PropActions.postMergeCallback,
     ];
 
 
