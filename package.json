@@ -1,20 +1,17 @@
 {
   "name": "xtal-json-merge",
   "version": "0.2.39",
-  "description": "Dependency free web component designed to deep merge JSON objects into other objects",
+  "description": "Web component designed to deep merge JSON objects into other objects",
   "main": "xtal-json-merge.js",
   "module": "xtal-json-merge.js",
   "repository": "https://github.com/bahrus/json-merge",
   "author": "bahrus <anderson.bruce.b@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "xtal-element": "0.0.196",
-    "trans-render": "0.0.188"
+    "xtal-element": "0.0.376"
   },
   "devDependencies": {
-    "@webcomponents/webcomponentsjs": "2.3.0",
-    "es-module-shims": "0.4.5",
-    "xtal-test": "0.0.44"
+    "xtal-test": "0.0.50"
   },
   "scripts": {
     "serve": "node node_modules/xtal-test/serve.js",

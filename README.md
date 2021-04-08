@@ -10,7 +10,7 @@
 
 [Demo](https://xtal-json-editor-demo.glitch.me/) 
 
-xtal-json-merge and xtal-insert-json merge predefined json with some dynamic json.  xtal-json-merge extends xtal-insert-json. They provide binding support compatible with Polymer, but they can be used in non Polymer settings as well.  They may seem more natural to use in [disciplined, declarative, data-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps like VueJS, Polymer, Aurelia, Svelte, Angular. It is likely to cause an allergic reaction if found inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS / StencilJS, etc.  
+xtal-json-merge and xtal-insert-json merge predefined json with some dynamic json.  xtal-json-merge extends xtal-insert-json. They provide binding support compatible with Polymer 2/3, but they can be used in non Polymer settings as well.  They may seem more natural to use in [disciplined, declarative, data-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps like VueJS, Polymer, Aurelia, Svelte, Angular. It is likely to cause an allergic reaction if found inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS / StencilJS, etc.  
 
 These two components can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
