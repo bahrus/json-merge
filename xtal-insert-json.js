@@ -54,44 +54,40 @@ export const PropActions = {
  * @element xtal-insert-json
  *
  */
-let XtalInsertJson = /** @class */ (() => {
-    class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
-        constructor() {
-            super(...arguments);
-            this.propActions = [
-                PropActions.parse,
-                PropActions.wrapAndMerge,
-                PropActions.postMergeCallback,
-            ];
-        }
-        merge(dest, src) {
-            Object.assign(dest, src);
-        }
-        loadJSON() {
-            const scriptTag = this.querySelector('script[type="application\/json"]');
-            if (!scriptTag) {
-                setTimeout(() => {
-                    this.loadJSON();
-                }, 100);
-                return;
-            }
-            this.stringToParse = scriptTag.innerText;
-        }
-        connectedCallback() {
-            this.style.display = 'none';
-            super.connectedCallback();
-            this.loadJSON();
-        }
+export class XtalInsertJson extends XtallatX(hydrate(WithPath(HTMLElement))) {
+    constructor() {
+        super(...arguments);
+        this.propActions = [
+            PropActions.parse,
+            PropActions.wrapAndMerge,
+            PropActions.postMergeCallback,
+        ];
     }
-    XtalInsertJson.is = 'xtal-insert-json';
-    XtalInsertJson.attributeProps = ({ mergedProp, refs, input, objectsToMerge, stringToParse, withPath, rawMergedProp }) => ({
-        obj: [mergedProp, refs, objectsToMerge, stringToParse, rawMergedProp, input],
-        str: [withPath],
-        jsonProp: [input],
-        notify: [mergedProp],
-        dry: [input, objectsToMerge]
-    });
-    return XtalInsertJson;
-})();
-export { XtalInsertJson };
+    merge(dest, src) {
+        Object.assign(dest, src);
+    }
+    loadJSON() {
+        const scriptTag = this.querySelector('script[type="application\/json"]');
+        if (!scriptTag) {
+            setTimeout(() => {
+                this.loadJSON();
+            }, 100);
+            return;
+        }
+        this.stringToParse = scriptTag.innerText;
+    }
+    connectedCallback() {
+        this.style.display = 'none';
+        super.connectedCallback();
+        this.loadJSON();
+    }
+}
+XtalInsertJson.is = 'xtal-insert-json';
+XtalInsertJson.attributeProps = ({ mergedProp, refs, input, objectsToMerge, stringToParse, withPath, rawMergedProp }) => ({
+    obj: [mergedProp, refs, objectsToMerge, stringToParse, rawMergedProp, input],
+    str: [withPath],
+    jsonProp: [input],
+    notify: [mergedProp],
+    dry: [input, objectsToMerge]
+});
 define(XtalInsertJson);

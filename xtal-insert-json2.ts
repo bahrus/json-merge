@@ -11,6 +11,7 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
     propActions = propActions;
     reactor = new xc.Rx(this);
 
+    disabled: boolean | undefined;
 
     value: any;
 
@@ -27,6 +28,9 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
      */
     refs: object;
 
+    /**
+     * @private
+     */
     rawMergedProp: object;
 
     /**
@@ -53,6 +57,9 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
      */
     delay: number;
 
+    /**
+     * @private
+     */
     stringToParse: string;
 
 
@@ -66,6 +73,7 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
     connectedCallback(){
         this.style.display = 'none';
         xc.hydrate(this, slicedPropDefs);
+        this.loadJSON();
     }
 
     onPropChange(n: string, prop: PropDef, newVal: any){
@@ -132,7 +140,7 @@ const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn 
     self.mergedProp = newVal ? newVal : rawMergedProp;
 };
 
-const propActions = [] as PropAction[];
+const propActions = [parse, wrapAndMerge, postMergeCallback] as PropAction[];
 
 const baseProp : PropDef = {
     dry: true,
