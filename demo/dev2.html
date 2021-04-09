@@ -4,9 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>xtal-json-merge demo</title>
 </head>
 <body>
+    <div>
+        <h3>Basic xtal-json-merge demo</h3>
+        <div>
+        <div>Input:</div>
+        <xtal-json-insert disabled>
+          <script type="application/json">
+          [
+            {"name": "Harry Potter", "age":"13"},
+            {"name": "Albus Dumbledore", "age":"279"}
+          ]
+          </script>
+        </xtal-json-insert>
+        <p-d on=value-changed to=[-value] val=detail.value m=1></p-d>
+        <xtal-editor -value></xtal-editor>
+        
+       
+      </div> 
+    
     <script type=importmap>
         {
             "imports": {
@@ -21,7 +39,7 @@
         }
     </script>
     <script type=module>
-        import '../xtal-insert-json2.js';
+        import '../xtal-json-insert.js';
         import 'pass-down/p-d.js';
         import 'xtal-editor/src/xtal-editor.js';
     </script>

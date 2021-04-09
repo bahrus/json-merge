@@ -1,10 +1,11 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
+import { wrap } from 'xtal-element/lib/with-path.js';
 /**
- * Combine passed-in JSON with JSON defined within script tag
- * @element xtal-insert-json
+ * Parse and publish JSON contained inside.
+ * @element xtal-json-insert
  *
  */
-export class XtalInsertJson extends HTMLElement {
+export class XtalJsonInsert extends HTMLElement {
     constructor() {
         super(...arguments);
         this.self = this;
@@ -33,8 +34,8 @@ export class XtalInsertJson extends HTMLElement {
         this.stringToParse = scriptTag.innerText;
     }
 }
-XtalInsertJson.is = 'xtal-insert-json';
-const parse = ({ stringToParse, disabled, self, refs, delay }) => {
+XtalJsonInsert.is = 'xtal-json-insert';
+export const parse = ({ stringToParse, disabled, self, refs, delay }) => {
     if (stringToParse === undefined || disabled)
         return;
     setTimeout(() => {
@@ -60,16 +61,16 @@ const parse = ({ stringToParse, disabled, self, refs, delay }) => {
         }
     }, delay === undefined ? 0 : delay);
 };
-const wrapAndMerge = ({ input, objectsToMerge, withPath, self, disabled, delay }) => {
-    if (disabled || input === undefined || objectsToMerge === undefined)
+export const wrapAndMerge = ({ objectsToMerge, withPath, self, disabled, delay }) => {
+    if (disabled || objectsToMerge === undefined)
         return;
-    const wrappedObject = self.wrap(input);
+    const wrappedObject = wrap(objectsToMerge, withPath);
     objectsToMerge.forEach(objToMerge => {
         self.merge(wrappedObject, objToMerge);
     });
     self.rawMergedProp = wrappedObject;
 };
-const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }) => {
+export const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }) => {
     if (disabled || rawMergedProp === undefined)
         return;
     let newVal = undefined;
@@ -78,7 +79,9 @@ const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn 
         if (!newVal)
             return;
     }
-    self.mergedProp = newVal ? newVal : rawMergedProp;
+    const val = newVal ? newVal : rawMergedProp;
+    self[slicedPropDefs.propLookup.mergedProp.alias] = val;
+    self[slicedPropDefs.propLookup.value.alias] = val;
 };
 const propActions = [parse, wrapAndMerge, postMergeCallback];
 const baseProp = {
@@ -93,16 +96,19 @@ const objProp2 = {
     ...objProp1,
     notify: true,
     obfuscate: true,
-    echoTo: 'value'
 };
 const objProp3 = {
     ...objProp1,
     parse: true
 };
+const objStr1 = {
+    ...baseProp,
+    type: String,
+};
 const propDefMap = {
     refs: objProp1, objectsToMerge: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
-    mergedProp: objProp2, input: objProp3, value: objProp2
+    mergedProp: objProp2, value: objProp2
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
-xc.letThereBeProps(XtalInsertJson, slicedPropDefs, 'onPropChange');
-xc.define(XtalInsertJson);
+xc.letThereBeProps(XtalJsonInsert, slicedPropDefs, 'onPropChange');
+xc.define(XtalJsonInsert);

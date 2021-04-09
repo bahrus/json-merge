@@ -1,11 +1,14 @@
 import {xc, PropAction, PropDef, PropDefMap, ReactiveSurface} from 'xtal-element/lib/XtalCore.js';
+import {wrap} from 'xtal-element/lib/with-path.js';
+
+type X = XtalJsonInsert;
 /**
- * Combine passed-in JSON with JSON defined within script tag
- * @element xtal-insert-json
+ * Parse and publish JSON contained inside.
+ * @element xtal-json-insert
  *  
  */
-export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
-    static is = 'xtal-insert-json';
+export class XtalJsonInsert extends HTMLElement implements ReactiveSurface{
+    static is = 'xtal-json-insert';
 
     self = this;
     propActions = propActions;
@@ -15,12 +18,12 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
 
     value: any;
 
-    /**
-     * An object that should be merged with the JSON inside the element
-     * @type {object}
-     * @attr
-     **/
-    input: object;
+    // /**
+    //  * An object that should be merged with the JSON inside the element
+    //  * @type {object}
+    //  * @attr
+    //  **/
+    // input: object;
 
     /**
      * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
@@ -47,7 +50,7 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
      * @type {function}
      * 
      */
-    postMergeCallbackFn: (mergedObj: any, t: XtalInsertJson) => any;
+    postMergeCallbackFn: (mergedObj: any, t: X) => any;
 
 
     /**
@@ -69,6 +72,16 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
      * 
      */
     objectsToMerge: object[];
+
+    /**
+    * object inside a new empty object, with key equal to this value.
+    * E.g. if the incoming object is {foo: 'hello', bar: 'world'}
+    * and with-path = 'myPath'
+    * then the source object which be merged into is:
+    * {myPath: {foo: 'hello', bar: 'world'}}
+    * @attr with-path
+    */
+    withPath!: string;
 
     connectedCallback(){
         this.style.display = 'none';
@@ -96,7 +109,7 @@ export class XtalInsertJson extends HTMLElement implements ReactiveSurface{
     }
 }
 
-const parse =  ({ stringToParse, disabled, self, refs, delay }: XtalInsertJson) => {
+export const parse =  ({ stringToParse, disabled, self, refs, delay }: X) => {
     if (stringToParse === undefined || disabled) return;
 
     setTimeout(() => {
@@ -120,16 +133,16 @@ const parse =  ({ stringToParse, disabled, self, refs, delay }: XtalInsertJson) 
 
 };
 
-const wrapAndMerge =  ({ input, objectsToMerge, withPath, self, disabled, delay }: XtalInsertJson) => {
-    if (disabled || input === undefined || objectsToMerge === undefined) return;
-    const wrappedObject = self.wrap(input);
+export const wrapAndMerge =  ({ objectsToMerge, withPath, self, disabled, delay }: X) => {
+    if (disabled || objectsToMerge === undefined) return;
+    const wrappedObject = wrap(objectsToMerge, withPath);
     objectsToMerge.forEach(objToMerge => {
         self.merge(wrappedObject, objToMerge);
     })
     self.rawMergedProp = wrappedObject
 };
 
-const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }: XtalInsertJson) => {
+export const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }: X) => {
     if (disabled || rawMergedProp === undefined) return;
     let newVal = undefined;
 
@@ -137,7 +150,9 @@ const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn 
         newVal = postMergeCallbackFn(rawMergedProp, self);
         if (!newVal) return;
     }
-    self.mergedProp = newVal ? newVal : rawMergedProp;
+    const val = newVal ? newVal : rawMergedProp;
+    self[slicedPropDefs.propLookup.mergedProp.alias] = val;
+    self[slicedPropDefs.propLookup.value.alias] = val;
 };
 
 const propActions = [parse, wrapAndMerge, postMergeCallback] as PropAction[];
@@ -156,7 +171,6 @@ const objProp2: PropDef = {
     ...objProp1,
     notify: true,
     obfuscate: true,
-    echoTo: 'value'
 };
 
 const objProp3: PropDef = {
@@ -164,13 +178,18 @@ const objProp3: PropDef = {
     parse: true
 };
 
-const propDefMap: PropDefMap<XtalInsertJson> = {
+const objStr1: PropDef = {
+    ...baseProp,
+    type: String,
+}
+
+const propDefMap: PropDefMap<X> = {
     refs: objProp1, objectsToMerge: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
-    mergedProp: objProp2, input: objProp3, value: objProp2
+    mergedProp: objProp2, value: objProp2
 };
 
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 
-xc.letThereBeProps(XtalInsertJson, slicedPropDefs, 'onPropChange');
+xc.letThereBeProps(XtalJsonInsert, slicedPropDefs, 'onPropChange');
 
-xc.define(XtalInsertJson);
+xc.define(XtalJsonInsert);
