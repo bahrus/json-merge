@@ -41,7 +41,7 @@ export const parse = ({ stringToParse, disabled, self, refs, delay }) => {
     setTimeout(() => {
         try {
             if (refs) {
-                self.objectsToMerge = JSON.parse(stringToParse, (key, val) => {
+                self.objectToInsert = JSON.parse(stringToParse, (key, val) => {
                     if (typeof val !== 'string')
                         return val;
                     if (!val.startsWith('${refs.') || !val.endsWith('}'))
@@ -51,8 +51,8 @@ export const parse = ({ stringToParse, disabled, self, refs, delay }) => {
                 });
             }
             else {
-                if (!self.objectsToMerge)
-                    self.objectsToMerge = JSON.parse(stringToParse);
+                if (!self.objectToInsert)
+                    self.objectToInsert = JSON.parse(stringToParse);
             }
             self.stringToParse = undefined;
         }
@@ -61,13 +61,10 @@ export const parse = ({ stringToParse, disabled, self, refs, delay }) => {
         }
     }, delay === undefined ? 0 : delay);
 };
-export const wrapAndMerge = ({ objectsToMerge, withPath, self, disabled, delay }) => {
-    if (disabled || objectsToMerge === undefined)
+export const wrapAndMerge = ({ objectToInsert, withPath, self, disabled, delay }) => {
+    if (disabled || objectToInsert === undefined)
         return;
-    const wrappedObject = wrap(objectsToMerge, withPath);
-    objectsToMerge.forEach(objToMerge => {
-        self.merge(wrappedObject, objToMerge);
-    });
+    const wrappedObject = wrap(objectToInsert, withPath);
     self.rawMergedProp = wrappedObject;
 };
 export const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }) => {
@@ -106,7 +103,7 @@ const objStr1 = {
     type: String,
 };
 const propDefMap = {
-    refs: objProp1, objectsToMerge: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
+    refs: objProp1, objectToInsert: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
     mergedProp: objProp2, value: objProp2
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);

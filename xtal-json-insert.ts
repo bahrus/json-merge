@@ -67,11 +67,11 @@ export class XtalJsonInsert extends HTMLElement implements ReactiveSurface{
 
 
     /**
-     * The object array that is to be merged.
+     * The object to insert.
      * @type {array}
      * 
      */
-    objectsToMerge: object[];
+    objectToInsert: object;
 
     /**
     * object inside a new empty object, with key equal to this value.
@@ -115,14 +115,14 @@ export const parse =  ({ stringToParse, disabled, self, refs, delay }: X) => {
     setTimeout(() => {
         try {
             if (refs) {
-                self.objectsToMerge = JSON.parse(stringToParse, (key, val) => {
+                self.objectToInsert = JSON.parse(stringToParse, (key, val) => {
                     if (typeof val !== 'string') return val;
                     if (!val.startsWith('${refs.') || !val.endsWith('}')) return val;
                     const realKey = val.substring(7, val.length - 1);
                     return self.refs[realKey];
                 });
             } else {
-                if (!self.objectsToMerge) self.objectsToMerge = JSON.parse(stringToParse);
+                if (!self.objectToInsert) self.objectToInsert = JSON.parse(stringToParse);
             }
             self.stringToParse = undefined;
         } catch (e) {
@@ -133,12 +133,9 @@ export const parse =  ({ stringToParse, disabled, self, refs, delay }: X) => {
 
 };
 
-export const wrapAndMerge =  ({ objectsToMerge, withPath, self, disabled, delay }: X) => {
-    if (disabled || objectsToMerge === undefined) return;
-    const wrappedObject = wrap(objectsToMerge, withPath);
-    objectsToMerge.forEach(objToMerge => {
-        self.merge(wrappedObject, objToMerge);
-    })
+export const wrapAndMerge =  ({ objectToInsert, withPath, self, disabled, delay }: X) => {
+    if (disabled || objectToInsert === undefined) return;
+    const wrappedObject = wrap(objectToInsert, withPath);
     self.rawMergedProp = wrappedObject
 };
 
@@ -184,7 +181,7 @@ const objStr1: PropDef = {
 }
 
 const propDefMap: PropDefMap<X> = {
-    refs: objProp1, objectsToMerge: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
+    refs: objProp1, objectToInsert: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
     mergedProp: objProp2, value: objProp2
 };
 
