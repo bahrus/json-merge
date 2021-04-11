@@ -13,11 +13,28 @@
         <div>Input:</div>
         <xtal-json-insert disabled>
           <script type="application/json">
-            {"name": "Harry Potter", "age":"13"}
+            [
+                {
+                    "type": "Ionic",
+                    "examples": [
+                       {
+                           "formula": "NaCl",
+                           "meltingPoint": 801,
+                           "boilingPoint": 1413
+                       },
+                       {
+                           "formula": "CaF2",
+                           "meltingPoint": 1418,
+                           "boilingPoint": 1533
+                       }
+                    ]
+                }
+                
+            ]
           </script>
         </xtal-json-insert>
         <p-d on=value-changed to=[-value] val=detail.value m=1></p-d>
-        <xtal-editor -value key=PotterPersonal></xtal-editor>
+        <xtal-editor -value key="Classes of Crystalline Solids"></xtal-editor>
         
        
       </div> 
