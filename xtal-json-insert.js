@@ -1,8 +1,9 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
 import { wrap } from 'xtal-element/lib/with-path.js';
 /**
- * Parse and publish JSON contained inside.
+ * Parse and notify JSON contained inside.
  * @element xtal-json-insert
+ * @event value-changed
  *
  */
 export class XtalJsonInsert extends HTMLElement {
@@ -61,26 +62,25 @@ export const parse = ({ stringToParse, disabled, self, refs, delay }) => {
         }
     }, delay === undefined ? 0 : delay);
 };
-export const wrapAndMerge = ({ objectToInsert, withPath, self, disabled, delay }) => {
+export const wrapAndInsert = ({ objectToInsert, withPath, self, disabled, delay }) => {
     if (disabled || objectToInsert === undefined)
         return;
     const wrappedObject = wrap(objectToInsert, withPath);
-    self.rawMergedProp = wrappedObject;
+    self.rawInsertedProp = wrappedObject;
 };
-export const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }) => {
-    if (disabled || rawMergedProp === undefined)
+export const postMergeCallback = ({ rawInsertedProp, self, disabled, postInsertCallbackFn: postMergeCallbackFn }) => {
+    if (disabled || rawInsertedProp === undefined)
         return;
     let newVal = undefined;
     if (postMergeCallbackFn) {
-        newVal = postMergeCallbackFn(rawMergedProp, self);
+        newVal = postMergeCallbackFn(rawInsertedProp, self);
         if (!newVal)
             return;
     }
-    const val = newVal ? newVal : rawMergedProp;
-    self[slicedPropDefs.propLookup.mergedProp.alias] = val;
+    const val = newVal ? newVal : rawInsertedProp;
     self[slicedPropDefs.propLookup.value.alias] = val;
 };
-const propActions = [parse, wrapAndMerge, postMergeCallback];
+const propActions = [parse, wrapAndInsert, postMergeCallback];
 const baseProp = {
     dry: true,
     async: true,
@@ -103,8 +103,8 @@ const objStr1 = {
     type: String,
 };
 const propDefMap = {
-    refs: objProp1, objectToInsert: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
-    mergedProp: objProp2, value: objProp2
+    refs: objProp1, objectToInsert: objProp1, stringToParse: objProp1, rawInsertedProp: objProp1,
+    value: objProp2
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(XtalJsonInsert, slicedPropDefs, 'onPropChange');

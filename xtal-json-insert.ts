@@ -3,8 +3,9 @@ import {wrap} from 'xtal-element/lib/with-path.js';
 
 type X = XtalJsonInsert;
 /**
- * Parse and publish JSON contained inside.
+ * Parse and notify JSON contained inside.
  * @element xtal-json-insert
+ * @event value-changed
  *  
  */
 export class XtalJsonInsert extends HTMLElement implements ReactiveSurface{
@@ -16,14 +17,13 @@ export class XtalJsonInsert extends HTMLElement implements ReactiveSurface{
 
     disabled: boolean | undefined;
 
+    /**
+     * @type {object}
+     * ⚡inserted-prop-changed
+     * The inserted the input property with the JSON inside the script tag.
+     * 
+     */
     value: any;
-
-    // /**
-    //  * An object that should be merged with the JSON inside the element
-    //  * @type {object}
-    //  * @attr
-    //  **/
-    // input: object;
 
     /**
      * A key value pair object that allows the JSON to be passed functions or objects during the JSON parsing phase.
@@ -34,15 +34,9 @@ export class XtalJsonInsert extends HTMLElement implements ReactiveSurface{
     /**
      * @private
      */
-    rawMergedProp: object;
+    rawInsertedProp: object;
 
-    /**
-     * @type {object}
-     * ⚡merged-prop-changed
-     * The result of merging the input property with the JSON inside the script tag.
-     * 
-     */
-    mergedProp: object;
+
 
 
     /**
@@ -50,7 +44,7 @@ export class XtalJsonInsert extends HTMLElement implements ReactiveSurface{
      * @type {function}
      * 
      */
-    postMergeCallbackFn: (mergedObj: any, t: X) => any;
+    postInsertCallbackFn: (mergedObj: any, t: X) => any;
 
 
     /**
@@ -133,26 +127,25 @@ export const parse =  ({ stringToParse, disabled, self, refs, delay }: X) => {
 
 };
 
-export const wrapAndMerge =  ({ objectToInsert, withPath, self, disabled, delay }: X) => {
+export const wrapAndInsert =  ({ objectToInsert, withPath, self, disabled, delay }: X) => {
     if (disabled || objectToInsert === undefined) return;
     const wrappedObject = wrap(objectToInsert, withPath);
-    self.rawMergedProp = wrappedObject
+    self.rawInsertedProp = wrappedObject
 };
 
-export const postMergeCallback = ({ rawMergedProp, self, disabled, postMergeCallbackFn }: X) => {
-    if (disabled || rawMergedProp === undefined) return;
+export const postMergeCallback = ({ rawInsertedProp, self, disabled, postInsertCallbackFn: postMergeCallbackFn }: X) => {
+    if (disabled || rawInsertedProp === undefined) return;
     let newVal = undefined;
 
     if (postMergeCallbackFn) {
-        newVal = postMergeCallbackFn(rawMergedProp, self);
+        newVal = postMergeCallbackFn(rawInsertedProp, self);
         if (!newVal) return;
     }
-    const val = newVal ? newVal : rawMergedProp;
-    self[slicedPropDefs.propLookup.mergedProp.alias] = val;
+    const val = newVal ? newVal : rawInsertedProp;
     self[slicedPropDefs.propLookup.value.alias] = val;
 };
 
-const propActions = [parse, wrapAndMerge, postMergeCallback] as PropAction[];
+const propActions = [parse, wrapAndInsert, postMergeCallback] as PropAction[];
 
 const baseProp : PropDef = {
     dry: true,
@@ -181,8 +174,8 @@ const objStr1: PropDef = {
 }
 
 const propDefMap: PropDefMap<X> = {
-    refs: objProp1, objectToInsert: objProp1, stringToParse: objProp1, rawMergedProp: objProp1,
-    mergedProp: objProp2, value: objProp2
+    refs: objProp1, objectToInsert: objProp1, stringToParse: objProp1, rawInsertedProp: objProp1,
+    value: objProp2
 };
 
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
