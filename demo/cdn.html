@@ -4,85 +4,70 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-
   <title>xtal-json-merge demo</title>
-
-
-
-
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
-  </custom-style>
 </head>
 
 <body>
-  <div>
-    <h3>Basic xtal-json-merge demo</h3>
-    <div>
-    <div>Input:</div>
-    <xtal-json-merge disabled input="[]">
-      <script type="application/json">
-    [
-      [
-        {"name": "Harry Potter", "age":"13"},
-        {"name": "Albus Dumbledore", "age":"279"}
-      ]
-    ]
-      </script>
-    </xtal-json-merge>
-    <p-d on=merged-prop-changed to=[-input] val=detail.value m=2></p-d>
-    <xtal-json-editor id="firstEditor" -input options='{"mode":"view"}'></xtal-json-editor>
-    <br>
-    <div>Merge with</div>
-    <pre>
-      [{
-        "columns":[
-            {"id": "index",       "name": "Index",      "field": "index"},
-            {"id": "isActive",    "name": "Active",     "field": "isActive"},
-            {"id": "balance",     "name": "Balance",    "field": "balance"},
-            {"id": "age",         "name": "Age",        "field": "age"},
-            {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-            {"id": "name",        "name": "Name",       "field": "name"},
-            {"id": "gender",      "name": "Gender",     "field": "gender"},
-            {"id": "company",     "name":"Company",     "field": "company"}
-        ],
-        "gridOptions":{
-            "enableCellNavigation": true,
-            "enableColumnReorder": false
-        }
-      }]              
-    </pre>
-    <br>
-    <xtal-insert-json -input id="insertData" with-path="data" hidden>
+  <h3>Basic xtal-json-merge demo</h3>
+  <div>Input:</div>
+  <xtal-json-merge input={} with-path=rowData>
     <script type="application/json">
-      [{
-        "columns":[
-            {"id": "index",       "name": "Index",      "field": "index"},
-            {"id": "isActive",    "name": "Active",     "field": "isActive"},
-            {"id": "balance",     "name": "Balance",    "field": "balance"},
-            {"id": "age",         "name": "Age",        "field": "age"},
-            {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-            {"id": "name",        "name": "Name",       "field": "name"},
-            {"id": "gender",      "name": "Gender",     "field": "gender"},
-            {"id": "company",     "name":"Company",     "field": "company"}
-        ],
-        "gridOptions":{
-            "enableCellNavigation": true,
-            "enableColumnReorder": false
-        }
-      }]
+    [
+      {
+          "formula": "NaCl",
+          "meltingPoint": 801,
+          "boilingPoint": 1413
+      },
+      {
+          "formula": "CaF2",
+          "meltingPoint": 1418,
+          "boilingPoint": 1533
+      }
+    ]
     </script>
-    </xtal-insert-json>
-    <p-d on="merged-prop-changed" to="[-input]"></p-d>
-    <br>
-    <div>Output:</div>
-    <xtal-json-editor -input options='{"mode":"view"}'></xtal-json-editor>
-  </div> 
-  <script type=module src="https://unpkg.com/xtal-json-editor@0.0.39/xtal-json-editor.js?module"></script>
-  <script type=module src="https://cdn.pika.dev/pass-down"></script>
-  <script type=module src="https://cdn.pika.dev/xtal-json-merge"></script>
-  </div>
+  </xtal-json-merge>
+  <p-d on=value-changed to=[-value] val=detail.value init-val=value m=1></p-d>
+  <p-d on=value-changed to=[-input] val=detail.value init-val=value m=1></p-d>
+  <xtal-editor -value key="Xtal Data"></xtal-editor>
+  <div>Merge with</div>
+  <code>
+    [{
+      "columns":[
+          {"name": "Formula",         "field": "formula"},
+          {"name": "Melting Point",   "field": "meltingPoint"},
+          {"name": "BoilingPoint",    "field": "boilingPoint"}
+      ],
+      "gridOptions":{
+          "enableCellNavigation": true,
+          "enableColumnReorder": false
+      }
+    }]              
+  </code>
+  <xtal-json-merge -input id="insertData">
+  <script type="application/json">
+    {
+      "columns":[
+          {"name": "Formula",         "field": "formula"},
+          {"name": "Melting Point",   "field": "meltingPoint"},
+          {"name": "BoilingPoint",    "field": "boilingPoint"}
+      ],
+      "gridOptions":{
+          "enableCellNavigation": true,
+          "enableColumnReorder": false
+      }
+    }
+  </script>
+  </xtal-json-merge>
+  <p-d on="value-changed" to="[-value]" ></p-d>
+  <div>Output:</div>
+  <xtal-editor -value key="Merged Grid Data"></xtal-editor>
+
+
+  <script type=module crossorigin>
+    import 'https://cdn.skypack.dev/xtal-json-merge@0.2.40?min';
+    import 'https://cdn.skypack.dev/pass-down@0.0.28?min';
+    import 'https://cdn.skypack.dev/xtal-editor@0.0.35?min';
+</script>
 </body>
 
 </html>
