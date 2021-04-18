@@ -17,6 +17,16 @@ export class XtalJsonMerge extends HTMLElement implements ReactiveSurface{
         passAttrToProp(this, slicedPropDefs, n, ov, nv);
     }
 
+    //https://wicg.github.io/custom-state-pseudo-class/#:~:text=A%20custom%20state%20pseudo%20class%20contains%20just%20one,like%20x-foo%3Ais%20%28%3A--state1%2C%20%3A--state2%29%2C%20x-foo%3Anot%20%28%3A--state2%29%2C%20and%20x-foo%3A--state1%3A--state2.
+    constructor() {
+        super();
+        const aThis = this as any;
+        console.log(aThis.attachInternals);
+        if(aThis.attachInternals !== undefined){
+            (aThis)._internals = aThis.attachInternals();
+        }
+    }
+
     self = this;
     propActions = propActions;
     reactor = new xc.Rx(this);
