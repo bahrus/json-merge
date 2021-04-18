@@ -68,8 +68,8 @@ const linkObjectToMergeInputInto = ({ stringToParse, disabled, refs, self }) => 
     }, self.delay ?? 0);
 };
 const wrapAndMerge = ({ input, objectToMergeInputInto, withPath, self, disabled, delay }) => {
-    const wrappedObject = wrap(input, withPath);
-    self.rawMergedObject = mergeDeep(objectToMergeInputInto, wrappedObject);
+    const wrappedObject = wrap(objectToMergeInputInto, withPath);
+    self.rawMergedObject = mergeDeep(wrappedObject, input);
 };
 const applyCallback = ({ rawMergedObject, postMergeCallbackFn, self }) => {
     const key = slicedPropDefs.propLookup.value.alias;
@@ -98,7 +98,7 @@ const objProp3 = {
     ...objProp1,
     stopReactionsIfFalsy: true,
 };
-const objStr1 = {
+const strProp1 = {
     ...baseProp,
     type: String,
 };
@@ -110,8 +110,8 @@ const propDefMap = {
     value: objProp2,
     refs: objProp1,
     rawMergedObject: objProp1,
-    stringToParse: objStr1,
-    withPath: objStr1,
+    stringToParse: strProp1,
+    withPath: strProp1,
     objectToMergeInputInto: objProp3,
     postMergeCallbackFn: objProp1,
     input: {

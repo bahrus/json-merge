@@ -134,8 +134,8 @@ const linkObjectToMergeInputInto = ({stringToParse, disabled, refs, self}: X) =>
 };
 
 const wrapAndMerge = ({input, objectToMergeInputInto, withPath, self, disabled, delay}: X) => {
-    const wrappedObject = wrap(input, withPath);
-    self.rawMergedObject = mergeDeep(objectToMergeInputInto, wrappedObject);  
+    const wrappedObject = wrap(objectToMergeInputInto, withPath);
+    self.rawMergedObject = mergeDeep(wrappedObject, input);  
 };
 
 const applyCallback =({rawMergedObject, postMergeCallbackFn, self}: X) => {
@@ -168,7 +168,7 @@ const objProp3: PropDef= {
     stopReactionsIfFalsy: true,
 }
 
-const objStr1: PropDef = {
+const strProp1: PropDef = {
     ...baseProp,
     type: String,
 }
@@ -181,8 +181,8 @@ const propDefMap: PropDefMap<X> = {
     value: objProp2,
     refs: objProp1,
     rawMergedObject: objProp1,
-    stringToParse: objStr1,
-    withPath: objStr1,
+    stringToParse: strProp1,
+    withPath: strProp1,
     objectToMergeInputInto: objProp3,
     postMergeCallbackFn: objProp1,
     input: {
