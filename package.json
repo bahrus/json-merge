@@ -1,6 +1,11 @@
 {
   "name": "xtal-json-merge",
   "version": "0.2.39",
+  "keywords": [
+    "Web Components",
+    "Custom Elements",
+    "JSON"
+  ],
   "description": "Web component designed to deep merge JSON objects into other objects",
   "main": "xtal-json-merge.js",
   "module": "xtal-json-merge.js",
@@ -11,12 +16,22 @@
     "xtal-element": "0.0.380"
   },
   "devDependencies": {
+    "@skypack/package-check": "0.2.2",
     "pass-down": "0.0.28",
     "xtal-editor": "0.0.35",
     "xtal-test": "0.0.50"
   },
+  "exports": {
+    ".": "./xtal-json-merge.js",
+    "./xtal-json-merge.js": "./xtal-json-merge.js"
+  },
+  "files": [
+    "xtal-json-merge.*",
+    "types.d.ts"
+  ],
   "scripts": {
     "serve": "node node_modules/xtal-test/serve.js",
-    "doc": "wca analyze xtal-*.js --outFile custom-elements.json"
+    "doc": "wca analyze xtal-*.js --outFile custom-elements.json",
+    "package-check": "package-check"
   }
 }

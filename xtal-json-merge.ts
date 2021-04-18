@@ -2,6 +2,7 @@ import {xc, PropAction, PropDef, PropDefMap, ReactiveSurface} from 'xtal-element
 import {wrap} from 'xtal-element/lib/with-path.js';
 import {mergeDeep} from 'trans-render/lib/mergeDeep.js';
 import { passAttrToProp } from 'xtal-element/lib/passAttrToProp.js';
+import {XtalJsonMergeProps} from './types.d.js';
 type X = XtalJsonMerge;
 
 /**
@@ -10,7 +11,7 @@ type X = XtalJsonMerge;
  * @event value-changed
  *  
  */
-export class XtalJsonMerge extends HTMLElement implements ReactiveSurface{
+export class XtalJsonMerge extends HTMLElement implements ReactiveSurface, XtalJsonMergeProps{
     static is = 'xtal-json-merge';
     static observedAttributes = ['disabled', 'input'];
     attributeChangedCallback(n: string, ov: string, nv: string){
@@ -196,3 +197,9 @@ const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(XtalJsonMerge, slicedPropDefs, 'onPropChange');
 
 xc.define(XtalJsonMerge);
+
+declare global {
+    interface HTMLElementTagNameMap {
+        "xtal-json-merge": XtalJsonMerge,
+    }
+}
