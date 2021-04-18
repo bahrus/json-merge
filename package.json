@@ -29,6 +29,7 @@
     "xtal-json-merge.*",
     "types.d.ts"
   ],
+  "types": "types.d.ts",
   "scripts": {
     "serve": "node node_modules/xtal-test/serve.js",
     "doc": "wca analyze xtal-*.js --outFile custom-elements.json",
