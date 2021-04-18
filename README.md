@@ -13,6 +13,7 @@ xtal-json-merge merges predefined json with some dynamic json.
 
 These two components can also be useful for declarative custom elements, or template-based components, and demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
+[Demo](https://codepen.io/bahrus/pen/ZELMbrN)
 
 ## Mission
 
