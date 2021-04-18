@@ -13,6 +13,7 @@
   "author": "bahrus <anderson.bruce.b@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "trans-render": "0.0.283",
     "xtal-element": "0.0.380"
   },
   "devDependencies": {
