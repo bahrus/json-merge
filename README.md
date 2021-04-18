@@ -8,11 +8,10 @@
 
 
 
-[Demo](https://xtal-json-editor-demo.glitch.me/) 
 
-xtal-json-merge and xtal-insert-json merge predefined json with some dynamic json.  xtal-json-merge extends xtal-insert-json. They provide binding support compatible with Polymer 2/3, but they can be used in non Polymer settings as well.  They may seem more natural to use in [disciplined, declarative, data-centric](https://blog.153.io/2017/03/08/you-dont-get-amp/) environments -- server-driven architectures or HTML template-oriented components / web apps like VueJS, Polymer, Aurelia, Svelte, Angular. It is likely to cause an allergic reaction if found inside a JavaScript, code-centric render function, like those found in (P)React / LitHTML / HyperHTML / SkateJS / StencilJS, etc.  
+xtal-json-merge merges predefined json with some dynamic json.  
 
-These two components can also be useful for demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
+These two components can also be useful for declarative custom elements, or template-based components, and demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
 
 ## Mission
@@ -52,38 +51,68 @@ The JSON needs to be wrapped inside a script tag with type application/json, as 
 
 
 ```html
-<!--- Petalia Syntax -->
-<fetch-data dsiabled url="https://HRDatabase.com" output="{{rowData}}"></fetch-data>
-<!-- pass down (p-d) value on fetch complete -->
-<p-d on=fetch-complete [-input] m=1>
-<xtal-insert-json  -input with-path="data">
+  <xtal-json-merge input={} with-path=rowData>
     <script type="application/json">
-    [{
-        "columns":[
-            {"id": "index",       "name": "Index",      "field": "index"},
-            {"id": "isActive",    "name": "Active",     "field": "isActive"},
-            {"id": "salary",     "name": "Salary",      "field": "balance", "formatter":  "${refs.dollarFormatter}"},
-            {"id": "age",         "name": "Age",        "field": "age"},
-            {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
-            {"id": "name",        "name": "Name",       "field": "name"},
-            {"id": "gender",      "name": "Gender",     "field": "gender"},
-        ],
-        "gridSettings":{
-            "enableCellNavigation": true,
-            "enableColumnReorder": false
-        }
-    }]
+    [
+      {
+          "formula": "NaCl",
+          "meltingPoint": 801,
+          "boilingPoint": 1413
+      },
+      {
+          "formula": "CaF2",
+          "meltingPoint": 1418,
+          "boilingPoint": 1533
+      }
+    ]
     </script>
-</xtal-insert-json>
-<p-d on=merged-prop-changed to=[-grid-options] m=1>
-<my-grid -grid-options></my-grid>
+  </xtal-json-merge>
+  <p-d on=value-changed to=[-value] val=detail.value init-val=value m=1></p-d>
+  <p-d on=value-changed to=[-input] val=detail.value init-val=value m=1></p-d>
+  <xtal-editor -value key="Xtal Data"></xtal-editor>
+  <div>Merge with</div>
+  <code>
+    [{
+      "columns":[
+          {"name": "Formula",         "field": "formula"},
+          {"name": "Melting Point",   "field": "meltingPoint"},
+          {"name": "BoilingPoint",    "field": "boilingPoint"}
+      ],
+      "gridOptions":{
+          "enableCellNavigation": true,
+          "enableColumnReorder": false
+      }
+    }]              
+  </code>
+  <xtal-json-merge -input id="insertData">
+  <script type="application/json">
+    {
+      "columns":[
+          {"name": "Formula",         "field": "formula"},
+          {"name": "Melting Point",   "field": "meltingPoint"},
+          {"name": "BoilingPoint",    "field": "boilingPoint"}
+      ],
+      "gridOptions":{
+          "enableCellNavigation": true,
+          "enableColumnReorder": false
+      }
+    }
+  </script>
+  </xtal-json-merge>
 ```
 
 
-## Viewing Your Element
+## Running xtal-json-merge
+
+1. Install node.js
+2. Fork or clone this repo.
+3. Open command and navigate to location of fork or clone.
+4. Issue the following commands:
 
 ```
 $ npm install
-$ npm run serveserve
+$ npm run serve
 ```
+
+5.  Open your browser to (typically) http://localhost:3030/demo/dev.html
 
