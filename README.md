@@ -6,12 +6,9 @@
 
 # \<xtal-json-merge\>
 
-
-
-
 xtal-json-merge merges predefined json with some dynamic json.  
 
-These two components can also be useful for declarative custom elements, or template-based components, and demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
+It can be useful for declarative custom elements, or template-based components, and demo pages that use html markup as the primary way of demonstrating the functionality of specific types of components, which we categorize below.
 
 [Demo](https://codepen.io/bahrus/pen/ZELMbrN)
 
@@ -34,7 +31,7 @@ Some components, like the Vaadin grid, choose to be configured via light DOM ele
 
 Other components tend to view themselves primarily as a JavaScript api, and then just quickly put a web component wrapper around it. Often that api consists of a single function or two, with a single parameter, where declarative JSON is expected to be passed.  These components are designed to facilitate working with such components. 
 
-These components, xtal-insert-json and xtal-json-merge, enforce the declarative, optimized, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bind).
+This component, xtal-json-merge, enforces the declarative, optimized, side-effect free, XSS safe principles by insisting that the content is strictly compliant JSON.  See [other examples of embedding JSON as part of the markup](https://www.ampproject.org/docs/reference/components/amp-bind).
 
 Note that someone ([Νίκος](https://marketplace.visualstudio.com/items?itemName=sissel.json-script-tag)) has kindly provided a nice VSCode extension, that makes editing JSON much easier.
 

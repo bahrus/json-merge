@@ -22,7 +22,6 @@ export class XtalJsonMerge extends HTMLElement implements ReactiveSurface, XtalJ
     constructor() {
         super();
         const aThis = this as any;
-        console.log(aThis.attachInternals);
         if(aThis.attachInternals !== undefined){
             (aThis)._internals = aThis.attachInternals();
         }
